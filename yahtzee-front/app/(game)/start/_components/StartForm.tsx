@@ -1,27 +1,24 @@
 'use client'
 
-import { useState } from 'react'
-
-
 export default function StartForm() {
 
-  const [numPlayers, setNumPlayers] = useState(0)
-
-  const number_of_players = [1, 2, 3, 4, 5, 6, 7 ,8, 9, 19]
+  const createNewGame = () => {
+    // Create Game Logic Here
+    // Use Auth info for player information
+    // Send POST request to create game
+    // Redirect to Play page
+    return
+  }
 
   return (
-    <form className="flex flex-col gap-3">
-      <div className="flex gap-5 text-xl">
-        <label>How Many Players?</label>
-        <select
-        className="rounded-lg px-1"
-        onChange={(e) => setNumPlayers(e.target.value)}
-        >
-          {number_of_players.map(number => (
-            <option key={number} value={number}>{number}</option>
-          ))}
-        </select>
-      </div>
-    </form>
+    <div className="flex flex-col gap-3 items-center">
+      <div className="text-3xl">Play Mode</div>
+      <button
+        className="text-2xl border-2 border-black rounded-lg bg-blue-300 py-2 px-3"
+        onClick={createNewGame}
+      >
+        Single Player
+      </button>
+    </div>
   )
 }
