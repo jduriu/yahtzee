@@ -11,7 +11,7 @@ export default function GameLayout({
     <body className="w-screen h-screen">
       <div className="w-full h-full flex flex-col justify-between">
         <Header/>
-        <main>
+        <main className="h-full">
           {children}
         </main>
         <Footer/>
