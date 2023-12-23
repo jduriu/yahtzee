@@ -51,116 +51,82 @@ export default function ScoreCard() {
   const [grandTotal, setGrandTotal] = useState(getGrandTotal)
 
   return (
-    <div className="w-full h-full p-5 text-sm">
-      <div>SCORE CARD</div>
-      <div className="grid grid-cols-3">
-        <div>Category</div>
-        <div>Score</div>
-        <div>How to Score</div>
-      </div>
+    <div className="w-full h-full px-10 py-5 text-lg">
+      <div className="text-3xl py-3">SCORE CARD</div>
+      <div className="text-2xl">Upper Section</div>
 
-      <div>Upper Section</div>
-
-      <div className="grid grid-rows-9 auto-rows-min">
-        <div className="grid grid-cols-3">
+      <div className="grid grid-cols-[75%_25%] xl:grid-cols-[30%_20%_50%] py-3">
+        <div>
           <div>Aces</div>
-          <div>{aces}</div>
-          <div>Count and Add Only Aces</div>
-        </div>
-        <div className="grid grid-cols-3">
           <div>Twos</div>
-          <div>{twos}</div>
-          <div>Count and Add Only Twos</div>
-        </div>
-        <div className="grid grid-cols-3">
           <div>Threes</div>
-          <div>{threes}</div>
-          <div>Count and Add Only Threes</div>
-        </div>
-        <div className="grid grid-cols-3">
           <div>Fours</div>
-          <div>{fours}</div>
-          <div>Count and Add Only Fours</div>
-        </div>
-        <div className="grid grid-cols-3">
           <div>Fives</div>
-          <div>{fives}</div>
-          <div>Count and Add Only Fives</div>
-        </div>
-        <div className="grid grid-cols-3">
           <div>Sixes</div>
-          <div>{sixes}</div>
-          <div>Count and Add Only Sixes</div>
-        </div>
-        <div className="grid grid-cols-3">
           <div>Upper Subtotal</div>
-          <div>{upperSubTotal}</div>
-        </div>
-        <div className="grid grid-cols-3">
           <div>Bonus</div>
-          <div>{bonus}</div>
-          <div>If total score is 63 or over</div>
-        </div>
-        <div className="grid grid-cols-3">
-          <div>Lower Total</div>
-          <div>{lowerTotal}</div>
-        </div>
-      </div>
-
-      <div>Lower Section</div>
-
-      <div className="grid grid-rows-11 items-center">
-        <div className="grid grid-cols-3">
-          <div>3 of a Kind</div>
-          <div>{threeOfKind}</div>
-          <div>Add total of 3 matching dice</div>
-        </div>
-        <div className="grid grid-cols-3">
-          <div>4 of a Kind</div>
-          <div>{fourOfKind}</div>
-          <div>Add total of 4 matching dice</div>
-        </div>
-        <div className="grid grid-cols-3">
-          <div>Full House</div>
-          <div>{fullHouse}</div>
-          <div>Add total of 3 matching dice + 2 matching dice</div>
-        </div>
-        <div className="grid grid-cols-3">
-          <div>Sm. Straight</div>
-          <div>{smStraight}</div>
-          <div>Sequence of 4</div>
-        </div>
-        <div className="grid grid-cols-3">
-          <div>Lg. Straight</div>
-          <div>{lgStraight}</div>
-          <div>Sequence of 5</div>
-        </div>
-        <div className="grid grid-cols-3">
-          <div>Yahtzee</div>
-          <div>{yahtzee}</div>
-          <div>5 of a Kind</div>
-        </div>
-        <div className="grid grid-cols-3">
-          <div>Chance</div>
-          <div>{chance}</div>
-          <div>Add Total of All Dice</div>
-        </div>
-        <div className="grid grid-cols-3">
-          <div>Yahtzee Bonus</div>
-          <div>{yahtzeeBonus * 100}</div>
-          <div>100 for Each Bonus</div>
-        </div>
-        <div className="grid grid-cols-3">
-          <div>Lower Total</div>
-          <div>{lowerTotal}</div>
-        </div>
-        <div className="grid grid-cols-3">
           <div>Upper Total</div>
+        </div>
+        <div>
+          <div>{aces}</div>
+          <div>{twos}</div>
+          <div>{threes}</div>
+          <div>{fours}</div>
+          <div>{fives}</div>
+          <div>{sixes}</div>
+          <div>{upperSubTotal}</div>
+          <div>{bonus ? "True" : "False"}</div>
           <div>{upperTotal}</div>
         </div>
-        <div className="grid grid-cols-3">
+        <div className="hidden lg:block">
+          <div>Count and Add Only Aces</div>
+          <div>Count and Add Only Twos</div>
+          <div>Count and Add Only Threes</div>
+          <div>Count and Add Only Fours</div>
+          <div>Count and Add Only Fives</div>
+          <div>Count and Add Only Sixes</div>
+          <div>If total score is 63 or over</div>
+        </div>
+      </div>
+
+      <div className="text-2xl">Lower Section</div>
+
+      <div className="grid grid-cols-[75%_25%] xl:grid-cols-[30%_20%_50%] py-3">
+        <div>
+          <div>3 of a Kind</div>
+          <div>4 of a Kind</div>
+          <div>Full House</div>
+          <div>Sm. Straight</div>
+          <div>Lg. Straight</div>
+          <div>Yahtzee</div>
+          <div>Chance</div>
+          <div>Yahtzee Bonus</div>
+          <div>Lower Total</div>
+          <div>Upper Total</div>
           <div>Grand Total</div>
+        </div>
+        <div>
+          <div>{threeOfKind}</div>
+          <div>{fourOfKind}</div>
+          <div>{fullHouse}</div>
+          <div>{smStraight}</div>
+          <div>{lgStraight}</div>
+          <div>{yahtzee}</div>
+          <div>{chance}</div>
+          <div>{yahtzeeBonus * 100}</div>
+          <div>{lowerTotal}</div>
+          <div>{upperTotal}</div>
           <div>{grandTotal}</div>
+        </div>
+        <div className="hidden lg:block">
+          <div>Add total of 3 matching dice</div>
+          <div>Add total of 4 matching dice</div>
+          <div>Add total of 3 matching dice + 2 matching dice</div>
+          <div>Sequence of 4</div>
+          <div>Sequence of 5</div>
+          <div>5 of a Kind</div>
+          <div>Add Total of All Dice</div>
+          <div>100 for Each Bonus</div>
         </div>
       </div>
     </div>
