@@ -51,7 +51,7 @@ export default function ScoreCard() {
   const [grandTotal, setGrandTotal] = useState(getGrandTotal)
 
   return (
-    <div className="w-full h-full px-10 py-5 text-lg">
+    <div className="w-full h-full px-10 py-5 text-md overflow-y-scroll">
       <div className="text-3xl py-3">SCORE CARD</div>
       <div className="text-2xl">Upper Section</div>
 
