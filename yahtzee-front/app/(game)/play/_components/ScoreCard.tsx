@@ -6,7 +6,7 @@ export default function ScoreCard() {
 
   const getUpperSubtotal = () => {
     const initialValue = 0
-    const values = [aces, twos, threes, fours, fives, sixes]
+    const values = [ones, twos, threes, fours, fives, sixes]
     const subtotal = values.reduce((acc, val) => acc + val, initialValue)
     return subtotal
   }
@@ -29,7 +29,7 @@ export default function ScoreCard() {
     return upperTotal + lowerTotal
   }
 
-  const [aces, setAces] = useState(0)
+  const [ones, setOnes] = useState(0)
   const [twos, setTwos] = useState(0)
   const [threes, setThrees] = useState(0)
   const [fours, setFours] = useState(0)
@@ -57,7 +57,7 @@ export default function ScoreCard() {
 
       <div className="grid grid-cols-[75%_25%] xl:grid-cols-[30%_20%_50%] py-3">
         <div>
-          <div>Aces</div>
+          <div>Ones</div>
           <div>Twos</div>
           <div>Threes</div>
           <div>Fours</div>
@@ -68,7 +68,7 @@ export default function ScoreCard() {
           <div>Upper Total</div>
         </div>
         <div>
-          <div>{aces}</div>
+          <div>{ones}</div>
           <div>{twos}</div>
           <div>{threes}</div>
           <div>{fours}</div>
@@ -79,7 +79,7 @@ export default function ScoreCard() {
           <div>{upperTotal}</div>
         </div>
         <div className="hidden lg:block">
-          <div>Count and Add Only Aces</div>
+          <div>Count and Add Only Ones</div>
           <div>Count and Add Only Twos</div>
           <div>Count and Add Only Threes</div>
           <div>Count and Add Only Fours</div>

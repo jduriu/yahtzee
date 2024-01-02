@@ -6,8 +6,7 @@ export default function DiceRoller() {
 
   const diceRoll = () => {
     const randomNum = Math.random() * (6 - 1) + 1
-    const roundedNum = Math.round(randomNum)
-    return roundedNum
+    return Math.round(randomNum)
   }
 
   useEffect(() => {
