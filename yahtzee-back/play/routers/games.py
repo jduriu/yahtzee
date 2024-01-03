@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, Response, HTTPException, status
-from queries import GameQueries
+from queries.games import GameQueries
+from schema.games import GameIn, GameOut
 
 router = APIRouter()
 
 
-@router.post("/games")
+@router.post("/games", response_model=GameOut)
 def create_game(
     game: GameIn,
     response: Response,

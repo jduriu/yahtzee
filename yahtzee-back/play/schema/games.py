@@ -1,14 +1,15 @@
 from pydantic import BaseModel
 from typing import List
+from datetime import date, datetime
 
 
-class GameIn:
+class GameIn(BaseModel):
   player_ids: List[str]
   scorecard_ids: List[str]
   turns_taken: int
 
-class GameOut:
-  game_id: str
+class GameOut(BaseModel):
+  start_time: float
   player_ids: List[str]
   scorecard_ids: List[str]
   turns_taken: int
