@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Response, HTTPException, status
-from queries.games import GameQueries
-from schema.games import GameIn, GameOut
+from queries import GameQueries
+from schema import GameIn, GameOut
 
 router = APIRouter()
 

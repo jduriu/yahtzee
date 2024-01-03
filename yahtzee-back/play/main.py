@@ -2,7 +2,7 @@ from typing import Union
 
 from fastapi import FastAPI
 
-from routers import games
+from routers import router
 
 app = FastAPI()
-app.include_router(games.router)
+app.include_router(router)
