@@ -22,6 +22,3 @@ class GameQueries:
   def get_game(self, game_id):
     game = games.find_one({"_id": ObjectId(game_id)})
     return game
-
-  def create_scorecard(self, scorecard):
-    pass
