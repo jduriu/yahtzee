@@ -1,47 +1,26 @@
-from pydantic import BaseModel
-from typing import List
-from datetime import date, datetime
+from pydantic import ConfigDict, BaseModel, Field
+from pydantic.functional_validators import BeforeValidator
+from typing import List, Optional
+from typing_extensions import Annotated
 
 
-class GameIn(BaseModel):
-  player_ids: List[str]
-  scorecard_ids: List[str]
-  turns_taken: int
+PyObjectId = Annotated[str, BeforeValidator(str)]
 
-class GameOut(BaseModel):
-  start_time: float
-  player_ids: List[str]
-  scorecard_ids: List[str]
-  turns_taken: int
 
-class ScorecardIn:
-  user_id: str
-  player_order_id: int
-  ones: int
-  twos: int
-  threes: int
-  fours: int
-  fives: int
-  sixes: int
-  bonus: int
-  threeOfKind: int
-  fourOfKind: int
-  fullHouse: int
-  smStraight: int
-  lgStraight: int
-  yahtzee: int
-  chance: int
-  yahtzeeBonus: int
-  ones_taken: bool
-  twos_taken: bool
-  threes_taken: bool
-  fours_taken: bool
-  fives_taken: bool
-  sixes_taken: bool
-  threeOfKind_taken: bool
-  fourOfKind_taken: bool
-  fullHouse_taken: bool
-  smStraight_taken: bool
-  lgStraight_taken: bool
-  yahtzee_taken: bool
-  chance_taken: bool
+class Game(BaseModel):
+    """
+    Document schema for a game instance in the database
+    """
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    start_time: float = Field(...)
+    player_ids: List[str] = Field(...)
+    scorecard_ids: List[str] = Field(...)
+    turns_taken: int = Field(...)
+    model_config = ConfigDict(
+        populate_by_name=True,
+        arbitrary_types_allowed=True,
+    )
+
+
+class Games(BaseModel):
+    games: List[Game]

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Response, HTTPException, status
 from queries import ScorecardQueries
-from schema import GameIn, GameOut
+# from schema import ScorecardIn, ScorecardOut
 
 router = APIRouter()
 
