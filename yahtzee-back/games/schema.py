@@ -24,10 +24,16 @@ class Game(BaseModel):
 
 
 class Games(BaseModel):
+    """
+    Container to hold a list of Game instances
+    """
     games: List[Game]
 
 
 class UpdateGame(BaseModel):
+    """
+    Optional fields which can be updated on a game instance
+    """
     player_ids: Optional[List[str]] = None
     scorecard_ids: Optional[List[str]] = None
     turns_taken: Optional[int] = None

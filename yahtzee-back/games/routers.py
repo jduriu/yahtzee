@@ -57,3 +57,13 @@ def update_game(
 ):
     response.status_code = 200
     return queries.update_game(id, game)
+
+
+@router.delete(
+    "/games/{id}",
+)
+def delete_game(
+    id: str,
+    queries: GameQueries = Depends(),
+):
+    return queries.delete_game(id)

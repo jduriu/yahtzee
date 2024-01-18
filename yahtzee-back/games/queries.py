@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from time import time
 from bson import ObjectId
 from pymongo import ReturnDocument
-from fastapi import HTTPException
+from fastapi import HTTPException, Response, status
 
 client = MongoClient("localhost", 27017, uuidRepresentation="standard")
 db = client.yahtzee_database
@@ -34,6 +34,10 @@ class GameQueries:
         return game
 
     def update_game(self, id, game):
+        """
+        Update optional fields on a game instance.
+        Fields include player_ids, scorecard_ids, and turns_taken
+        """
         game = {
             k: v for k, v in game.model_dump(by_alias=True).items() if v is not None  # noqa
         }
@@ -47,9 +51,19 @@ class GameQueries:
             if updated_game is not None:
                 return updated_game
             else:
-                raise HTTPException(status_code=404, detail=f"Game {id} not found")
+                raise HTTPException(status_code=404, detail=f"Game {id} not found")  # noqa
 
         if game == db.games.find_one({"_id": id}):
             return game
 
         raise HTTPException(status_code=404, detail=f"Game {id} not found")
+
+    def delete_game(self, id):
+        """
+        Remove game instance from the database.
+        """
+        mongo_response = db.games.delete_one({"_id": ObjectId(id)})
+        if mongo_response.deleted_count == 1:
+            return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+        raise HTTPException(status_code=404, detail=f"Student {id} not found")
