@@ -1,15 +1,18 @@
-from fastapi import APIRouter, Depends, Response, HTTPException, status
+from fastapi import APIRouter, Depends, Response
 from queries import ScorecardQueries
-# from schema import ScorecardIn, ScorecardOut
+from schema import Scorecard, Scorecards
 
 router = APIRouter()
 
-# EXAMPLE
-# @router.post("/scorecards", response_model=ScorecardOut)
-# def create_scorecard(
-#     scorecard: ScorecardIn,
-#     response: Response,
-#     queries: ScorecardQueries = Depends(),
-# ):
-#     response.status_code = 200
-#     pass
+
+@router.post(
+    "/scorecard",
+    response_model=Scorecard
+)
+def create_scorecard(
+    scorecard: Scorecard,
+    response: Response,
+    queries: ScorecardQueries = Depends()
+):
+    response.status_code = 200
+    return queries.create_scorecard(scorecard)

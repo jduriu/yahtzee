@@ -6,6 +6,7 @@ from fastapi import HTTPException, Response, status
 
 client = MongoClient("localhost", 27017, uuidRepresentation="standard")
 db = client.yahtzee_database
+games_collection = db.games
 
 
 class GameQueries:
@@ -15,7 +16,7 @@ class GameQueries:
         """
         document = game.model_dump(by_alias=True, exclude=["id"])
         document["start_time"] = time()
-        created_game = db.games.insert_one(document)
+        created_game = games_collection.insert_one(document)
         new_game = self.get_game(created_game.inserted_id)
         return new_game
 
@@ -23,14 +24,14 @@ class GameQueries:
         """
         Obtain all game instances in the games collection.
         """
-        all_games = [game for game in db.games.find()]
+        all_games = [game for game in games_collection.find()]
         return all_games
 
     def get_game(self, id):
         """
         Obtain a single game instance based on the input id
         """
-        game = db.games.find_one({"_id": ObjectId(id)})
+        game = games_collection.find_one({"_id": ObjectId(id)})
         return game
 
     def update_game(self, id, game):
@@ -43,7 +44,7 @@ class GameQueries:
         }
 
         if len(game) >= 1:
-            updated_game = db.games.find_one_and_update(
+            updated_game = games_collection.find_one_and_update(
                 {"_id": ObjectId(id)},
                 {"$set": game},
                 return_document=ReturnDocument.AFTER,
@@ -53,7 +54,7 @@ class GameQueries:
             else:
                 raise HTTPException(status_code=404, detail=f"Game {id} not found")  # noqa
 
-        if game == db.games.find_one({"_id": id}):
+        if game == games_collection.find_one({"_id": id}):
             return game
 
         raise HTTPException(status_code=404, detail=f"Game {id} not found")
@@ -62,7 +63,7 @@ class GameQueries:
         """
         Remove game instance from the database.
         """
-        mongo_response = db.games.delete_one({"_id": ObjectId(id)})
+        mongo_response = games_collection.delete_one({"_id": ObjectId(id)})
         if mongo_response.deleted_count == 1:
             return Response(status_code=status.HTTP_204_NO_CONTENT)
 

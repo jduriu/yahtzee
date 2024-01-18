@@ -1,36 +1,37 @@
-from pydantic import BaseModel
-from typing import List
-from datetime import date, datetime
+from pydantic import BaseModel, ConfigDict, Field
+from pydantic.functional_validators import BeforeValidator
+from typing import List, Optional
+from typing_extensions import Annotated
 
-# EXAMPLE
-# class ScorecardIn:
-#   user_id: str
-#   player_order_id: int
-#   ones: int
-#   twos: int
-#   threes: int
-#   fours: int
-#   fives: int
-#   sixes: int
-#   bonus: int
-#   threeOfKind: int
-#   fourOfKind: int
-#   fullHouse: int
-#   smStraight: int
-#   lgStraight: int
-#   yahtzee: int
-#   chance: int
-#   yahtzeeBonus: int
-#   ones_taken: bool
-#   twos_taken: bool
-#   threes_taken: bool
-#   fours_taken: bool
-#   fives_taken: bool
-#   sixes_taken: bool
-#   threeOfKind_taken: bool
-#   fourOfKind_taken: bool
-#   fullHouse_taken: bool
-#   smStraight_taken: bool
-#   lgStraight_taken: bool
-#   yahtzee_taken: bool
-#   chance_taken: bool
+PyObjectId = Annotated[str, BeforeValidator(str)]
+
+
+class Scorecard(BaseModel):
+    """
+    Document schema for a scorecard instance in the database
+    """
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    user_id: str = Field(...)
+    player_order_id: int = Field(...)
+    ones: int = Field(default=None)
+    twos: int = Field(default=None)
+    threes: int = Field(default=None)
+    fours: int = Field(default=None)
+    fives: int = Field(default=None)
+    sixes: int = Field(default=None)
+    bonus: int = Field(default=None)
+    three_of_kind: int = Field(default=None)
+    four_of_kind: int = Field(default=None)
+    full_house: int = Field(default=None)
+    sm_straight: int = Field(default=None)
+    lg_straight: int = Field(default=None)
+    yahtzee: int = Field(default=None)
+    chance: int = Field(default=None)
+    yahtzee_bonus: int = Field(default=None)
+
+
+class Scorecards(BaseModel):
+    """
+    Container to hold a list of Scorecard instances
+    """
+    scorecards: List[Scorecard]

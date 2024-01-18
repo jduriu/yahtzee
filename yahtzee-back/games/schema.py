@@ -19,7 +19,6 @@ class Game(BaseModel):
     turns_taken: int = Field(...)
     model_config = ConfigDict(
         populate_by_name=True,
-        arbitrary_types_allowed=True,
     )
 
 
