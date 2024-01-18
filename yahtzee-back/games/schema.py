@@ -2,6 +2,7 @@ from pydantic import ConfigDict, BaseModel, Field
 from pydantic.functional_validators import BeforeValidator
 from typing import List, Optional
 from typing_extensions import Annotated
+from bson import ObjectId
 
 
 PyObjectId = Annotated[str, BeforeValidator(str)]
@@ -24,3 +25,12 @@ class Game(BaseModel):
 
 class Games(BaseModel):
     games: List[Game]
+
+
+class UpdateGame(BaseModel):
+    player_ids: Optional[List[str]] = None
+    scorecard_ids: Optional[List[str]] = None
+    turns_taken: Optional[int] = None
+    model_config = ConfigDict(
+        json_encoders={ObjectId: str}
+    )
