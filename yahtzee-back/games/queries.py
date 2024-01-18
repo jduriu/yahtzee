@@ -67,4 +67,4 @@ class GameQueries:
         if mongo_response.deleted_count == 1:
             return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-        raise HTTPException(status_code=404, detail=f"Student {id} not found")
+        raise HTTPException(status_code=404, detail=f"Game {id} not found")

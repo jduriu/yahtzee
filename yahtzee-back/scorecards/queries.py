@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from bson import ObjectId
-from fastapi import HTTPException
+from fastapi import HTTPException, Response, status
 from pymongo import ReturnDocument
 
 client = MongoClient("localhost", 27017)
@@ -64,3 +64,13 @@ class ScorecardQueries:
             status_code=404,
             detail=f"Scorecard {id} not found"
         )
+
+    def delete_scorecard(self, id):
+        """
+        Remove scorecard instance from the database.
+        """
+        mongo_response = scorecards_collection.delete_one({"_id": ObjectId(id)})
+        if mongo_response.deleted_count == 1:
+            return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+        raise HTTPException(status_code=404, detail=f"Game {id} not found")

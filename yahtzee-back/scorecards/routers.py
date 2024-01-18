@@ -56,3 +56,13 @@ def update_scorecard(
 ):
     response.status_code = 200
     return queries.update_scorecard(id, scorecard)
+
+
+@router.delete(
+    "/scorecards/{id}",
+)
+def delete_scorecard(
+    id: str,
+    queries: ScorecardQueries = Depends(),
+):
+    return queries.delete_scorecard(id)
