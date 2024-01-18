@@ -26,3 +26,10 @@ class ScorecardQueries:
         """
         scorecard = scorecards_collection.find_one({"_id": ObjectId(id)})
         return scorecard
+
+    def get_scorecards(self):
+        """
+        Obtain all scorecard instances in the database.
+        """
+        all_scorecards = [scorecard for scorecard in scorecards_collection.find()]  # noqa
+        return all_scorecards
