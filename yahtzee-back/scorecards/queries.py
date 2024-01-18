@@ -1,6 +1,7 @@
 from pymongo import MongoClient
-from bson.objectid import ObjectId
+from bson import ObjectId
 from fastapi import HTTPException
+from pymongo import ReturnDocument
 
 client = MongoClient("localhost", 27017)
 db = client.yahtzee_database
@@ -33,3 +34,33 @@ class ScorecardQueries:
         """
         all_scorecards = [scorecard for scorecard in scorecards_collection.find()]  # noqa
         return all_scorecards
+
+    def update_scorecard(self, id, scorecard):
+        """
+        Update optional fields on a scorecard instance.
+        """
+        fields = {
+            k: v for k, v in scorecard.model_dump(by_alias=True).items() if v is not None  # noqa
+        }
+
+        if len(fields) >= 1:
+            updated_scorecard = scorecards_collection.find_one_and_update(
+                {"_id": ObjectId(id)},
+                {"$set": fields},
+                return_document=ReturnDocument.AFTER,
+            )
+            if updated_scorecard is not None:
+                return updated_scorecard
+            else:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Scorecard {id} not found"
+                )
+
+        if scorecard == self.get_scorecard(id):
+            return scorecard
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Scorecard {id} not found"
+        )

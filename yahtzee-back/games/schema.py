@@ -10,7 +10,7 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 
 class Game(BaseModel):
     """
-    Document schema for a game instance in the database
+    Document schema for a game instance in the database.
     """
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     start_time: float = Field(...)
@@ -24,14 +24,14 @@ class Game(BaseModel):
 
 class Games(BaseModel):
     """
-    Container to hold a list of Game instances
+    Container to hold a list of Game instances.
     """
     games: List[Game]
 
 
 class UpdateGame(BaseModel):
     """
-    Optional fields which can be updated on a game instance
+    Optional fields which can be updated on a game instance.
     """
     player_ids: Optional[List[str]] = None
     scorecard_ids: Optional[List[str]] = None

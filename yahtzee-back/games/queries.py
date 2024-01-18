@@ -39,14 +39,14 @@ class GameQueries:
         Update optional fields on a game instance.
         Fields include player_ids, scorecard_ids, and turns_taken
         """
-        game = {
+        fields = {
             k: v for k, v in game.model_dump(by_alias=True).items() if v is not None  # noqa
         }
 
-        if len(game) >= 1:
+        if len(fields) >= 1:
             updated_game = games_collection.find_one_and_update(
                 {"_id": ObjectId(id)},
-                {"$set": game},
+                {"$set": fields},
                 return_document=ReturnDocument.AFTER,
             )
             if updated_game is not None:
@@ -54,7 +54,7 @@ class GameQueries:
             else:
                 raise HTTPException(status_code=404, detail=f"Game {id} not found")  # noqa
 
-        if game == games_collection.find_one({"_id": id}):
+        if game == self.get_game(id):
             return game
 
         raise HTTPException(status_code=404, detail=f"Game {id} not found")
