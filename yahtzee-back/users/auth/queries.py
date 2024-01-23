@@ -157,14 +157,16 @@ class AuthQueries:
     ):
         return [{"user_id": current_user[ObjectId(id)], "owner": current_user.username}]
 
-    async def create_user(
-        self,
-        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    ):
+    def create_user(self, form_data):
+        user_info = form_data.model_dump(by_alias=True, exclude=["id"])
         username_taken = users_collection.find_one({
-            "username": form_data.username
+            "username": user_info["username"]
         })
         if not username_taken:
-            users_collection.insert_one(form_data)
-        user = self.get_user(form_data.username)
-        return user
+            hashed_password = self.get_password_hash(user_info["password"])
+            user_info["hashed_password"] = hashed_password
+            del user_info["password"]
+            users_collection.insert_one(user_info)
+            user = self.get_user(user_info["username"])
+            return user
+        raise HTTPException(status_code=404, detail="Username taken")
