@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 
-
 from games.routers import games_router
 from scorecards.routers import scorecards_router
 
