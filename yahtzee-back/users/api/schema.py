@@ -20,6 +20,10 @@ class UserSignup(BaseModel):
     disabled: Optional[bool] = Field(default=False)
 
 
+class TokenData(BaseModel):
+    username: str
+
+
 class User(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     username: str

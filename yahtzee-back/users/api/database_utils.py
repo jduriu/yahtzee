@@ -1,7 +1,6 @@
 from pymongo import MongoClient
 from fastapi import HTTPException, status
-from datetime import timedelta
-from api.schema import Token
+from api.schema import Token, UserInDB
 from api.config import Settings
 from api.auth import AuthenticationUtilities
 
@@ -27,6 +26,17 @@ class MongoDB:
             return user
         raise HTTPException(status_code=404, detail="Username taken")
 
+    def get_user(self, username):
+        user = self.db.find_one({
+            "username": username
+        })
+        if not user:
+            raise HTTPException(
+                status_code=400,
+                detail="User not found",
+            )
+        return UserInDB(**user)
+
     def login_for_access_token(self, form_data):
         user = self.get_user(
             username=form_data.username,
@@ -47,11 +57,12 @@ class MongoDB:
                 detail="Incorrect password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        access_token_expires = timedelta(
-            minutes=settings.access_token_expire_minutes
-        )
         access_token = auth_utils.create_access_token(
             data={"sub": user.username},
-            expires_delta=access_token_expires,
         )
         return Token(access_token=access_token, token_type="bearer")
+
+
+    ###############################################################
+    # Protected Endpoints
+    ###############################################################
