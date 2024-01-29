@@ -8,7 +8,7 @@ settings = Settings()
 auth_utils = AuthenticationUtilities()
 
 
-class MongoDB:
+class Mongo_Users:
     client = MongoClient("localhost", 27017, uuidRepresentation="standard")
     db = client.yahtzee_database.users
 
@@ -18,7 +18,7 @@ class MongoDB:
             "username": user_info["username"]
         })
         if not username_taken:
-            hashed_password = auth_utils.get_password_hash(user_info["password"])
+            hashed_password = auth_utils.get_password_hash(user_info["password"]) # noqa
             user_info["hashed_password"] = hashed_password
             del user_info["password"]
             self.db.insert_one(user_info)
@@ -61,8 +61,3 @@ class MongoDB:
             data={"sub": user.username},
         )
         return Token(access_token=access_token, token_type="bearer")
-
-
-    ###############################################################
-    # Protected Endpoints
-    ###############################################################
