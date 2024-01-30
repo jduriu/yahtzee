@@ -1,8 +1,8 @@
 from pymongo import MongoClient
 from fastapi import HTTPException, status
-from api.schema import Token, UserInDB
-from api.config import Settings
-from api.auth import AuthenticationUtilities
+from users_api.schema import Token, UserInDB
+from users_api.config import Settings
+from users_api.auth import AuthenticationUtilities
 
 settings = Settings()
 auth_utils = AuthenticationUtilities()

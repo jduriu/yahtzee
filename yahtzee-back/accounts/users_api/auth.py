@@ -1,11 +1,11 @@
 from passlib.context import CryptContext
 from jose import jwt, JWTError
-from api.schema import TokenData
+from users_api.schema import TokenData
 from fastapi import HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
-from api.config import Settings
+from users_api.config import Settings
 
 
 settings = Settings()

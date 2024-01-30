@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
-from api.schema import UserSignup, UserInDB, Token, TokenData
+from users_api.schema import UserSignup, UserInDB, Token, TokenData
 from typing import Annotated
-from api.database_utils import Mongo_Users
+from users_api.database_utils import Mongo_Users
 from fastapi.security import OAuth2PasswordRequestForm
-from api.auth import Authenticator
+from users_api.auth import Authenticator
 
 users_router = APIRouter()
 
