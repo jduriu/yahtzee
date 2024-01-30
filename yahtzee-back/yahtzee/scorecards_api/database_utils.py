@@ -9,6 +9,9 @@ db = client.yahtzee_database.scorecards
 
 class Mongo_Scorecards:
     def create_scorecard(self, scorecard):
+        """
+        Create a scorecard instance and return the instance
+        """
         new_scorecard = db.insert_one(
             scorecard.model_dump(by_alias=True, exclude=["id"])
         )
