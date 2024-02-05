@@ -19,23 +19,13 @@ oauth2_scheme = OAuth2PasswordBearer(
 
 
 class AuthenticationUtilities:
-    def verify_password(
-        self,
-        plain_password,
-        hashed_password
-    ):
+    def verify_password(self, plain_password, hashed_password):
         return pwd_context.verify(plain_password, hashed_password)
 
-    def get_password_hash(
-        self,
-        password
-    ):
+    def get_password_hash(self, password):
         return pwd_context.hash(password)
 
-    def create_access_token(
-        self,
-        data: dict,
-    ):
+    def create_access_token(self, data: dict):
         to_encode = data.copy()
         expires_delta = timedelta(settings.access_token_expire_minutes)
         expire = datetime.now(timezone.utc) + expires_delta
@@ -46,6 +36,16 @@ class AuthenticationUtilities:
             algorithm=jwt_algorithm
         )
         return encoded_jwt
+
+    # def create_refresh_token(self, expires_delta: int = None) -> str:
+    #     if expires_delta is not None:
+    #         expires_delta = datetime.utcnow() + expires_delta
+    #     else:
+    #         expires_delta = datetime.utcnow() + timedelta(minutes=refresh_token_expiration_min)
+
+    #     to_encode = {"exp": expires_delta, "sub": str(subject), "role": role }
+    #     encoded_jwt = jwt.encode(to_encode, jwt_refresh_secret_key, signing_algo)
+    #     return encoded_jwt
 
 
 class Authenticator:

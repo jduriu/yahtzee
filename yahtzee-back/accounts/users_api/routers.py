@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from users_api.schema import UserSignup, UserInDB, Token, TokenData
 from typing import Annotated
 from users_api.database_utils import Mongo_Users
@@ -29,6 +29,14 @@ def login_for_access_token(
 ):
     return database_utils.login_for_access_token(form_data)
 
+
+@users_router.post("/login")
+async def login(
+    request: Request,
+    database_utils: Mongo_Users = Depends()
+):
+    form_data = await request.json()
+    return database_utils.login_for_access_token(form_data)
 
 ################################################################
 #                    Protected Endpoints

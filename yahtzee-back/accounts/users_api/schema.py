@@ -12,6 +12,11 @@ class Token(BaseModel):
     token_type: str
 
 
+class UserForm(BaseModel):
+    username: str
+    password: str
+
+
 class UserSignup(BaseModel):
     username: str
     email: str | None = None

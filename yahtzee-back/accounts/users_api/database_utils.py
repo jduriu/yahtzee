@@ -3,6 +3,8 @@ from fastapi import HTTPException, status
 from users_api.schema import Token, UserInDB
 from users_api.config import Settings
 from users_api.auth import AuthenticationUtilities
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 
 settings = Settings()
 auth_utils = AuthenticationUtilities()
@@ -39,7 +41,8 @@ class Mongo_Users:
 
     def login_for_access_token(self, form_data):
         user = self.get_user(
-            username=form_data.username,
+            username=form_data.username
+            # username=form_data["username"],
         )
         if not user:
             raise HTTPException(
@@ -48,6 +51,7 @@ class Mongo_Users:
                 headers={"WWW-Authenticate": "Bearer"},
             )
         password_verified = auth_utils.verify_password(
+            # plain_password=form_data["password"],
             plain_password=form_data.password,
             hashed_password=user.hashed_password
         )
@@ -60,4 +64,11 @@ class Mongo_Users:
         access_token = auth_utils.create_access_token(
             data={"sub": user.username},
         )
-        return Token(access_token=access_token, token_type="bearer")
+        token_data = {
+            "access_token": access_token,
+            "token_type": "bearer"
+        }
+        return JSONResponse(
+            status_code=status.HTTP_201_CREATED,
+            content=jsonable_encoder(token_data)
+        )

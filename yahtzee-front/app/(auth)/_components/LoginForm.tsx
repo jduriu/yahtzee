@@ -1,28 +1,20 @@
 "use client"
 
 import { useState } from "react"
+import { TokenAuth } from "@/utils/authUtils"
+
 
 export default function LoginForm() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const login = TokenAuth()[0]
 
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const form = JSON.stringify({"username": username, "password": password})
-    const url = "http://localhost:8000/login"
-
-    const response = await fetch(url, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: form
-    })
+    const response = await login(username, password)
     if (response.ok) {
-      console.log("User Signed In!")
-      // redirect user...
+      console.log("User logged in!!")
     }
   }
 
