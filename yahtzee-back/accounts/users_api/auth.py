@@ -6,6 +6,9 @@ from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
 from users_api.config import Settings
+import hashlib
+import os
+import binascii
 
 
 settings = Settings()
@@ -25,15 +28,36 @@ class AuthenticationUtilities:
     def get_password_hash(self, password):
         return pwd_context.hash(password)
 
+    def generate_fingerprint(self):
+        # generate a random string of 50 bytes
+        random_fgp = os.urandom(50)
+        # convert bytestring -> hexadecimal -> utf-8 string
+        fingerprint = binascii.hexlify(random_fgp).decode('utf-8')
+        # Create a hardened cookie
+        fingerprint_cookie = f"__Secure-Fgp={fingerprint}; SameSite=Strict; HttpOnly; Secure"
+        # Compute a SHA256 hash of the fingerprint to store in the token
+        fingerprint_cookie_hash = hashlib.sha256(fingerprint_cookie.encode('utf-8')).hexdigest()
+        return fingerprint_cookie_hash
+
     def create_access_token(self, data: dict):
-        to_encode = data.copy()
+        token_data = data.copy()  # dictionary containing "sub": username
+        fingerprint = self.generate_fingerprint()
+        now = datetime.now(timezone.utc)
         expires_delta = timedelta(settings.access_token_expire_minutes)
-        expire = datetime.now(timezone.utc) + expires_delta
-        to_encode.update({"exp": expire})
+        expire = now + expires_delta
+
+        token_data.update({
+            "exp": expire,  # expiration time
+            'iat': now,  # issued at
+            'nbf': now,  # not before time
+            "userFingerprint": fingerprint  # unique user fingerprint
+        })
+        header_claims = {"typ": "JWT"}
         encoded_jwt = jwt.encode(
-            to_encode,
+            token_data,
             jwt_secret,
-            algorithm=jwt_algorithm
+            algorithm=jwt_algorithm,
+            headers=header_claims
         )
         return encoded_jwt
 

@@ -41,8 +41,8 @@ class Mongo_Users:
 
     def login_for_access_token(self, form_data):
         user = self.get_user(
-            username=form_data.username
-            # username=form_data["username"],
+            username=form_data.username   # used when using FastAPI OAuth2 Form class attributes
+            # username=form_data["username"],  # used when using react form
         )
         if not user:
             raise HTTPException(
@@ -51,8 +51,8 @@ class Mongo_Users:
                 headers={"WWW-Authenticate": "Bearer"},
             )
         password_verified = auth_utils.verify_password(
-            # plain_password=form_data["password"],
-            plain_password=form_data.password,
+            # plain_password=form_data["password"],  # used when using react form
+            plain_password=form_data.password,   # used when using FastAPI OAuth2 Form class attributes
             hashed_password=user.hashed_password
         )
         if not password_verified:
@@ -64,11 +64,11 @@ class Mongo_Users:
         access_token = auth_utils.create_access_token(
             data={"sub": user.username},
         )
-        token_data = {
-            "access_token": access_token,
-            "token_type": "bearer"
+        response_headers = {
+            "Authorization": f"Bearer {access_token}",
         }
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
-            content=jsonable_encoder(token_data)
+            content=jsonable_encoder({"message": "Login successful, token generated"}),
+            headers=response_headers
         )
