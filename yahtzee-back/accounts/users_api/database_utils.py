@@ -1,5 +1,6 @@
 from pymongo import MongoClient
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Form
+from typing import Annotated
 from users_api.schema import Token, UserInDB
 from users_api.config import Settings
 from users_api.auth import AuthenticationUtilities
@@ -39,10 +40,9 @@ class Mongo_Users:
             )
         return UserInDB(**user)
 
-    def login_for_access_token(self, form_data):
+    def login_for_access_token(self, username, password):
         user = self.get_user(
-            username=form_data.username   # used when using FastAPI OAuth2 Form class attributes
-            # username=form_data["username"],  # used when using react form
+            username=username,  # used when using react form
         )
         if not user:
             raise HTTPException(
@@ -51,8 +51,7 @@ class Mongo_Users:
                 headers={"WWW-Authenticate": "Bearer"},
             )
         password_verified = auth_utils.verify_password(
-            # plain_password=form_data["password"],  # used when using react form
-            plain_password=form_data.password,   # used when using FastAPI OAuth2 Form class attributes
+            plain_password=password,  # used when using react form
             hashed_password=user.hashed_password
         )
         if not password_verified:
@@ -62,17 +61,17 @@ class Mongo_Users:
                 headers={"WWW-Authenticate": "Bearer"},
             )
         access_token, fingerprint_cookie = auth_utils.create_access_token(
-            data={
-                "sub": user.username,
-                "iss": user.id
-            },
+            data={"sub": user.username},
         )
         response_headers = {
-            "Authorization": f"Bearer {access_token}",
             "Set-Cookie": fingerprint_cookie,
         }
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
-            content=jsonable_encoder({"message": "Login successful, token generated"}),
+            content=jsonable_encoder({
+                "message": "Login successful, token generated",
+                "access_token": access_token,
+                "token_type": "Bearer"
+            }),
             headers=response_headers
         )

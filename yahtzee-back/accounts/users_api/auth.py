@@ -85,11 +85,12 @@ class Authenticator:
         user_fingerprint = None
         if req.cookies:
             cookie = req.cookies.get('__Secure-Fgp')
-            token = req.cookies.get('Authorization').split(" ")[1]
             if cookie:
                 user_fingerprint = cookie
 
         fingerprint_digest = hashlib.sha256(user_fingerprint.encode('utf-8')).hexdigest()  # noqa
+
+        token = req.headers.get("Authorization").split(" ")[1]
 
         verifier = jwt.JWTVerifier(
                 jwt_secret,

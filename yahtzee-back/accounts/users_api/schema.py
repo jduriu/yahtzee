@@ -8,6 +8,7 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 
 
 class Token(BaseModel):
+    message: str
     access_token: str
     token_type: str
 

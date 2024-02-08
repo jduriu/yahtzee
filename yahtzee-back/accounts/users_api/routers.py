@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, Request
-from users_api.schema import UserSignup, UserInDB, Token, TokenData
+from fastapi import APIRouter, Depends, Request, Form
+from users_api.schema import UserSignup, UserInDB, Token, TokenData, UserForm
 from typing import Annotated
 from users_api.database_utils import Mongo_Users
 from fastapi.security import OAuth2PasswordRequestForm
@@ -15,7 +15,7 @@ users_router = APIRouter()
 
 @users_router.post("/signup", response_model=UserInDB,)
 def signup(
-    user_form: UserSignup,
+    user_form: UserSignup,  # Need to verify this works with Next, may need to accept form data or a pydantic workaround
     database_utils: Mongo_Users = Depends(),
     response_model_by_alias=False,
 ):
@@ -24,30 +24,22 @@ def signup(
 
 @users_router.post("/authenticate", response_model=Token)
 def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    username: Annotated[str, Form(...)],
+    password: Annotated[str, Form(...)],
     database_utils: Mongo_Users = Depends(),
 ):
-    return database_utils.login_for_access_token(form_data)
+    return database_utils.login_for_access_token(username, password)
 
-
-# For use without built-in FastAPI form
-@users_router.post("/login")
-async def login(
-    request: Request,
-    database_utils: Mongo_Users = Depends()
-):
-    form_data = await request.json()
-    return database_utils.login_for_access_token(form_data)
 
 ################################################################
 #                    Protected Endpoints
 ################################################################
 
 
-@users_router.get("/user", response_model=UserInDB)
-async def get_user_me(
-    request: Request,
-    token_data: Annotated[TokenData, Depends(Authenticator())],
-    database_utils: Mongo_Users = Depends()
-):
-    return database_utils.get_user(token_data.username)
+# @users_router.get("/user", response_model=UserInDB)
+# async def get_user_me(
+#     request: Request,
+#     database_utils: Mongo_Users = Depends()
+# ):
+#     token_data = await Authenticator(request)
+#     return database_utils.get_user(token_data.username)
