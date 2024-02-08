@@ -30,6 +30,7 @@ def login_for_access_token(
     return database_utils.login_for_access_token(form_data)
 
 
+# For use without built-in FastAPI form
 @users_router.post("/login")
 async def login(
     request: Request,
@@ -44,7 +45,8 @@ async def login(
 
 
 @users_router.get("/user", response_model=UserInDB)
-def get_user_me(
+async def get_user_me(
+    request: Request,
     token_data: Annotated[TokenData, Depends(Authenticator())],
     database_utils: Mongo_Users = Depends()
 ):

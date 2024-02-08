@@ -61,11 +61,15 @@ class Mongo_Users:
                 detail="Incorrect password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        access_token = auth_utils.create_access_token(
-            data={"sub": user.username},
+        access_token, fingerprint_cookie = auth_utils.create_access_token(
+            data={
+                "sub": user.username,
+                "iss": user.id
+            },
         )
         response_headers = {
             "Authorization": f"Bearer {access_token}",
+            "Set-Cookie": fingerprint_cookie,
         }
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,

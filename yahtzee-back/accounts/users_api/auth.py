@@ -1,7 +1,7 @@
 from passlib.context import CryptContext
 from jose import jwt, JWTError
 from users_api.schema import TokenData
-from fastapi import HTTPException, Depends, status
+from fastapi import HTTPException, Depends, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
@@ -14,6 +14,7 @@ import binascii
 settings = Settings()
 jwt_secret = settings.secret_key
 jwt_algorithm = settings.algorithm
+issuer_id = settings.issuer_id
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/authenticate",
@@ -37,11 +38,11 @@ class AuthenticationUtilities:
         fingerprint_cookie = f"__Secure-Fgp={fingerprint}; SameSite=Strict; HttpOnly; Secure"
         # Compute a SHA256 hash of the fingerprint to store in the token
         fingerprint_cookie_hash = hashlib.sha256(fingerprint_cookie.encode('utf-8')).hexdigest()
-        return fingerprint_cookie_hash
+        return (fingerprint_cookie, fingerprint_cookie_hash)
 
     def create_access_token(self, data: dict):
         token_data = data.copy()  # dictionary containing "sub": username
-        fingerprint = self.generate_fingerprint()
+        fingerprint_cookie, fingerprint_hash = self.generate_fingerprint()
         now = datetime.now(timezone.utc)
         expires_delta = timedelta(settings.access_token_expire_minutes)
         expire = now + expires_delta
@@ -49,17 +50,19 @@ class AuthenticationUtilities:
         token_data.update({
             "exp": expire,  # expiration time
             'iat': now,  # issued at
+            'iss': issuer_id,
             'nbf': now,  # not before time
-            "userFingerprint": fingerprint  # unique user fingerprint
+            "userFingerprint": fingerprint_hash  # unique user fingerprint
         })
         header_claims = {"typ": "JWT"}
+        # Encode the JWT data
         encoded_jwt = jwt.encode(
             token_data,
             jwt_secret,
             algorithm=jwt_algorithm,
             headers=header_claims
         )
-        return encoded_jwt
+        return (encoded_jwt, fingerprint_cookie)
 
     # def create_refresh_token(self, expires_delta: int = None) -> str:
     #     if expires_delta is not None:
@@ -73,19 +76,31 @@ class AuthenticationUtilities:
 
 
 class Authenticator:
-    def __call__(self, token: Annotated[str, Depends(oauth2_scheme)]):
+    def __call__(self, req: Request):
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-        try:
-            payload = jwt.decode(
-                token,
+        user_fingerprint = None
+        if req.cookies:
+            cookie = req.cookies.get('__Secure-Fgp')
+            token = req.cookies.get('Authorization').split(" ")[1]
+            if cookie:
+                user_fingerprint = cookie
+
+        fingerprint_digest = hashlib.sha256(user_fingerprint.encode('utf-8')).hexdigest()  # noqa
+
+        verifier = jwt.JWTVerifier(
                 jwt_secret,
-                algorithms=[jwt_algorithm]
-            )
-            username: str = payload.get("sub")
+                algorithms=[jwt_algorithm],
+                issuer=issuer_id,
+                claim_required=('userFingerprint', fingerprint_digest)
+        )
+
+        try:
+            decoded_token = verifier.verify(token)
+            username: str = decoded_token.get("sub")
             if username is None:
                 raise credentials_exception
         except JWTError:
