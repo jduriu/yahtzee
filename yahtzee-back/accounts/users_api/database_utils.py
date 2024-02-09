@@ -42,7 +42,7 @@ class Mongo_Users:
 
     def login_for_access_token(self, username, password):
         user = self.get_user(
-            username=username,  # used when using react form
+            username=username,
         )
         if not user:
             raise HTTPException(
@@ -51,7 +51,7 @@ class Mongo_Users:
                 headers={"WWW-Authenticate": "Bearer"},
             )
         password_verified = auth_utils.verify_password(
-            plain_password=password,  # used when using react form
+            plain_password=password,
             hashed_password=user.hashed_password
         )
         if not password_verified:
@@ -66,11 +66,15 @@ class Mongo_Users:
         response_headers = {
             "Set-Cookie": fingerprint_cookie,
         }
+        refresh_token = auth_utils.create_refresh_token(
+            data={"sub": user.username},
+        )
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content=jsonable_encoder({
                 "message": "Login successful, token generated",
                 "access_token": access_token,
+                "refresh_token": refresh_token,
                 "token_type": "Bearer"
             }),
             headers=response_headers

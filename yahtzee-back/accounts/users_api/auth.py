@@ -12,9 +12,12 @@ import binascii
 
 
 settings = Settings()
-jwt_secret = settings.secret_key
+jwt_access_secret = settings.access_secret_key
+jwt_refresh_secret = settings.refresh_secret_key
 jwt_algorithm = settings.algorithm
 issuer_id = settings.issuer_id
+access_expire = settings.access_token_expire_minutes
+refresh_expire = settings.refresh_token_expire_minutes
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/authenticate",
@@ -44,7 +47,7 @@ class AuthenticationUtilities:
         token_data = data.copy()  # dictionary containing "sub": username
         fingerprint_cookie, fingerprint_hash = self.generate_fingerprint()
         now = datetime.now(timezone.utc)
-        expires_delta = timedelta(settings.access_token_expire_minutes)
+        expires_delta = timedelta(access_expire)
         expire = now + expires_delta
 
         token_data.update({
@@ -56,23 +59,30 @@ class AuthenticationUtilities:
         })
         header_claims = {"typ": "JWT"}
         # Encode the JWT data
-        encoded_jwt = jwt.encode(
+        encoded_access_jwt = jwt.encode(
             token_data,
-            jwt_secret,
+            jwt_access_secret,
             algorithm=jwt_algorithm,
             headers=header_claims
         )
-        return (encoded_jwt, fingerprint_cookie)
+        return (encoded_access_jwt, fingerprint_cookie)
 
-    # def create_refresh_token(self, expires_delta: int = None) -> str:
-    #     if expires_delta is not None:
-    #         expires_delta = datetime.utcnow() + expires_delta
-    #     else:
-    #         expires_delta = datetime.utcnow() + timedelta(minutes=refresh_token_expiration_min)
-
-    #     to_encode = {"exp": expires_delta, "sub": str(subject), "role": role }
-    #     encoded_jwt = jwt.encode(to_encode, jwt_refresh_secret_key, signing_algo)
-    #     return encoded_jwt
+    def create_refresh_token(self, data: dict) -> str:
+        token_data = data.copy()  # dictionary containing "sub": username
+        now = datetime.utcnow()
+        expire = now + timedelta(refresh_expire)
+        token_data.update({
+            "exp": expire,  # expiration time
+            'iat': now,  # issued at
+            'iss': issuer_id,
+            'nbf': now,  # not before time
+        })
+        encoded_refresh_jwt = jwt.encode(
+            token_data,
+            jwt_refresh_secret,
+            algorithm=jwt_algorithm
+        )
+        return encoded_refresh_jwt
 
 
 class Authenticator:
@@ -93,7 +103,7 @@ class Authenticator:
         token = req.headers.get("Authorization").split(" ")[1]
 
         verifier = jwt.JWTVerifier(
-                jwt_secret,
+                jwt_access_secret,
                 algorithms=[jwt_algorithm],
                 issuer=issuer_id,
                 claim_required=('userFingerprint', fingerprint_digest)
