@@ -10,6 +10,7 @@
   --accent-2: #75ABBC;
 }
 
+
 body {
   color: var(--foreground);
   background: linear-gradient(

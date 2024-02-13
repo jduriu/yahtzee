@@ -1,13 +1,15 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
+import Button from "@/app/(game)/_components/Button";
 
 interface Dice {
   name: string;
   value: number;
-  setter: (num: number) => void;
+  set: (num: number) => void;
   open: boolean;
 }
+
 
 
 export default function DiceRoller() {
@@ -20,31 +22,31 @@ export default function DiceRoller() {
     {
       "name": "d1",
       "value": diceOne,
-      "setter": (num: number) => setDiceOne(num),
+      "set": (num: number) => setDiceOne(num),
       "open": true
     },
     {
       "name": "d2",
       "value": diceTwo,
-      "setter": (num: number) => setDiceOne(num),
+      "set": (num: number) => setDiceTwo(num),
       "open": true
     },
     {
       "name": "d3",
       "value": diceThree,
-      "setter": (num: number) => setDiceOne(num),
+      "set": (num: number) => setDiceThree(num),
       "open": true
     },
     {
       "name": "d4",
       "value": diceFour,
-      "setter": (num: number) => setDiceOne(num),
+      "set": (num: number) => setDiceFour(num),
       "open": true
     },
     {
       "name": "d5",
       "value": diceFive,
-      "setter": (num: number) => setDiceOne(num),
+      "set": (num: number) => setDiceFive(num),
       "open": true
     },
   ]
@@ -54,13 +56,18 @@ export default function DiceRoller() {
     return Math.round(randomNum)
   }
 
-  const rollOpenDice = (dice: Dice[]) => {
-    dice.map(diceProps => {
-      if (diceProps.open) {
+  const rollOpenDice = () => {
+    for (let die of dice) {
+      if (die["open"]) {
         const newDiceValue = diceRoll()
-        diceProps.setter(newDiceValue)
+        die.set(newDiceValue)
       }
-    })
+    }
+  }
+
+  const rollButtonProps = {
+    name: "Roll",
+    style: "small"
   }
 
 
@@ -73,10 +80,15 @@ export default function DiceRoller() {
       gap-10"
       >
         {dice.map(diceProps =>
-          <div key={diceProps.name}>{diceProps.value}</div>
+          <div
+            key={diceProps.name}
+            // className={{}}
+          >
+            {diceProps.value}
+          </div>
         )}
       </div>
-      <div>Button</div>
+      <Button action={rollOpenDice} buttonProps={rollButtonProps}/>
     </div>
   )
 }

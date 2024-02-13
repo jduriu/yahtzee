@@ -8,7 +8,7 @@ export default function GameLayout({
   children: React.ReactNode
 }) {
   return (
-    <body className="w-screen h-screen">
+    <body className="h-screen">
       <div className="w-full h-full flex flex-col justify-between">
         <Header/>
         <main className="h-full">
