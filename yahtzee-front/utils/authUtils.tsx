@@ -27,9 +27,9 @@ export function setRefreshToken(refreshToken: string) {
 // Token authentication class for client
 export function TokenAuth() {
   async function login(username: string, password: string) {
-    const form = new FormData();
-    form.append("username", username);
-    form.append("password", password);
+    const form = new FormData()
+    form.append("username", username)
+    form.append("password", password)
     const url = "http://localhost:8000/authenticate"
 
     try {
@@ -40,12 +40,13 @@ export function TokenAuth() {
       })
       if (response.ok) {
         const data = await response.json()
-        setJwtToken(data.access_token);
-        return data.message;
+        setJwtToken(data.access_token)
+        setRefreshToken(data.refresh_token)
+        return data.message
 
       }
     } catch (error) {
-      return errorHandler(error);
+      return errorHandler(error)
     }
   }
 
