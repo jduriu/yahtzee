@@ -8,46 +8,55 @@ interface Dice {
   value: number;
   set: (num: number) => void;
   open: boolean;
+  changeStatus: () => void;
 }
 
-
-
 export default function DiceRoller() {
-  const [diceOne, setDiceOne] = useState(1)
-  const [diceTwo, setDiceTwo] = useState(1)
-  const [diceThree, setDiceThree] = useState(1)
-  const [diceFour, setDiceFour] = useState(1)
-  const [diceFive, setDiceFive] = useState(1)
+  const [diceOne, setDiceOne] = useState(0)
+  const [diceOneOpen, setDiceOneOpen] = useState(true)
+  const [diceTwo, setDiceTwo] = useState(0)
+  const [diceTwoOpen, setDiceTwoOpen] = useState(true)
+  const [diceThree, setDiceThree] = useState(0)
+  const [diceThreeOpen, setDiceThreeOpen] = useState(true)
+  const [diceFour, setDiceFour] = useState(0)
+  const [diceFourOpen, setDiceFourOpen] = useState(true)
+  const [diceFive, setDiceFive] = useState(0)
+  const [diceFiveOpen, setDiceFiveOpen] = useState(true)
   const dice: Dice[] = [
     {
       "name": "d1",
       "value": diceOne,
       "set": (num: number) => setDiceOne(num),
-      "open": true
+      "open": diceOneOpen,
+      "changeStatus": () => setDiceOneOpen(!diceOneOpen)
     },
     {
       "name": "d2",
       "value": diceTwo,
       "set": (num: number) => setDiceTwo(num),
-      "open": true
+      "open": diceTwoOpen,
+      "changeStatus": () => setDiceTwoOpen(!diceTwoOpen)
     },
     {
       "name": "d3",
       "value": diceThree,
       "set": (num: number) => setDiceThree(num),
-      "open": true
+      "open": diceThreeOpen,
+      "changeStatus": () => setDiceThreeOpen(!diceThreeOpen)
     },
     {
       "name": "d4",
       "value": diceFour,
       "set": (num: number) => setDiceFour(num),
-      "open": true
+      "open": diceFourOpen,
+      "changeStatus": () => setDiceFourOpen(!diceFourOpen)
     },
     {
       "name": "d5",
       "value": diceFive,
       "set": (num: number) => setDiceFive(num),
-      "open": true
+      "open": diceFiveOpen,
+      "changeStatus": () => setDiceFiveOpen(!diceFiveOpen)
     },
   ]
 
@@ -65,6 +74,7 @@ export default function DiceRoller() {
     }
   }
 
+
   const rollButtonProps = {
     name: "Roll",
     style: "small"
@@ -79,13 +89,22 @@ export default function DiceRoller() {
       flex items-center justify-center
       gap-10"
       >
-        {dice.map(diceProps =>
-          <div
-            key={diceProps.name}
-            // className={{}}
+        {dice.map(die =>
+          die.open ?
+          <button
+            key={die.name}
+            onClick={die.changeStatus}
           >
-            {diceProps.value}
-          </div>
+            {die.value}
+          </button>
+          :
+          <button
+            key={die.name}
+            className="-translate-y-2"
+            onClick={die.changeStatus}
+          >
+            {die.value}
+          </button>
         )}
       </div>
       <Button action={rollOpenDice} buttonProps={rollButtonProps}/>
