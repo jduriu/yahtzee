@@ -12,6 +12,7 @@ interface Dice {
 }
 
 export default function DiceRoller() {
+  const [rollsRemaining, setRollsRemaining] = useState(3)
   const [diceOne, setDiceOne] = useState(0)
   const [diceOneOpen, setDiceOneOpen] = useState(true)
   const [diceTwo, setDiceTwo] = useState(0)
@@ -72,42 +73,42 @@ export default function DiceRoller() {
         die.set(newDiceValue)
       }
     }
+    setRollsRemaining(rollsRemaining - 1)
+  }
+
+  const recordScore = () => {
+    // Send POST request to yahtzee api to record turn
+    return
   }
 
 
-  const rollButtonProps = {
-    name: "Roll",
-    style: "small"
-  }
+  const rollButtonProps = {name: "Roll", style: "large"}
+  const scoreButtonProps = {name: "Score", style: "small"}
 
 
   return (
     <div className="w-full h-full flex flex-col gap-3 items-center justify-center p-5">
-      <div className="self-start">Dice Values</div>
-      <div
-      className="w-full h-[100px]
-      flex items-center justify-center
-      gap-10"
-      >
+      <div className="self-start">Rolls Remaining: {rollsRemaining}</div>
+      <div className="w-full h-[100px] flex items-center justify-center gap-20 text-xl">
         {dice.map(die =>
           die.open ?
-          <button
-            key={die.name}
-            onClick={die.changeStatus}
-          >
-            {die.value}
-          </button>
+            <button key={die.name} onClick={die.changeStatus}>
+              {die.value}
+            </button>
           :
-          <button
-            key={die.name}
-            className="-translate-y-2"
-            onClick={die.changeStatus}
-          >
-            {die.value}
-          </button>
+            <button key={die.name} className="-translate-y-3 font-bold" onClick={die.changeStatus}>
+              {die.value}
+            </button>
         )}
       </div>
-      <Button action={rollOpenDice} buttonProps={rollButtonProps}/>
+      <div className="w-full flex gap-10 items-center justify-center">
+        {rollsRemaining ?
+          <Button action={rollOpenDice} buttonProps={rollButtonProps}/>
+          :
+          null
+        }
+        <Button action={recordScore} buttonProps={scoreButtonProps}/>
+      </div>
     </div>
   )
 }
