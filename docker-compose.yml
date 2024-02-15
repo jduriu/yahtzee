@@ -1,0 +1,95 @@
+volumes:
+  yahztee_db:
+    external: true
+  # accounts_db:
+  #   external: true
+
+services:
+# *********** DATABASE SERVICES ***********
+  mongodb-yahtzee:
+    image: mongo:latest
+    ports:
+      - 27017:27017  # left side exposed to network, right side internal on container
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=yahtzee_user  # hide in deployment yml
+      - MONGO_INITDB_ROOT_PASSWORD=yahtzee_pass  # hide in deployment yml
+    volumes:
+      - yahztee_db:/data/db
+
+  # mongodb-accounts:
+  #   image: mongo:latest
+  #   ports:
+  #     - 27018:27017
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=accounts_user  # hide in deployment yml
+  #     - MONGO_INITDB_ROOT_PASSWORD=accounts_pass  # hide in deployment yml
+
+# *********** API SERVICES ***********
+  # yahztee-api:
+  #   build:
+  #     context: ./yahztee-back/yahtzee
+  #     dockerfile: ./Dockerfile.dev  # define image and build commands
+  #   ports:
+  #     - 8000:8000
+  #   volumes:
+  #     - ./yahtzee-back/yahtzee:/app
+  #   depends_on:
+  #     - mongodb_yahtzee
+  #   environment:
+  #     DATABASE_URL: mongodb_yahtzee://yahztee_user:yahztee_pass@mongodb  # default collection/db?
+  #     ACCOUNTS_API_HOST: http://localhost:8001
+  #     # NEED TO RESOLVE WHERE ENV VARIABLES SHOULD GO, MAYBE SHIFT EVERYTHING TO APP .env?
+
+  # accounts-api:
+  #   build:
+  #     context: ./yahztee-back/accounts
+  #     dockerfile: ./Dockerfile.dev
+  #   ports:
+  #     - 8001:8000
+  #   volumes:
+  #     - ./yahtzee-back/accounts:/app
+  #   depends_on:
+  #     - mongodb_accounts
+  #   environment:
+  #     DATABASE_URL: mongodb_accounts://accounts_user:accounts_pass@mongodb # default collection/db?
+  #     YAHTZEE_API_HOST: http://localhost:8000
+  #     # NEED TO RESOLVE WHERE ENV VARIABLES SHOULD GO, MAYBE SHIFT EVERYTHING TO APP .env?
+
+# *********** FRONTEND SERVICES ***********
+  # next-app:
+  #   image: node:lts-bullseye
+  #   build:
+  #     context: ./yahtzee_front
+  #     dockerfile: ./Dockerfile.dev
+  #   working_dir: /app
+  #   volumes:
+  #     - ./next-app:/app # consider storing dev app in src to separate from prod build
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     HOST_OS: ${OS}
+  #     NODE_ENV: development
+  #     HOST: "0.0.0.0"
+  #     PUBLIC_URL: http://localhost:3000
+  #     YAHTZEE_API_HOST: http://localhost:8000
+  #     ACCOUNTS_API_HOST: http://localhost:8001
+
+  # mongo-express-yahtzee:
+  #   image: mongo-express
+  #   restart: always
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: yahtzee_user
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: yahtzee_pass
+  #     ME_CONFIG_MONGODB_URL: mongodb_yahztee://yahztee_user:yahztee_pass@mongo:27017/
+
+  # mongo-express-accounts:
+  #   image: mongo-express
+  #   restart: always
+  #   ports:
+  #     - 8082:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: accounts_user
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: accounts_pass
+  #     ME_CONFIG_MONGODB_URL: mongodb_accounts://accounts_user:accounts_pass@mongo:27018/  # might need to change port if yahztee works and this one doesn't
