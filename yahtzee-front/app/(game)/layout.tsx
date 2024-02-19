@@ -15,7 +15,7 @@ export default function GameLayout({
     <body className={inter.className + "w-screen h-screen"}>
       <div className="w-full h-full flex flex-col justify-between">
         <Header/>
-        <main className="h-full">
+        <main className="h-full w-full">
           {children}
         </main>
         <Footer/>
