@@ -12,7 +12,7 @@ auth_utils = AuthenticationUtilities()
 
 db_url = os.environ.get("DATABASE_URL")
 client = MongoClient(db_url, uuidRepresentation="standard")
-db = client.yahtzee_database.users
+db = client.accounts.users
 
 
 class Mongo_Users:

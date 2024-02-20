@@ -7,7 +7,7 @@ import os
 
 db_url = os.environ.get("DATABASE_URL")
 client = MongoClient(db_url, uuidRepresentation="standard")
-db = client.yahtzee_database.games
+db = client.yahtzee.games
 
 
 class Mongo_Games:
