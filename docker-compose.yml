@@ -1,21 +1,21 @@
-# volumes:
-#   yahtzee_db:
-#     external: true
-#   accounts_db:
-#     external: true
+volumes:
+  yahtzee_db:
+    external: true
+  accounts_db:
+    external: true
 
 services:
 # *********** DATABASE SERVICES ***********
-  # mongodb-yahtzee:
-  #   container_name: mongodb-yahtzee
-  #   image: mongo:latest
-  #   ports:
-  #     - 27017:27017  # left side exposed to network, right side internal on container
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=yahtzee_user  # hide in deployment yml
-  #     - MONGO_INITDB_ROOT_PASSWORD=yahtzee_pass  # hide in deployment yml
-  #   volumes:
-  #     - yahtzee_db:/data/db
+  mongodb-yahtzee:
+    container_name: mongodb-yahtzee
+    image: mongo:latest
+    ports:
+      - 27017:27017  # left side exposed to network, right side internal on container
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=yahtzee_user  # hide in deployment yml
+      - MONGO_INITDB_ROOT_PASSWORD=yahtzee_pass  # hide in deployment yml
+    volumes:
+      - yahtzee_db:/data/db
 
   # mongodb-accounts:
   #   image: mongo:latest
@@ -28,35 +28,35 @@ services:
   #     - accounts_db:/data/db
 
 # *********** API SERVICES ***********
-  # yahtzee-api:
-  #   build:
-  #     context: ./yahtzee-back/yahtzee
-  #     dockerfile: ./Dockerfile.dev  # define image and build commands
-  #   ports:
-  #     - 8000:8000
-  #   volumes:
-  #     - ./yahtzee-back/yahtzee:/app
-  #   # depends_on:
-  #   #   - mongodb-yahtzee
-  #   environment:
-  #     DATABASE_URL: mongodb://yahtzee_user:yahtzee_pass@mongodb_yahtzee  # default collection/db?
-  #     ACCOUNTS_API_HOST: http://localhost:8001
-  #     # NEED TO RESOLVE WHERE ENV VARIABLES SHOULD GO, MAYBE SHIFT EVERYTHING TO APP .env?
-
-  accounts-api:
+  yahtzee-api:
     build:
-      context: ./yahtzee-back/accounts
-      dockerfile: ./Dockerfile.dev
+      context: ./yahtzee-back/yahtzee
+      dockerfile: ./Dockerfile.dev  # define image and build commands
     ports:
-      - 8001:8000
+      - 8000:8000
     volumes:
-      - ./yahtzee-back/accounts:/app
+      - ./yahtzee-back/yahtzee:/app
     # depends_on:
-    #   - mongodb-accounts
+    #   - mongodb-yahtzee
     environment:
-      DATABASE_URL: mongodb://accounts_user:accounts_pass@mongodb_accounts # default collection/db?
-      YAHTZEE_API_HOST: http://localhost:8000
+      DATABASE_URL: mongodb://yahtzee_user:yahtzee_pass@mongodb-yahtzee  # default collection/db?
+      ACCOUNTS_API_HOST: http://localhost:8001
       # NEED TO RESOLVE WHERE ENV VARIABLES SHOULD GO, MAYBE SHIFT EVERYTHING TO APP .env?
+
+  # accounts-api:
+  #   build:
+  #     context: ./yahtzee-back/accounts
+  #     dockerfile: ./Dockerfile.dev
+  #   ports:
+  #     - 8001:8000
+  #   volumes:
+  #     - ./yahtzee-back/accounts:/app
+  #   # depends_on:
+  #   #   - mongodb-accounts
+  #   environment:
+  #     DATABASE_URL: mongodb://accounts_user:accounts_pass@mongodb_accounts # default collection/db?
+  #     YAHTZEE_API_HOST: http://localhost:8000
+  #     # NEED TO RESOLVE WHERE ENV VARIABLES SHOULD GO, MAYBE SHIFT EVERYTHING TO APP .env?
 
 # *********** FRONTEND SERVICES ***********
   # next-app:
@@ -77,21 +77,14 @@ services:
   #     YAHTZEE_API_HOST: http://localhost:8000
   #     ACCOUNTS_API_HOST: http://localhost:8001
 
-  # busybox:
-  #   image: bbox
-  #   build:
-  #     dockerfile: ./tmp/Dockerfile
-  #   ports:
-  #     - 8083:8083
-
-  # mongo-express-yahtzee:
-  #   image: mongo-express
-  #   ports:
-  #     - 8081:8081
-  #   environment:
-  #     ME_CONFIG_MONGODB_ADMINUSERNAME: yahtzee_user
-  #     ME_CONFIG_MONGODB_ADMINPASSWORD: yahtzee_pass
-  #     ME_CONFIG_MONGODB_SERVER: mongodb-yahtzee
+  mongo-express-yahtzee:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: yahtzee_user
+      ME_CONFIG_MONGODB_ADMINPASSWORD: yahtzee_pass
+      ME_CONFIG_MONGODB_SERVER: mongodb-yahtzee
 
   # mongo-express-accounts:
   #   image: mongo-express
@@ -102,3 +95,13 @@ services:
   #     ME_CONFIG_MONGODB_ADMINPASSWORD: accounts_pass
   #     ME_CONFIG_MONGODB_SERVER: mongodb-accounts
   #     # ME_CONFIG_MONGODB_PORT: 27018
+
+
+# *********** DEVELOPMENT SERVICES ***********
+# Non-closing ubuntu service to test bridge network mapping
+  # busybox:
+  #   image: bbox
+  #   build:
+  #     dockerfile: ./tmp/Dockerfile
+  #   ports:
+  #     - 8083:8083
