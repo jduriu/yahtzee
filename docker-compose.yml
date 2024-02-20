@@ -1,28 +1,31 @@
 volumes:
-  yahztee_db:
+  yahtzee_db:
     external: true
-  # accounts_db:
-  #   external: true
+  accounts_db:
+    external: true
 
 services:
 # *********** DATABASE SERVICES ***********
-  mongodb-yahtzee:
-    image: mongo:latest
-    ports:
-      - 27017:27017  # left side exposed to network, right side internal on container
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=yahtzee_user  # hide in deployment yml
-      - MONGO_INITDB_ROOT_PASSWORD=yahtzee_pass  # hide in deployment yml
-    volumes:
-      - yahztee_db:/data/db
-
-  # mongodb-accounts:
+  # mongodb-yahtzee:
+  #   container_name: mongodb-yahtzee
   #   image: mongo:latest
   #   ports:
-  #     - 27018:27017
+  #     - 27017:27017  # left side exposed to network, right side internal on container
   #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=accounts_user  # hide in deployment yml
-  #     - MONGO_INITDB_ROOT_PASSWORD=accounts_pass  # hide in deployment yml
+  #     - MONGO_INITDB_ROOT_USERNAME=yahtzee_user  # hide in deployment yml
+  #     - MONGO_INITDB_ROOT_PASSWORD=yahtzee_pass  # hide in deployment yml
+  #   volumes:
+  #     - yahtzee_db:/data/db
+
+  mongodb-accounts:
+    image: mongo:latest
+    ports:
+      - 27018:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=accounts_user  # hide in deployment yml
+      - MONGO_INITDB_ROOT_PASSWORD=accounts_pass  # hide in deployment yml
+    volumes:
+      - accounts_db:/data/db
 
 # *********** API SERVICES ***********
   # yahztee-api:
@@ -73,23 +76,28 @@ services:
   #     PUBLIC_URL: http://localhost:3000
   #     YAHTZEE_API_HOST: http://localhost:8000
   #     ACCOUNTS_API_HOST: http://localhost:8001
+  busybox:
+    image: bbox
+    build:
+      dockerfile: ./tmp/Dockerfile
+    ports:
+      - 8083:8083
 
   # mongo-express-yahtzee:
   #   image: mongo-express
-  #   restart: always
   #   ports:
   #     - 8081:8081
   #   environment:
   #     ME_CONFIG_MONGODB_ADMINUSERNAME: yahtzee_user
   #     ME_CONFIG_MONGODB_ADMINPASSWORD: yahtzee_pass
-  #     ME_CONFIG_MONGODB_URL: mongodb_yahztee://yahztee_user:yahztee_pass@mongo:27017/
+  #     ME_CONFIG_MONGODB_SERVER: mongodb-yahtzee
 
-  # mongo-express-accounts:
-  #   image: mongo-express
-  #   restart: always
-  #   ports:
-  #     - 8082:8081
-  #   environment:
-  #     ME_CONFIG_MONGODB_ADMINUSERNAME: accounts_user
-  #     ME_CONFIG_MONGODB_ADMINPASSWORD: accounts_pass
-  #     ME_CONFIG_MONGODB_URL: mongodb_accounts://accounts_user:accounts_pass@mongo:27018/  # might need to change port if yahztee works and this one doesn't
+  mongo-express-accounts:
+    image: mongo-express
+    ports:
+      - 8082:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: accounts_user
+      ME_CONFIG_MONGODB_ADMINPASSWORD: accounts_pass
+      ME_CONFIG_MONGODB_SERVER: mongodb-accounts
+      # ME_CONFIG_MONGODB_PORT: 27018
