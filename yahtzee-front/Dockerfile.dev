@@ -3,11 +3,10 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json ./
+COPY package.json .
 RUN npm i
 COPY app ./app
 COPY public ./public
-COPY global_components ./global_components
 COPY utils ./utils
 COPY next.config.js .
 COPY tsconfig.json .
