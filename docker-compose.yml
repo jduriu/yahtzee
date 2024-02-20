@@ -6,56 +6,56 @@ volumes:
 
 services:
 # *********** DATABASE SERVICES ***********
-  # mongodb-yahtzee:
-  #   container_name: mongodb-yahtzee
-  #   image: mongo:latest
-  #   ports:
-  #     - 27017:27017  # left side exposed to network, right side internal on container
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=yahtzee_user  # hide in deployment yml
-  #     - MONGO_INITDB_ROOT_PASSWORD=yahtzee_pass  # hide in deployment yml
-  #   volumes:
-  #     - yahtzee_db:/data/db
+  mongodb-yahtzee:
+    container_name: mongodb-yahtzee
+    image: mongo:latest
+    ports:
+      - 27017:27017  # left side exposed to network, right side internal on container
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=yahtzee_user  # hide in deployment yml
+      - MONGO_INITDB_ROOT_PASSWORD=yahtzee_pass  # hide in deployment yml
+    volumes:
+      - yahtzee_db:/data/db
 
-  # mongodb-accounts:
-  #   container_name: mongodb-accounts
-  #   image: mongo:latest
-  #   ports:
-  #     - 27018:27017
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=accounts_user  # hide in deployment yml
-  #     - MONGO_INITDB_ROOT_PASSWORD=accounts_pass  # hide in deployment yml
-  #   volumes:
-  #     - accounts_db:/data/db
+  mongodb-accounts:
+    container_name: mongodb-accounts
+    image: mongo:latest
+    ports:
+      - 27018:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=accounts_user  # hide in deployment yml
+      - MONGO_INITDB_ROOT_PASSWORD=accounts_pass  # hide in deployment yml
+    volumes:
+      - accounts_db:/data/db
 
 # *********** API SERVICES ***********
-  # yahtzee-api:
-  #   build:
-  #     context: ./yahtzee-back/yahtzee
-  #     dockerfile: ./Dockerfile.dev
-  #   ports:
-  #     - 8000:8000
-  #   volumes:
-  #     - ./yahtzee-back/yahtzee:/app
-  #   depends_on:
-  #     - mongodb-yahtzee
-  #   environment:
-  #     DATABASE_URL: mongodb://yahtzee_user:yahtzee_pass@mongodb-yahtzee
-  #     ACCOUNTS_API_HOST: http://localhost:8001
+  yahtzee-api:
+    build:
+      context: ./yahtzee-back/yahtzee
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - 8000:8000
+    volumes:
+      - ./yahtzee-back/yahtzee:/app
+    depends_on:
+      - mongodb-yahtzee
+    environment:
+      DATABASE_URL: mongodb://yahtzee_user:yahtzee_pass@mongodb-yahtzee
+      ACCOUNTS_API_HOST: http://localhost:8001
 
-  # accounts-api:
-  #   build:
-  #     context: ./yahtzee-back/accounts
-  #     dockerfile: ./Dockerfile.dev
-  #   ports:
-  #     - 8001:8000
-  #   volumes:
-  #     - ./yahtzee-back/accounts:/app
-  #   depends_on:
-  #     - mongodb-accounts
-  #   environment:
-  #     DATABASE_URL: mongodb://accounts_user:accounts_pass@mongodb-accounts
-  #     YAHTZEE_API_HOST: http://localhost:8000
+  accounts-api:
+    build:
+      context: ./yahtzee-back/accounts
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - 8001:8000
+    volumes:
+      - ./yahtzee-back/accounts:/app
+    depends_on:
+      - mongodb-accounts
+    environment:
+      DATABASE_URL: mongodb://accounts_user:accounts_pass@mongodb-accounts
+      YAHTZEE_API_HOST: http://localhost:8000
 
 # *********** FRONTEND SERVICES ***********
   next-app:
@@ -75,24 +75,24 @@ services:
       YAHTZEE_API_HOST: http://localhost:8000
       ACCOUNTS_API_HOST: http://localhost:8001
 
-  # mongo-express-yahtzee:
-  #   image: mongo-express
-  #   ports:
-  #     - 8081:8081
-  #   environment:
-  #     ME_CONFIG_MONGODB_ADMINUSERNAME: yahtzee_user
-  #     ME_CONFIG_MONGODB_ADMINPASSWORD: yahtzee_pass
-  #     ME_CONFIG_MONGODB_SERVER: mongodb-yahtzee
+  mongo-express-yahtzee:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: yahtzee_user
+      ME_CONFIG_MONGODB_ADMINPASSWORD: yahtzee_pass
+      ME_CONFIG_MONGODB_SERVER: mongodb-yahtzee
 
-  # mongo-express-accounts:
-  #   image: mongo-express
-  #   ports:
-  #     - 8082:8081
-  #   environment:
-  #     ME_CONFIG_MONGODB_ADMINUSERNAME: accounts_user
-  #     ME_CONFIG_MONGODB_ADMINPASSWORD: accounts_pass
-  #     ME_CONFIG_MONGODB_SERVER: mongodb-accounts
-  #     # ME_CONFIG_MONGODB_PORT: 27018  # WHY DONT WE NEED TO SPECIFY THIS????
+  mongo-express-accounts:
+    image: mongo-express
+    ports:
+      - 8082:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: accounts_user
+      ME_CONFIG_MONGODB_ADMINPASSWORD: accounts_pass
+      ME_CONFIG_MONGODB_SERVER: mongodb-accounts
+      # ME_CONFIG_MONGODB_PORT: 27018  # WHY DONT WE NEED TO SPECIFY THIS????
 
 
 # *********** DEVELOPMENT SERVICES ***********
