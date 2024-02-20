@@ -1,12 +1,17 @@
 FROM python:3.9
 
-WORKDIR /code
+RUN python -m pip install --upgrade pip
 
-COPY requirements.txt /code/requirements.txt
+WORKDIR /deps
 
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+COPY requirements.txt requirements.txt
 
-COPY users_api /code/users_api
-COPY main.py /code/
+RUN python -m pip install -r requirements.txt
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+## These are not needed until production dockerfile since we are using local app storage for development
+# COPY users_api /code/users_api
+# COPY main.py /code/
+
+WORKDIR /app
+
+CMD uvicorn main:app --reload --host 0.0.0.0

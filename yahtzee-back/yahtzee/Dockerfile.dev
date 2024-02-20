@@ -12,7 +12,7 @@ COPY requirements.txt requirements.txt
 RUN python -m pip install -r requirements.txt
 
 
-## These are not needed until production dockerfile since we are using local app storage
+## These are not needed until production dockerfile since we are using local app storage for development
 # COPY games_api /code/games_api
 # COPY scorecards_api /code/scorecards_api
 # COPY main.py /code/
@@ -20,4 +20,4 @@ RUN python -m pip install -r requirements.txt
 # change working directory to /app
 WORKDIR /app
 
-CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0"]
+CMD uvicorn main:app --reload --host 0.0.0.0

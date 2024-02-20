@@ -28,35 +28,35 @@ services:
   #     - accounts_db:/data/db
 
 # *********** API SERVICES ***********
-  yahtzee-api:
-    build:
-      context: ./yahtzee-back/yahtzee
-      dockerfile: ./Dockerfile.dev  # define image and build commands
-    ports:
-      - 8000:8000
-    volumes:
-      - ./yahtzee-back/yahtzee:/app
-    # depends_on:
-    #   - mongodb-yahtzee
-    environment:
-      DATABASE_URL: mongodb://yahtzee_user:yahtzee_pass@mongodb_yahtzee  # default collection/db?
-      ACCOUNTS_API_HOST: http://localhost:8001
-      # NEED TO RESOLVE WHERE ENV VARIABLES SHOULD GO, MAYBE SHIFT EVERYTHING TO APP .env?
-
-  # accounts-api:
+  # yahtzee-api:
   #   build:
-  #     context: ./yahtzee-back/accounts
-  #     dockerfile: ./Dockerfile.dev
+  #     context: ./yahtzee-back/yahtzee
+  #     dockerfile: ./Dockerfile.dev  # define image and build commands
   #   ports:
-  #     - 8001:8000
+  #     - 8000:8000
   #   volumes:
-  #     - ./yahtzee-back/accounts:/app
+  #     - ./yahtzee-back/yahtzee:/app
   #   # depends_on:
-  #   #   - mongodb-accounts
+  #   #   - mongodb-yahtzee
   #   environment:
-  #     DATABASE_URL: mongodb://accounts_user:accounts_pass@mongodb_accounts # default collection/db?
-  #     YAHTZEE_API_HOST: http://localhost:8000
+  #     DATABASE_URL: mongodb://yahtzee_user:yahtzee_pass@mongodb_yahtzee  # default collection/db?
+  #     ACCOUNTS_API_HOST: http://localhost:8001
   #     # NEED TO RESOLVE WHERE ENV VARIABLES SHOULD GO, MAYBE SHIFT EVERYTHING TO APP .env?
+
+  accounts-api:
+    build:
+      context: ./yahtzee-back/accounts
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - 8001:8000
+    volumes:
+      - ./yahtzee-back/accounts:/app
+    # depends_on:
+    #   - mongodb-accounts
+    environment:
+      DATABASE_URL: mongodb://accounts_user:accounts_pass@mongodb_accounts # default collection/db?
+      YAHTZEE_API_HOST: http://localhost:8000
+      # NEED TO RESOLVE WHERE ENV VARIABLES SHOULD GO, MAYBE SHIFT EVERYTHING TO APP .env?
 
 # *********** FRONTEND SERVICES ***********
   # next-app:
