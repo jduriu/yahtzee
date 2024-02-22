@@ -26,11 +26,13 @@ export function setRefreshToken(refreshToken: string) {
 
 // Token authentication class for client
 export function TokenAuth() {
+  const authClient = process.env.ACCOUNTS_API_HOST
+
   async function login(username: string, password: string) {
     const form = new FormData()
     form.append("username", username)
     form.append("password", password)
-    const url = "http://localhost:8000/authenticate"
+    const url = `${authClient}/authenticate`
 
     try {
       const response = await fetch(url, {

@@ -11,9 +11,10 @@ export default function Play() {
   // Make API call to obtain current turn and scorecard
   // Send turn data to diceboard and scorecard
   // Initialize a new turn in the diceboard
-  //
-  const turnUrl = "http://localhost:8000/turns"
-  const scorecardUrl = "http://localhost:8000/scorecards"
+  const yahtzeeClient = process.env.YAHTZEE_API_HOST
+
+  const turnUrl = `${yahtzeeClient}/turns`
+  const scorecardUrl = `${yahtzeeClient}/scorecards`
 
   // const getCurrentTurn = async () => {
   //   const turn = await fetch(turnUrl, {

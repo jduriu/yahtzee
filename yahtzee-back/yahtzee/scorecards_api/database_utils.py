@@ -2,9 +2,11 @@ from pymongo import MongoClient
 from bson import ObjectId
 from fastapi import HTTPException, Response, status
 from pymongo import ReturnDocument
+import os
 
-client = MongoClient("localhost", 27017)
-db = client.yahtzee_database.scorecards
+db_url = os.environ.get("DATABASE_URL")
+client = MongoClient(db_url, uuidRepresentation="standard")
+db = client.yahtzee.scorecards
 
 
 class Mongo_Scorecards:

@@ -20,9 +20,9 @@ class UserForm(BaseModel):
 
 class UserSignup(BaseModel):
     username: str
-    email: str | None = None
+    email: Optional[str] = None
     password: str
-    full_name: str | None = None
+    full_name: Optional[str] = None
     disabled: Optional[bool] = Field(default=False)
 
 

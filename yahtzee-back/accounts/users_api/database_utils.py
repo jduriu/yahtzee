@@ -1,36 +1,37 @@
 from pymongo import MongoClient
-from fastapi import HTTPException, status, Form
-from typing import Annotated
-from users_api.schema import Token, UserInDB
+from fastapi import HTTPException, status
+from users_api.schema import UserInDB
 from users_api.config import Settings
 from users_api.auth import AuthenticationUtilities
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+import os
 
 settings = Settings()
 auth_utils = AuthenticationUtilities()
 
+db_url = os.environ.get("DATABASE_URL")
+client = MongoClient(db_url, uuidRepresentation="standard")
+db = client.accounts.users
+
 
 class Mongo_Users:
-    client = MongoClient("localhost", 27017, uuidRepresentation="standard")
-    db = client.yahtzee_database.users
-
     def create_user(self, form_data):
         user_info = form_data.model_dump(by_alias=True, exclude=["id"])
-        username_taken = self.db.find_one({
+        username_taken = db.find_one({
             "username": user_info["username"]
         })
         if not username_taken:
             hashed_password = auth_utils.get_password_hash(user_info["password"]) # noqa
             user_info["hashed_password"] = hashed_password
             del user_info["password"]
-            self.db.insert_one(user_info)
+            db.insert_one(user_info)
             user = self.get_user(user_info["username"])
             return user
         raise HTTPException(status_code=404, detail="Username taken")
 
     def get_user(self, username):
-        user = self.db.find_one({
+        user = db.find_one({
             "username": username
         })
         if not user:

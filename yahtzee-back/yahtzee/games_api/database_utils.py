@@ -3,9 +3,11 @@ from time import time
 from bson import ObjectId
 from pymongo import ReturnDocument
 from fastapi import HTTPException, Response, status
+import os
 
-client = MongoClient("localhost", 27017, uuidRepresentation="standard")
-db = client.yahtzee_database.games
+db_url = os.environ.get("DATABASE_URL")
+client = MongoClient(db_url, uuidRepresentation="standard")
+db = client.yahtzee.games
 
 
 class Mongo_Games:
