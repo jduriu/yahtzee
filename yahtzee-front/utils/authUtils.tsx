@@ -22,11 +22,39 @@ export function setRefreshToken(refreshToken: string) {
   return sessionStorage.setItem("refreshToken", refreshToken)
 }
 
-
+interface FormData {
+  username: string;
+  email: string;
+  password: string;
+  full_name: string;
+}
 
 // Token authentication class for client
 export function TokenAuth() {
   const authClient = process.env.ACCOUNTS_API_HOST
+
+
+  async function signUp(formData: FormData) {
+    const url = `${authClient}/signup`
+    const data = JSON.stringify(formData)
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        body: data,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      if (response.ok) {
+        const data = await response.json()
+        // Auto login for token? Or create a separate page?
+      }
+    } catch (error) {
+      return errorHandler(error)
+    }
+
+  }
 
   async function login(username: string, password: string) {
     const form = new FormData()
@@ -52,5 +80,5 @@ export function TokenAuth() {
     }
   }
 
-  return [login]
+  return [signUp, login]
 }
