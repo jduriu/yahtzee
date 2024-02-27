@@ -73,7 +73,6 @@ export function TokenAuth() {
         setJwtToken(data.access_token)
         setRefreshToken(data.refresh_token)
         return data.message
-
       }
     } catch (error) {
       return errorHandler(error)

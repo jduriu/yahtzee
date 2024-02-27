@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { TokenAuth } from "@/utils/authUtils"
 import Link from "next/link"
+import SubmitButton from "./SubmitButton"
 
 
 export default function SignupForm({loading, setLoading, loggingIn, setLoggingIn}) {
@@ -34,23 +35,18 @@ export default function SignupForm({loading, setLoading, loggingIn, setLoggingIn
 
   return (
     <div className="flex flex-col h-full w-full bg-white/60 shadow-2xl rounded-3xl px-10 py-5 justify-center items-center gap-10">
-      <div className="text-3xl w-full flex justify-center items-center">Signup Form</div>
+      <div className="text-3xl w-full flex justify-center items-center">Create Account</div>
       <div className="flex w-full flex-col gap-3 justify-center items-center">
         {formFields.map((field) => (
-          <>
+          <div key={field.name} className="flex flex-col gap-3 justify-center items-center w-full">
             <div className="">{field.name}:</div>
             <input className="bg-white w-2/3 p-2" type="text" value={field.value} onChange={(e) => field.changeHandler(e.target.value)}/>
-          </>
+          </div>
         ))}
 
       </div>
       <div className="w-full justify-center items-center flex flex-col gap-10">
-        <button
-          className="px-10 py-2 bg-blue-500 border-4 border-white rounded-full hover:bg-gray-300 hover:border-black"
-          onClick={handleSubmit}
-        >
-          Submit
-        </button>
+        <SubmitButton handler={handleSubmit} name='Submit'/>
         <div className="text-gray-500">
           <span>If you already have an account, click </span>
           <Link href="/login" className="text-blue-500 hover:underline">here</Link>

@@ -62,3 +62,8 @@ body {
   width: 100%;
   color: black;
 }
+
+#hide-password {
+  -webkit-text-security:disc;
+  -mox-text-security:disc;
+}
