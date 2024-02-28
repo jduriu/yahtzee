@@ -1,5 +1,3 @@
-import Header from "./_components/Header"
-import Footer from "./_components/Footer"
 
 
 export default function GameLayout({
@@ -8,14 +6,8 @@ export default function GameLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="w-screen h-screen">
-      <div className="w-full h-full flex flex-col justify-between">
-        <Header/>
-        <main className="h-full w-full">
-          {children}
-        </main>
-        <Footer/>
-      </div>
+    <div className="w-full h-full">
+      {children}
     </div>
   )
 }
