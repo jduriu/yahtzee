@@ -23,6 +23,6 @@
       "@/utils/*": ["./utils/*"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "global_components/Modal.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "global_components/Modal.tsx"],
   "exclude": ["node_modules"]
 }
