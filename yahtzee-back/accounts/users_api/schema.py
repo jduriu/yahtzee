@@ -26,6 +26,7 @@ class TokenData(BaseModel):
 
 class User(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    user_id: str
     username: str
     email: str
     disabled: bool

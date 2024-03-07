@@ -5,6 +5,7 @@ from users_api.config import Settings
 from users_api.auth import AuthenticationUtilities
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+import uuid
 import os
 
 settings = Settings()
@@ -16,8 +17,15 @@ db = client.accounts.users
 
 
 class Mongo_Users:
+    def generate_uuid(self):
+        new_uuid = uuid.uuid4().hex
+        while db.find_one({"user_id": new_uuid}):
+            new_uuid = uuid.uuid4().hex
+        return new_uuid
+
     def create_user(self, form_data):
         user_info = form_data.model_dump(by_alias=True, exclude=["id"])
+        new_uuid = self.generate_uuid()
         username_taken = db.find_one({
             "username": user_info["username"]
         })
@@ -25,6 +33,7 @@ class Mongo_Users:
             hashed_password = auth_utils.get_password_hash(user_info["password"]) # noqa
             user_info["hashed_password"] = hashed_password
             del user_info["password"]
+            user_info["user_id"] = new_uuid
             db.insert_one(user_info)
             user = self.get_user(user_info["username"])
             return user
@@ -70,6 +79,7 @@ class Mongo_Users:
         refresh_token = auth_utils.create_refresh_token(
             data={"sub": user.username},
         )
+        # Save instance of refresh token in database with user ID
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content=jsonable_encoder({

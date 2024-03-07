@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Request, Form
-from users_api.schema import UserSignup, UserInDB, Token, TokenData
+from users_api.schema import UserSignup, UserInDB, Token, TokenData, User
 from typing import Annotated
 from users_api.database_utils import Mongo_Users
 from fastapi.security import OAuth2PasswordRequestForm
