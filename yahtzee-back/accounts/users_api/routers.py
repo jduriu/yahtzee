@@ -6,6 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from users_api.auth import Authenticator
 
 users_router = APIRouter()
+authenticator = Authenticator()
 
 
 ################################################################
@@ -15,7 +16,7 @@ users_router = APIRouter()
 
 @users_router.post("/signup", response_model=UserInDB,)
 def signup(
-    user_form: UserSignup,  # Need to verify this works with Next, may need to accept form data or a pydantic workaround
+    user_form: UserSignup,
     database_utils: Mongo_Users = Depends(),
     response_model_by_alias=False,
 ):
@@ -36,10 +37,10 @@ def login_for_access_token(
 ################################################################
 
 
-# @users_router.get("/user", response_model=UserInDB)
-# async def get_user_me(
-#     request: Request,
-#     database_utils: Mongo_Users = Depends()
-# ):
-#     token_data = await Authenticator(request)
-#     return database_utils.get_user(token_data.username)
+@users_router.get("/user", response_model=UserInDB)
+def get_user_me(
+    request: Request,
+    database_utils: Mongo_Users = Depends()
+):
+    token_data = authenticator(request)
+    return database_utils.get_user(token_data.username)

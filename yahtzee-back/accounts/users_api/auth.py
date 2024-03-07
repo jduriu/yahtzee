@@ -92,25 +92,24 @@ class Authenticator:
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-        user_fingerprint = None
-        if req.cookies:
-            cookie = req.cookies.get('__Secure-Fgp')
-            if cookie:
-                user_fingerprint = cookie
 
-        fingerprint_digest = hashlib.sha256(user_fingerprint.encode('utf-8')).hexdigest()  # noqa
+        ### NEED TO FIGURE OUT WHY FINGERPRINT COOKIE IS NOT BEING SENT IN REQUEST FROM FRONT END
+        # user_fingerprint = None
+        # if req.cookies:
+        #     fingerprint_cookie = req.cookies.get('__Secure-Fgp')
+        #     if fingerprint_cookie:
+        #         user_fingerprint = fingerprint_cookie
+
+        # fingerprint_digest = hashlib.sha256(user_fingerprint.encode('utf-8')).hexdigest()  # noqa
 
         token = req.headers.get("Authorization").split(" ")[1]
 
-        verifier = jwt.JWTVerifier(
-                jwt_access_secret,
-                algorithms=[jwt_algorithm],
-                issuer=issuer_id,
-                claim_required=('userFingerprint', fingerprint_digest)
-        )
-
         try:
-            decoded_token = verifier.verify(token)
+            decoded_token = jwt.decode(
+                token,
+                jwt_access_secret,
+                algorithms=[jwt_algorithm]
+            )
             username: str = decoded_token.get("sub")
             if username is None:
                 raise credentials_exception

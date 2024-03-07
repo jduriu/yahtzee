@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { TokenAuth, getJwtToken } from "@/utils/authUtils"
+import { TokenAuth, getJwtToken, errorHandler } from "@/utils/authUtils"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import SubmitButton from "./SubmitButton"
@@ -15,10 +15,34 @@ export default function LoginForm() {
   const router = useRouter()
 
 
+  const getUserInfo = async () => {
+    const authClient = process.env.ACCOUNTS_API_HOST
+    const url = `${authClient}/user`
+    const token = getJwtToken()
+
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      })
+      if (response.ok) {
+        const data = await response.json()
+        console.log(data)
+      }
+    } catch (error) {
+      errorHandler(error)
+    }
+  }
+
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     await login(username, password)
-    router.replace('play')
+    await getUserInfo()
+    // router.replace('play')
     // Check if the token is in session storage? If it is, redirect?
     // const token = getJwtToken()
     // if (token) {
