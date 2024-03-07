@@ -40,7 +40,10 @@ def login_for_access_token(
 @users_router.get("/user", response_model=User)
 def get_user_me(
     request: Request,
-    database_utils: Mongo_Users = Depends()
+    database_utils: Mongo_Users = Depends(),
 ):
     token_data = authenticator(request)
     return database_utils.get_user(token_data.username)
+
+
+# @users_router.post("/authenticate/refresh", response_model=Token)

@@ -13,20 +13,21 @@ auth_utils = AuthenticationUtilities()
 
 db_url = os.environ.get("DATABASE_URL")
 client = MongoClient(db_url, uuidRepresentation="standard")
-db = client.accounts.users
+users_db = client.accounts.users
+refresh_tokens_db = client.accounts.refresh_tokens
 
 
 class Mongo_Users:
     def generate_uuid(self):
         new_uuid = uuid.uuid4().hex
-        while db.find_one({"user_id": new_uuid}):
+        while users_db.find_one({"user_id": new_uuid}):
             new_uuid = uuid.uuid4().hex
         return new_uuid
 
     def create_user(self, form_data):
         user_info = form_data.model_dump(by_alias=True, exclude=["id"])
         new_uuid = self.generate_uuid()
-        username_taken = db.find_one({
+        username_taken = users_db.find_one({
             "username": user_info["username"]
         })
         if not username_taken:
@@ -34,13 +35,13 @@ class Mongo_Users:
             user_info["hashed_password"] = hashed_password
             del user_info["password"]
             user_info["user_id"] = new_uuid
-            db.insert_one(user_info)
+            users_db.insert_one(user_info)
             user = self.get_user(user_info["username"])
             return user
         raise HTTPException(status_code=404, detail="Username taken")
 
     def get_user(self, username):
-        user = db.find_one({
+        user = users_db.find_one({
             "username": username
         })
         if not user:
@@ -51,9 +52,7 @@ class Mongo_Users:
         return UserInDB(**user)
 
     def login_for_access_token(self, username, password):
-        user = self.get_user(
-            username=username,
-        )
+        user = self.get_user(username=username,)
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -76,10 +75,21 @@ class Mongo_Users:
         response_headers = {
             "Set-Cookie": fingerprint_cookie,
         }
-        refresh_token = auth_utils.create_refresh_token(
+        refresh_token, expiration = auth_utils.create_refresh_token(
             data={"sub": user.username},
         )
-        # Save instance of refresh token in database with user ID
+        user_refresh_tokens = refresh_tokens_db.find_one({
+            "username": username
+        })
+        if not user_refresh_tokens:
+            refresh_tokens_db.insert_one({
+                "username": username,
+                "active_token": {refresh_token: expiration},
+                "refresh_tokens": [refresh_token]
+            })
+        else:
+            user_refresh_tokens["active_token"] = {refresh_token, expiration}
+            user_refresh_tokens["refresh_tokens"].append(refresh_token)
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content=jsonable_encoder({
@@ -90,3 +100,7 @@ class Mongo_Users:
             }),
             headers=response_headers
         )
+
+    def validate_refresh_token(self, username, refresh_token):
+        # Check
+        pass

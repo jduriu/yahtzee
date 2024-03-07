@@ -1,10 +1,10 @@
 from passlib.context import CryptContext
 from jose import jwt, JWTError
 from users_api.schema import TokenData
-from fastapi import HTTPException, Depends, status, Request
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import HTTPException, status, Request
+# from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
-from typing import Annotated
+# from typing import Annotated
 from users_api.config import Settings
 import hashlib
 import os
@@ -19,10 +19,10 @@ issuer_id = settings.issuer_id
 access_expire = settings.access_token_expire_minutes
 refresh_expire = settings.refresh_token_expire_minutes
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/authenticate",
-    scheme_name="JWT"
-)
+# oauth2_scheme = OAuth2PasswordBearer(
+#     tokenUrl="/authenticate",
+#     scheme_name="JWT"
+# )
 
 
 class AuthenticationUtilities:
@@ -82,7 +82,7 @@ class AuthenticationUtilities:
             jwt_refresh_secret,
             algorithm=jwt_algorithm
         )
-        return encoded_refresh_jwt
+        return (encoded_refresh_jwt, expire)
 
 
 class Authenticator:
@@ -111,7 +111,9 @@ class Authenticator:
                 algorithms=[jwt_algorithm]
             )
             username: str = decoded_token.get("sub")
-            if username is None:
+            now = datetime.utcnow()
+            expired = decoded_token.get("exp")
+            if username is None or expired < now:
                 raise credentials_exception
         except JWTError:
             raise credentials_exception
