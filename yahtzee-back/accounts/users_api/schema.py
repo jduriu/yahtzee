@@ -13,16 +13,10 @@ class Token(BaseModel):
     token_type: str
 
 
-class UserForm(BaseModel):
-    username: str
-    password: str
-
-
 class UserSignup(BaseModel):
     username: str
     email: Optional[str] = None
     password: str
-    full_name: Optional[str] = None
     disabled: Optional[bool] = Field(default=False)
 
 
@@ -34,7 +28,6 @@ class User(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     username: str
     email: str
-    full_name: str
     disabled: bool
 
 

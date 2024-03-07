@@ -11,7 +11,6 @@ export default function SignUpForm({setLoading, setLoggingIn}) {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
-  const [fullName, setFullName] = useState("")
   const signUp = TokenAuth()[0]
   const login = TokenAuth()[1]
   const router = useRouter()
@@ -23,7 +22,6 @@ export default function SignUpForm({setLoading, setLoggingIn}) {
       username: username,
       password: password,
       email: email,
-      full_name: fullName
     }
     setLoading(true)
 
@@ -41,7 +39,6 @@ export default function SignUpForm({setLoading, setLoggingIn}) {
     {name: "Username", value: username, changeHandler: setUsername},
     {name: "Password", value: password, changeHandler: setPassword},
     {name: "Email", value: email, changeHandler: setEmail},
-    {name: "Full Name", value: fullName, changeHandler: setFullName},
   ]
 
   return (

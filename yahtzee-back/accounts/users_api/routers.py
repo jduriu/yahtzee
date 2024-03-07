@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Request, Form
-from users_api.schema import UserSignup, UserInDB, Token, TokenData, UserForm
+from users_api.schema import UserSignup, UserInDB, Token, TokenData
 from typing import Annotated
 from users_api.database_utils import Mongo_Users
 from fastapi.security import OAuth2PasswordRequestForm
@@ -37,7 +37,7 @@ def login_for_access_token(
 ################################################################
 
 
-@users_router.get("/user", response_model=UserInDB)
+@users_router.get("/user", response_model=User)
 def get_user_me(
     request: Request,
     database_utils: Mongo_Users = Depends()
