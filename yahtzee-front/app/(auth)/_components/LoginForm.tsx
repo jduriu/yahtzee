@@ -17,7 +17,7 @@ export default function LoginForm() {
 
   const getUserInfo = async () => {
     const authClient = process.env.ACCOUNTS_API_HOST
-    const url = `${authClient}/user`
+    const url = `${authClient}/api/user`
     const token = getJwtToken()
 
     try {

@@ -35,7 +35,7 @@ export function TokenAuth() {
 
 
   async function signUp(formData: FormData) {
-    const url = `${authClient}/signup`
+    const url = `${authClient}/api/signup`
     const data = JSON.stringify(formData)
 
     try {
@@ -60,7 +60,7 @@ export function TokenAuth() {
     const form = new FormData()
     form.append("username", username)
     form.append("password", password)
-    const url = `${authClient}/authenticate`
+    const url = `${authClient}/api/authenticate`
 
     try {
       const response = await fetch(url, {

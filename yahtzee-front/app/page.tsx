@@ -9,7 +9,7 @@ export default function Home() {
   const handleHowToPlay = async () => {
     // TEMPORARY USING AS A TEST BUTTON FOR AUTHENTICATOR LOGIC
     const authClient = process.env.ACCOUNTS_API_HOST
-    const url = `${authClient}/user`
+    const url = `${authClient}/api/user`
     const token = getJwtToken()
 
     try {
