@@ -41,8 +41,7 @@ export default function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     await login(username, password)
-    await getUserInfo()
-    // router.replace('play')
+    router.replace('/')
     // Check if the token is in session storage? If it is, redirect?
     // const token = getJwtToken()
     // if (token) {

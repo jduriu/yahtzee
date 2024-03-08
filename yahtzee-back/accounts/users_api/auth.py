@@ -1,10 +1,8 @@
 from passlib.context import CryptContext
 from jose import jwt, JWTError
-from users_api.schema import TokenData
+from users_api.schema import TokenData, RefreshTokenData
 from fastapi import HTTPException, status, Request
-# from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
-# from typing import Annotated
 from users_api.config import Settings
 import hashlib
 import os
@@ -19,10 +17,6 @@ issuer_id = settings.issuer_id
 access_expire = settings.access_token_expire_minutes
 refresh_expire = settings.refresh_token_expire_minutes
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-# oauth2_scheme = OAuth2PasswordBearer(
-#     tokenUrl="/authenticate",
-#     scheme_name="JWT"
-# )
 
 
 class AuthenticationUtilities:
@@ -46,10 +40,9 @@ class AuthenticationUtilities:
     def create_access_token(self, data: dict):
         token_data = data.copy()  # dictionary containing "sub": username
         fingerprint_cookie, fingerprint_hash = self.generate_fingerprint()
-        now = datetime.now(timezone.utc)
-        expires_delta = timedelta(access_expire)
+        now = datetime.utcnow()
+        expires_delta = timedelta(minutes=access_expire)
         expire = now + expires_delta
-
         token_data.update({
             "exp": expire,  # expiration time
             'iat': now,  # issued at
@@ -58,7 +51,6 @@ class AuthenticationUtilities:
             "userFingerprint": fingerprint_hash  # unique user fingerprint
         })
         header_claims = {"typ": "JWT"}
-        # Encode the JWT data
         encoded_access_jwt = jwt.encode(
             token_data,
             jwt_access_secret,
@@ -70,7 +62,7 @@ class AuthenticationUtilities:
     def create_refresh_token(self, data: dict) -> str:
         token_data = data.copy()  # dictionary containing "sub": username
         now = datetime.utcnow()
-        expire = now + timedelta(refresh_expire)
+        expire = now + timedelta(minutes=refresh_expire)
         token_data.update({
             "exp": expire,  # expiration time
             'iat': now,  # issued at
@@ -86,14 +78,18 @@ class AuthenticationUtilities:
 
 
 class Authenticator:
+    """
+    Checks if the submitted access token is valid and if it has expired
+    """
     def __call__(self, req: Request):
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
+            detail="Could not validate access token",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-        ### NEED TO FIGURE OUT WHY FINGERPRINT COOKIE IS NOT BEING SENT IN REQUEST FROM FRONT END
+        # ****** NEED TO FIGURE OUT WHY FINGERPRINT COOKIE IS NOT BEING SENT IN REQUEST FROM FRONT END
+        # ****** NEED TO FIGURE OUT HOW TO DIGEST THE FINGERPRINT
         # user_fingerprint = None
         # if req.cookies:
         #     fingerprint_cookie = req.cookies.get('__Secure-Fgp')
@@ -112,9 +108,37 @@ class Authenticator:
             )
             username: str = decoded_token.get("sub")
             now = datetime.utcnow()
-            expired = decoded_token.get("exp")
-            if username is None or expired < now:
+            expiration = datetime.utcfromtimestamp(decoded_token.get("exp"))
+            if not username or expiration < now:
                 raise credentials_exception
         except JWTError:
             raise credentials_exception
         return TokenData(username=username)
+
+
+class RefreshAuthenticator:
+    """
+    Checks if the submitted refresh token is valid and if it has expired
+    """
+    def __call__(self, req: Request):
+        refresh_exception = HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate refresh token",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+        refresh_token = req.headers.get("refresh_token")
+
+        try:
+            decoded_token = jwt.decode(
+                refresh_token,
+                jwt_refresh_secret,
+                algorithms=[jwt_algorithm]
+            )
+            username: str = decoded_token.get("sub")
+            now = datetime.utcnow()
+            expiration = datetime.utcfromtimestamp(decoded_token.get("exp"))
+            if not username or expiration < now:
+                raise refresh_exception
+        except JWTError:
+            raise refresh_exception
+        return RefreshTokenData(username=username, refresh_token=refresh_token)

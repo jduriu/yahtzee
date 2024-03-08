@@ -78,18 +78,24 @@ class Mongo_Users:
         refresh_token, expiration = auth_utils.create_refresh_token(
             data={"sub": user.username},
         )
-        user_refresh_tokens = refresh_tokens_db.find_one({
+        user_refresh_log = refresh_tokens_db.find_one({
             "username": username
         })
-        if not user_refresh_tokens:
+        if not user_refresh_log:
             refresh_tokens_db.insert_one({
                 "username": username,
-                "active_token": {refresh_token: expiration},
-                "refresh_tokens": [refresh_token]
+                "active_token": refresh_token,
+                "inactive_tokens": {}
             })
         else:
-            user_refresh_tokens["active_token"] = {refresh_token, expiration}
-            user_refresh_tokens["refresh_tokens"].append(refresh_token)
+            old_token = user_refresh_log["active_token"]
+            if old_token:
+                user_refresh_log["inactive_tokens"][old_token] = True
+            user_refresh_log["active_token"] = refresh_token
+            refresh_tokens_db.find_one_and_replace(
+                {"username": username},
+                user_refresh_log
+            )
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content=jsonable_encoder({
@@ -101,6 +107,41 @@ class Mongo_Users:
             headers=response_headers
         )
 
-    def validate_refresh_token(self, username, refresh_token):
-        # Check
-        pass
+    def refresh_token(self, username, refresh_token):
+        user_refresh_log = refresh_tokens_db.find_one({
+            "username": username
+        })
+        if not user_refresh_log:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Username not recognized",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        inactive = user_refresh_log["inactive_tokens"][refresh_token]
+        active = refresh_token == user_refresh_log["active_token"]
+        if not inactive and active:
+            user_refresh_log["inactive_tokens"][refresh_token] = True
+            access_token, fingerprint_cookie = auth_utils.create_access_token(
+                data={"sub": username},
+            )
+            response_headers = {
+                "Set-Cookie": fingerprint_cookie,
+            }
+            refresh_token, expiration = auth_utils.create_refresh_token(
+                data={"sub": username},
+            )
+            user_refresh_log["active_token"] = refresh_token
+            refresh_tokens_db.find_one_and_replace(
+                {"username": username},
+                user_refresh_log
+            )
+            return JSONResponse(
+                status_code=status.HTTP_201_CREATED,
+                content=jsonable_encoder({
+                    "message": "Login successful, token generated",
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "token_type": "Bearer"
+                }),
+                headers=response_headers
+            )

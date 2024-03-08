@@ -14,15 +14,19 @@ class Token(BaseModel):
     token_type: str
 
 
+class TokenData(BaseModel):
+    username: str
+
+
+class RefreshTokenData(TokenData):
+    refresh_token: str
+
+
 class UserSignup(BaseModel):
     username: str
     email: Optional[str] = None
     password: str
     disabled: Optional[bool] = Field(default=False)
-
-
-class TokenData(BaseModel):
-    username: str
 
 
 class User(BaseModel):

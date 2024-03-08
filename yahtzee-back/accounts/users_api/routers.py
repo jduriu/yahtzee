@@ -3,10 +3,11 @@ from users_api.schema import UserSignup, UserInDB, Token, TokenData, User
 from typing import Annotated
 from users_api.database_utils import Mongo_Users
 from fastapi.security import OAuth2PasswordRequestForm
-from users_api.auth import Authenticator
+from users_api.auth import Authenticator, RefreshAuthenticator
 
 users_router = APIRouter()
 authenticator = Authenticator()
+refreshAuthenticator = RefreshAuthenticator()
 
 
 ################################################################
@@ -46,4 +47,13 @@ def get_user_me(
     return database_utils.get_user(token_data.username)
 
 
-# @users_router.post("/authenticate/refresh", response_model=Token)
+@users_router.post("/authenticate/refresh", response_model=Token)
+def refresh_token(
+    request: Request,
+    database_utils: Mongo_Users = Depends(),
+):
+    token_data = authenticator(request)
+    return database_utils.refresh_token(
+        token_data.username,
+        token_data.refresh_token
+    )
