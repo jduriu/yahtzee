@@ -1,4 +1,4 @@
-from pydantic import ConfigDict, BaseModel, Field
+from pydantic import  BaseModel, Field
 from pydantic.functional_validators import BeforeValidator
 from typing_extensions import Annotated
 from typing import Optional
@@ -27,6 +27,11 @@ class UserSignup(BaseModel):
     email: Optional[str] = None
     password: str
     disabled: Optional[bool] = Field(default=False)
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
 
 class User(BaseModel):

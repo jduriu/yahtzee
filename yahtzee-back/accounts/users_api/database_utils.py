@@ -51,7 +51,9 @@ class Mongo_Users:
             )
         return UserInDB(**user)
 
-    def login_for_access_token(self, username, password):
+    def login_for_access_token(self, user_form):
+        username = user_form.username
+        password = user_form.password
         user = self.get_user(username=username,)
         if not user:
             raise HTTPException(

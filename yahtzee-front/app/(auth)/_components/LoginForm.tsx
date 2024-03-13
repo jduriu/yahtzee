@@ -5,29 +5,27 @@ import { TokenAuth, getJwtToken, errorHandler } from "@/utils/authUtils"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import SubmitButton from "./SubmitButton"
+import { accountsClient } from "@/utils/axiosClients"
+
 
 
 export default function LoginForm() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [hidePassword, setHidePassword] = useState(true)
-  const login = TokenAuth()[1]
+  const tokenAuth = TokenAuth()
+  const login = tokenAuth.login
   const router = useRouter()
 
 
   const getUserInfo = async () => {
+    const axios = require('axios').default
     const authClient = process.env.ACCOUNTS_API_HOST
     const url = `${authClient}/api/user`
     const token = getJwtToken()
 
     try {
-      const response = await fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      })
+      const response = await axios.get(url, {})
       if (response.ok) {
         const data = await response.json()
         console.log(data)

@@ -1,8 +1,12 @@
 'use client'
 
+import { accountsClient, accountsAuthClient } from '@/utils/axiosClients'
+
 
 export function errorHandler(error) {
   console.log(error)
+  return error
+
 }
 
 // Token Handlers
@@ -31,53 +35,42 @@ interface FormData {
 
 // Token authentication class for client
 export function TokenAuth() {
-  const authClient = process.env.ACCOUNTS_API_HOST
-
 
   async function signUp(formData: FormData) {
-    const url = `${authClient}/api/signup`
     const data = JSON.stringify(formData)
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        body: data,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      if (response.ok) {
-        const data = await response.json()
+    await accountsClient.post('/signup', data)
+      .then(async response => {
+        const data = response.data
+        console.log(data)
         // Auto login for token? Or create a separate page?
-      }
-    } catch (error) {
-      return errorHandler(error)
-    }
-
+      })
+      .catch(error => {
+        return errorHandler(error)
+      })
   }
 
   async function login(username: string, password: string) {
-    const form = new FormData()
-    form.append("username", username)
-    form.append("password", password)
-    const url = `${authClient}/api/authenticate`
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        credentials: "include",
-        body: form,
-      })
-      if (response.ok) {
-        const data = await response.json()
+    const data = {"username": username, "password": password}
+    await accountsClient.post('/authenticate', JSON.stringify(data))
+      .then(async response => {
+        const data = response.data
         setJwtToken(data.access_token)
         setRefreshToken(data.refresh_token)
         return data.message
-      }
-    } catch (error) {
-      return errorHandler(error)
-    }
+      })
+      .catch(error => {
+        return errorHandler(error)
+      })
   }
 
-  return [signUp, login]
+  async function refreshToken() {
+      const token = getRefreshToken()
+
+  }
+
+  return {
+    signup: signUp,
+    login: login,
+    refreshToken: refreshToken
+  }
 }

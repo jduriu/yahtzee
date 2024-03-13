@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Request, Form
-from users_api.schema import UserSignup, UserInDB, Token, TokenData, User
+from users_api.schema import UserSignup, UserInDB, Token, TokenData, User, UserLogin
 from typing import Annotated
 from users_api.database_utils import Mongo_Users
 from fastapi.security import OAuth2PasswordRequestForm
@@ -26,11 +26,10 @@ def signup(
 
 @users_router.post("/api/authenticate", response_model=Token)
 def login_for_access_token(
-    username: Annotated[str, Form(...)],
-    password: Annotated[str, Form(...)],
+    user_form: UserLogin,
     database_utils: Mongo_Users = Depends(),
 ):
-    return database_utils.login_for_access_token(username, password)
+    return database_utils.login_for_access_token(user_form)
 
 
 ################################################################
@@ -52,7 +51,7 @@ def refresh_token(
     request: Request,
     database_utils: Mongo_Users = Depends(),
 ):
-    token_data = authenticator(request)
+    token_data = refreshAuthenticator(request)
     return database_utils.refresh_token(
         token_data.username,
         token_data.refresh_token

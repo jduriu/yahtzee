@@ -11,8 +11,9 @@ export default function SignUpForm({setLoading, setLoggingIn}) {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
-  const signUp = TokenAuth()[0]
-  const login = TokenAuth()[1]
+  const tokenAuth = TokenAuth()
+  const signUp = tokenAuth.signup
+  const login = tokenAuth.login
   const router = useRouter()
 
 
@@ -25,7 +26,7 @@ export default function SignUpForm({setLoading, setLoggingIn}) {
     }
     setLoading(true)
 
-    const new_user = await signUp(formData)
+    await signUp(formData)
     setTimeout(() => {
       setLoggingIn(true)
     }, 2000);
