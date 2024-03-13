@@ -1,6 +1,6 @@
 'use client'
 
-import { accountsClient, accountsAuthClient } from '@/utils/axiosClients'
+import { accountsClient } from '@/utils/axiosClients'
 
 
 export function errorHandler(error) {
@@ -65,6 +65,18 @@ export function TokenAuth() {
 
   async function refreshToken() {
       const token = getRefreshToken()
+      await accountsClient.post('/refresh', {
+        headers: {'refresh_token': token}
+      })
+        .then(async response => {
+          const data = response.data
+          setJwtToken(data.access_token)
+          setRefreshToken(data.refresh_token)
+        })
+        .catch(error => {
+          return errorHandler(error)
+        })
+
 
   }
 

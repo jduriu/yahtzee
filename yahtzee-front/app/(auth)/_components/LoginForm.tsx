@@ -5,7 +5,7 @@ import { TokenAuth, getJwtToken, errorHandler } from "@/utils/authUtils"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import SubmitButton from "./SubmitButton"
-import { accountsClient } from "@/utils/axiosClients"
+import { accountsAuthClient } from "@/utils/axiosClients"
 
 
 
@@ -19,20 +19,11 @@ export default function LoginForm() {
 
 
   const getUserInfo = async () => {
-    const axios = require('axios').default
-    const authClient = process.env.ACCOUNTS_API_HOST
-    const url = `${authClient}/api/user`
-    const token = getJwtToken()
-
-    try {
-      const response = await axios.get(url, {})
-      if (response.ok) {
-        const data = await response.json()
-        console.log(data)
-      }
-    } catch (error) {
-      errorHandler(error)
-    }
+    await accountsAuthClient.get('/user')
+      .then(response => console.log(response.data))
+      .catch(error => {
+        errorHandler(error)
+      })
   }
 
 

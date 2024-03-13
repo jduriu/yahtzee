@@ -45,8 +45,7 @@ accountsAuthClient.interceptors.response.use(
       originalRequest._retry = true
       const refresh = await refreshToken()
       // need to send back a response from refresh token
-      const token = refresh.response.accessToken
-      setJwtToken(token)
+      const token = getJwtToken()
       accountsAuthClient.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${token}`

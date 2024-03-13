@@ -33,17 +33,8 @@ def login_for_access_token(
 
 
 ################################################################
-#                    Protected Endpoints
+#                    Refresh Token Endpoint
 ################################################################
-
-
-@users_router.get("/api/user", response_model=User)
-def get_user_me(
-    request: Request,
-    database_utils: Mongo_Users = Depends(),
-):
-    token_data = authenticator(request)
-    return database_utils.get_user(token_data.username)
 
 
 @users_router.post("/api/authenticate/refresh", response_model=Token)
@@ -56,3 +47,16 @@ def refresh_token(
         token_data.username,
         token_data.refresh_token
     )
+
+################################################################
+#                    Protected Endpoints
+################################################################
+
+
+@users_router.get("/api/user", response_model=User)
+def get_user_me(
+    request: Request,
+    database_utils: Mongo_Users = Depends(),
+):
+    token_data = authenticator(request)
+    return database_utils.get_user(token_data.username)
