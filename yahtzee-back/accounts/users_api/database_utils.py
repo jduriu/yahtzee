@@ -119,7 +119,9 @@ class Mongo_Users:
                 detail="Username not recognized",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        inactive = user_refresh_log["inactive_tokens"][refresh_token]
+        inactive = user_refresh_log["inactive_tokens"].get(
+            refresh_token, False
+        )
         active = refresh_token == user_refresh_log["active_token"]
         if not inactive and active:
             user_refresh_log["inactive_tokens"][refresh_token] = True

@@ -127,7 +127,6 @@ class RefreshAuthenticator:
             headers={"WWW-Authenticate": "Bearer"}
         )
         refresh_token = req.headers.get("refresh_token")
-
         try:
             decoded_token = jwt.decode(
                 refresh_token,

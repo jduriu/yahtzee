@@ -65,8 +65,8 @@ export function TokenAuth() {
 
   async function refreshToken() {
       const token = getRefreshToken()
-      await accountsClient.post('/refresh', {
-        headers: {'refresh_token': token}
+      await accountsClient.post('/authenticate/refresh', null, {
+        headers: { 'refresh_token': token }
       })
         .then(async response => {
           const data = response.data

@@ -41,10 +41,10 @@ accountsAuthClient.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config
-    if (error.response.status === 403 && !originalRequest._retry) {
+    if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
-      const refresh = await refreshToken()
-      // need to send back a response from refresh token
+      await refreshToken()
+
       const token = getJwtToken()
       accountsAuthClient.defaults.headers.common[
         "Authorization"

@@ -18,13 +18,13 @@ export default function LoginForm() {
   const router = useRouter()
 
 
-  const getUserInfo = async () => {
-    await accountsAuthClient.get('/user')
-      .then(response => console.log(response.data))
-      .catch(error => {
-        errorHandler(error)
-      })
-  }
+  // const getUserInfo = async () => {
+  //   await accountsAuthClient.get('/user')
+  //     .then(response => console.log(response.data))
+  //     .catch(error => {
+  //       errorHandler(error)
+  //     })
+  // }
 
 
   const handleSubmit = async (e) => {

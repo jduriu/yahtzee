@@ -1,6 +1,7 @@
 'use client'
 
-import { TokenAuth, getJwtToken, errorHandler } from "@/utils/authUtils"
+import { errorHandler } from "@/utils/authUtils"
+import { accountsAuthClient } from "@/utils/axiosClients"
 
 export default function Home() {
 
@@ -8,25 +9,11 @@ export default function Home() {
 
   const handleHowToPlay = async () => {
     // TEMPORARY USING AS A TEST BUTTON FOR AUTHENTICATOR LOGIC
-    const authClient = process.env.ACCOUNTS_API_HOST
-    const url = `${authClient}/api/user`
-    const token = getJwtToken()
-
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      })
-      if (response.ok) {
-        const data = await response.json()
-        console.log(data)
-      }
-    } catch (error) {
-      errorHandler(error)
-    }
+    await accountsAuthClient.get('/user')
+      .then(response => console.log(response.data))
+      .catch(error => {
+        errorHandler(error)
+    })
   }
 
 
