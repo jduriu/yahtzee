@@ -1,13 +1,7 @@
-'use client'
-
 import { accountsClient } from '@/utils/axiosClients'
+import { errorHandler } from './errorUtils'
+import { useRouter } from "next/navigation"
 
-
-export function errorHandler(error) {
-  console.log(error)
-  return error
-
-}
 
 // Token Handlers
 export function getJwtToken() {
@@ -24,6 +18,12 @@ export function getRefreshToken() {
 
 export function setRefreshToken(refreshToken: string) {
   return sessionStorage.setItem("refreshToken", refreshToken)
+}
+
+export function revokeTokens() {
+  sessionStorage.removeItem("jwt")
+  sessionStorage.removeItem("refreshToken")
+  return
 }
 
 interface FormData {
@@ -76,8 +76,6 @@ export function TokenAuth() {
         .catch(error => {
           return errorHandler(error)
         })
-
-
   }
 
   return {

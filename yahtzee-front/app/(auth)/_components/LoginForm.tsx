@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { TokenAuth, getJwtToken, errorHandler } from "@/utils/authUtils"
+import { TokenAuth } from "@/utils/authUtils"
+import { errorHandler } from "@/utils/errorUtils"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import SubmitButton from "./SubmitButton"

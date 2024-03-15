@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --foreground: #314154;
+  --foreground: #007afd;
   --background-start: #d1fdff;
   --background-end: #fddb92;
   --accent-1: #A2AEBB;
@@ -12,7 +12,7 @@
 
 
 body {
-  color: var(--foreground);
+  color: white;
   /* background: linear-gradient(
       to bottom,
       transparent,
