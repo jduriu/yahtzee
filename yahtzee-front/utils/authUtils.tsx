@@ -1,6 +1,5 @@
 import { accountsClient } from '@/utils/axiosClients'
 import { errorHandler } from './errorUtils'
-import { useRouter } from "next/navigation"
 
 
 // Token Handlers
@@ -41,7 +40,6 @@ export function TokenAuth() {
     await accountsClient.post('/signup', data)
       .then(async response => {
         const data = response.data
-        console.log(data)
         // Auto login for token? Or create a separate page?
       })
       .catch(error => {

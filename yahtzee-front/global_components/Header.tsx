@@ -18,7 +18,7 @@ export default function Header() {
   ]
 
   return (
-    <div className="w-full flex h-[50px] justify-end items-center gap-3 px-10 border border-white">
+    <div className="w-full flex h-full justify-end items-center gap-3 px-5 text-xl font-serif">
       {links.map(link => (
         <Link href={link.path} key={link.path}>{link.name}</Link>
       ))}

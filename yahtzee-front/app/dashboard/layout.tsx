@@ -1,7 +1,7 @@
 import Header from '@/global_components/Header'
 import Footer from '@/global_components/Footer'
 
-export default function GameLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode

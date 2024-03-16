@@ -43,8 +43,8 @@ export default function SignUpForm({setLoading, setLoggingIn}) {
   ]
 
   return (
-    <div className="flex flex-col h-full w-full bg-white/60 shadow-2xl rounded-3xl p-10 items-center gap-10 overflow-y-scroll">
-      <div className="text-3xl w-full flex justify-center items-center">Create Account</div>
+    <div className="flex flex-col h-full w-full shadow-purple rounded-3xl p-10 items-center justify-center gap-10">
+      <div id="blue-glow" className="text-3xl w-full flex justify-center items-center">Create Account</div>
       <div className="flex w-full flex-col gap-3 justify-center items-center">
         {formFields.map((field) => (
           <div key={field.name} className="flex flex-col gap-3 justify-center items-center w-full">
@@ -56,7 +56,7 @@ export default function SignUpForm({setLoading, setLoggingIn}) {
       </div>
       <div className="w-full justify-center items-center flex flex-col gap-10">
         <SubmitButton pushHandler={handleSubmit} name='Submit'/>
-        <div className="text-gray-500">
+        <div className="text-gray-200">
           <span>If you already have an account, click </span>
           <Link href="/login" className="text-blue-500 hover:underline">here</Link>
           <span> to login</span>

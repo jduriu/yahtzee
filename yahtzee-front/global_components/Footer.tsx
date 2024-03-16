@@ -1,7 +1,7 @@
 export default function Footer() {
 
   return (
-    <div className="w-full h-[50px] flex flex-col justify-center items-center gap-3 px-10 py-5 border border-white">
+    <div className="w-full h-full flex flex-col justify-center items-center gap-3 px-10">
       <div>Created by Jon Uriu 2023</div>
     </div>
   )

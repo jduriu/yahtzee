@@ -43,12 +43,12 @@ export default function LoginForm() {
 
 
   return (
-    <div className="flex flex-col h-full w-full bg-white/60 shadow-2xl rounded-3xl p-10 items-center gap-10 overflow-y-scroll">
+    <div className="flex flex-col h-full w-full shadow-purple rounded-3xl p-10 items-center justify-center gap-10">
       <div className="text-3xl w-full flex justify-center items-center">Welcome Back!</div>
       <div className="flex w-full flex-col gap-3 justify-center items-center">
         <div>Username:</div>
         <input
-          className="bg-white w-2/3 p-2"
+          className="bg-white w-2/3 p-2 text-black"
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -56,7 +56,7 @@ export default function LoginForm() {
         <div>Password:</div>
         <div className="w-2/3 flex justify-center items-center gap-3">
           <input
-            className="w-full bg-white p-2"
+            className="w-full bg-white p-2 text-black"
             type="text"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -70,7 +70,7 @@ export default function LoginForm() {
       </div>
       <div className="w-full flex flex-col gap-10 justify-center items-center">
         <SubmitButton pushHandler={handleSubmit} name='Login'/>
-        <div className="text-gray-500">
+        <div className="text-gray-200">
           <span>If you do not have an account, sign-up by clicking </span>
           <Link href="/signup" className="text-blue-500 hover:underline">here</Link>
         </div>
