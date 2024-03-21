@@ -44,7 +44,7 @@ export default function LoginForm() {
 
   return (
     <div className="flex flex-col h-full w-full shadow-purple rounded-3xl p-10 items-center justify-center gap-10">
-      <div className="text-3xl w-full flex justify-center items-center">Welcome Back!</div>
+      <div id="blue-glow" className="text-3xl w-full flex justify-center items-center">Welcome Back!</div>
       <div className="flex w-full flex-col gap-3 justify-center items-center">
         <div>Username:</div>
         <input

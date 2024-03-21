@@ -14,8 +14,8 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       boxShadow: {
-        'blue': '0 4px 30px blue',
-        'purple': '0 4px 30px rgba(138, 0, 255, .7)',
+        'blue': '0 0 30px blue',
+        'purple': '0 0 30px rgba(138, 0, 255, .7)',
         'neuro': '-7px -7px 20px 0 rgba(255, 255, 255, 0.7), 7px 7px 20px 0 rgba(0, 0, 0, 0.2)',
         'neuro-press': 'inset -7px -7px 20px 0 rgba(255, 255, 255, 0.7), inset 7px 7px 20px 0 rgba(0, 0, 0, 0.2)',
       },

@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/dashboard',
+        permanent: true,
+      }
+    ]
+  },
   compiler: {
     // Enables the styled-components SWC transform
     styledComponents: true
