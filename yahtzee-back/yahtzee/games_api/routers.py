@@ -23,10 +23,10 @@ def get_all_games(
 
 @games_router.get("/api/game", response_model=Game)
 def get_game(
-    id: str,
+    game_id: str,
     db_utils: Mongo_Games = Depends(),
 ):
-    return db_utils.get_game(id)
+    return db_utils.get_game(game_id)
 
 
 @games_router.put("/api/games/{id}", response_model=Game, response_model_by_alias=False)  # noqa

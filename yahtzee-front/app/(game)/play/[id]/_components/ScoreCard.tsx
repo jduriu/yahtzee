@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-export default function ScoreCard() {
+export default function ScoreCard({scorecard}) {
 
   const getUpperSubtotal = () => {
     const initialValue = 0
@@ -49,6 +49,23 @@ export default function ScoreCard() {
   const [yahtzeeBonus, setYahtzeeBonus] = useState(0)
   const [lowerTotal, setLowerTotal] = useState(getLowerTotal)
   const [grandTotal, setGrandTotal] = useState(getGrandTotal)
+
+  useEffect(() => {
+    setOnes(scorecard.ones)
+    setTwos(scorecard.twos)
+    setThrees(scorecard.threes)
+    setFours(scorecard.fours)
+    setFives(scorecard.fives)
+    setSixes(scorecard.sixes)
+    setThreeOfKind(scorecard.three_of_kind)
+    setFourOfKind(scorecard.four_of_kind)
+    setFullHouse(scorecard.full_house)
+    setSmStraight(scorecard.sm_straight)
+    setLgStraight(scorecard.lg_straight)
+    setYahtzee(scorecard.yahtzee)
+    setChance(scorecard.chance)
+    setYahtzeeBonus(scorecard.yahtzee_bonus)
+  }, [scorecard])
 
   return (
     <div className="w-full h-full px-10 py-5 text-md overflow-y-scroll">

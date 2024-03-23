@@ -21,12 +21,13 @@ def get_scorecards(
     return Scorecards(scorecards=all_scorecards)
 
 
-@scorecards_router.get("/api/scorecard", response_model=Scorecard)
+@scorecards_router.get("/api/scorecard_by_user", response_model=Scorecard)
 def get_scorecard(
-    id: str,
+    user_id: str,
+    game_id: str,
     db_utils: Mongo_Scorecards = Depends()
 ):
-    return db_utils.get_scorecard(id)
+    return db_utils.get_scorecard_by_user(user_id, game_id)
 
 
 @scorecards_router.put("/api/scorecards/{id}", response_model=Scorecard)
