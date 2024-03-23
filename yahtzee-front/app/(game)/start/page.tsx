@@ -1,27 +1,20 @@
 'use client'
 
 import StartForm from "./_components/StartForm";
-import useModal from "@/utils/useModal";
-import Modal from "@/global_components/Modal";
+import { useState } from 'react'
 
 export default function Start() {
-
-  const {isVisible, toggleModal} = useModal();
-
-  const modalContent = (
-    <div className="modal-content">Test</div>
-  )
+  const [mode, setMode] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   return (
-    <>
-    <div className="w-full h-full flex justify-center items-center flex-col">
-      {/* <StartForm/> */}
-      <button onClick={toggleModal}>
-        Show modal
-      </button>
-      <Modal isVisible={isVisible} hideModal={toggleModal} content={modalContent}/>
-    </div>
-    </>
 
+    <div className="w-full h-full flex justify-center items-center flex-col">
+      {mode ?
+        <div>Game Creator</div>
+        :
+        <StartForm setMode={setMode}/>
+      }
+    </div>
   )
 }

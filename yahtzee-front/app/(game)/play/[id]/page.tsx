@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import DiceBoard from "./_components/DiceBoard";
 import ScoreCard from "./_components/ScoreCard";
 
-export default function Play() {
+export default function Play({params}) {
 
   // Make API call to obtain current turn and scorecard
   // Send turn data to diceboard and scorecard
@@ -15,6 +15,7 @@ export default function Play() {
 
   const turnUrl = `${yahtzeeClient}/turns`
   const scorecardUrl = `${yahtzeeClient}/scorecards`
+  console.log(params.id)
 
   // const getCurrentTurn = async () => {
   //   const turn = await fetch(turnUrl, {

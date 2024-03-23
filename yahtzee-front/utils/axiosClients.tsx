@@ -55,4 +55,12 @@ accountsAuthClient.interceptors.response.use(
   }
 )
 
-export { accountsClient, accountsAuthClient }
+const yahtzeeClient = axios.create({
+  baseURL: `${process.env.YAHTZEE_API_HOST}/api`,
+  headers: {
+    "Content-type": "application/json"
+  },
+  withCredentials: true,
+})
+
+export { accountsClient, accountsAuthClient, yahtzeeClient }

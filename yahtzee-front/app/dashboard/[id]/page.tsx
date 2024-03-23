@@ -31,7 +31,7 @@ export default function Dashboard ({ params }) {
       <div className="h-[90%] grid grid-cols-2 gap-4">
         <div className={gridClasses}>
           <Link className="game-button" href='/tutorial'>How To Play</Link>
-          <Link className="game-button red" href='/create'>Create Game</Link>
+          <Link className="game-button red" href='/start'>Create Game</Link>
           <Link className="game-button orange" href={`/find/${user && user.user_id}`}>Open Game</Link>
         </div>
         <div className={gridClasses}>

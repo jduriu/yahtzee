@@ -19,26 +19,11 @@ export default function LoginForm() {
   const router = useRouter()
 
 
-  // const getUserInfo = async () => {
-  //   await accountsAuthClient.get('/user')
-  //     .then(response => console.log(response.data))
-  //     .catch(error => {
-  //       errorHandler(error)
-  //     })
-  // }
-
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     await login(username, password)
     router.replace('/')
-    // Check if the token is in session storage? If it is, redirect?
-    // const token = getJwtToken()
-    // if (token) {
-    //   const userId = getUserId(token) // create a get function to obtain the user id
-    //   router.replace(`/dashboard/${userId}`)
-    // }
-
   }
 
 
