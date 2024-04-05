@@ -51,7 +51,7 @@ export default function ScoreCard({scorecard}) {
   const [grandTotal, setGrandTotal] = useState(getGrandTotal)
 
   useEffect(() => {
-    setOnes(scorecard.ones)
+    setOnes(scorecard.ones ? scorecard.ones : '-')
     setTwos(scorecard.twos)
     setThrees(scorecard.threes)
     setFours(scorecard.fours)
