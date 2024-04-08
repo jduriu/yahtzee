@@ -17,8 +17,7 @@ export default function SignUpForm({setLoading, setLoggingIn}) {
   const router = useRouter()
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     const formData = {
       username: username,
       password: password,
