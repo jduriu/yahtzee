@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react"
-import Button from "@/app/(game)/_components/Button";
+import Button from "@/global_components/Button";
 
 interface Dice {
   name: string;
@@ -82,10 +82,6 @@ export default function DiceRoller() {
   }
 
 
-  const rollButtonProps = {name: "Roll", style: "large"}
-  const scoreButtonProps = {name: "Score", style: "small"}
-
-
   return (
     <div className="w-full h-full flex flex-col gap-3 items-center justify-center p-5">
       <div className="self-start">Rolls Remaining: {rollsRemaining}</div>
@@ -103,11 +99,11 @@ export default function DiceRoller() {
       </div>
       <div className="w-full flex gap-10 items-center justify-center">
         {rollsRemaining ?
-          <Button action={rollOpenDice} buttonProps={rollButtonProps}/>
+          <Button clickHandler={rollOpenDice} content="Roll" style="large"/>
           :
           null
         }
-        <Button action={recordScore} buttonProps={scoreButtonProps}/>
+        <Button clickHandler={recordScore} content="Score" style="small"/>
       </div>
     </div>
   )

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { revokeTokens } from "@/utils/authUtils"
+import Button from "@/global_components/Button"
 
 export default function Logout() {
   const router = useRouter()
@@ -25,12 +26,8 @@ export default function Logout() {
         <>
           <div>Are you sure you want to log out?</div>
           <div className="flex gap-5">
-            <button onClick={handleYes} className="border border-black rounded-full w-[75px]">
-              Yes
-            </button>
-            <button onClick={() => router.back()} className="border border-black rounded-full w-[75px]">
-              No
-            </button>
+            <Button clickHandler={handleYes} content="Yes" style="logout"/>
+            <Button clickHandler={() => router.back()} content="No" style="logout"/>
           </div>
         </>
       }

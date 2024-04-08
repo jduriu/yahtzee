@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { TokenAuth } from "@/utils/authUtils"
 import Link from "next/link"
-import SubmitButton from "./SubmitButton"
+import Button from "@/global_components/Button"
 import { useRouter } from "next/navigation"
 
 
@@ -55,7 +55,7 @@ export default function SignUpForm({setLoading, setLoggingIn}) {
 
       </div>
       <div className="w-full justify-center items-center flex flex-col gap-10">
-        <SubmitButton pushHandler={handleSubmit} name='Submit'/>
+        <Button clickHandler={handleSubmit} content="Submit" style="Submit"/>
         <div className="text-gray-200">
           <span>If you already have an account, click </span>
           <Link href="/login" className="text-blue-500 hover:underline">here</Link>
