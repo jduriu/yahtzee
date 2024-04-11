@@ -55,17 +55,13 @@ export default function Play({params}) {
     }
   }, [router, params.id])
 
-
-  // Send turn data to diceboard and scorecard
-  // Initialize a new turn in the diceboard
-
   return (
     <div className="w-full h-full flex gap-3 p-5 border-2 border-black">
       <div className="w-1/2 h-full border-2 border-black">
-        <DiceBoard/>
+        <DiceBoard scorecard={scorecard}/>
       </div>
       <div className="w-1/2 h-full border-2 border-black">
-        <ScoreCard/>
+        <ScoreCard scorecard={scorecard}/>
       </div>
     </div>
   )
