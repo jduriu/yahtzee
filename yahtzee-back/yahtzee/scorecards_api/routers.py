@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends, Body, HTTPException, Query
 from scorecards_api.database_utils import Mongo_Scorecards
 from scorecards_api.schema import Scorecard, Scorecards, UpdateScorecard
 
@@ -27,6 +27,18 @@ def get_scorecard(
     db_utils: Mongo_Scorecards = Depends()
 ):
     return db_utils.get_scorecard(id)
+
+
+@scorecards_router.get("/api/scorecard_by_user_and_game", response_model=Scorecard)
+def get_scorecard_by_user_and_game(
+    user_id: str,
+    game_id: str,
+    db_utils: Mongo_Scorecards = Depends()
+):
+    scorecard = db_utils.get_scorecard_by_user_and_game(user_id, game_id)
+    if not scorecard:
+        raise HTTPException(status_code=404, detail="Scorecard not found")
+    return scorecard
 
 
 @scorecards_router.put("/api/scorecards/{id}", response_model=Scorecard)

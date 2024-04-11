@@ -49,7 +49,7 @@ export default function SignUpForm({setLoading, setLoggingIn}) {
         {formFields.map((field) => (
           <div key={field.name} className="flex flex-col gap-3 justify-center items-center w-full">
             <div className="">{field.name}:</div>
-            <input className="bg-white w-2/3 p-2" type="text" value={field.value} onChange={(e) => field.changeHandler(e.target.value)}/>
+            <input className="bg-white w-2/3 p-2 text-black" type="text" value={field.value} onChange={(e) => field.changeHandler(e.target.value)}/>
           </div>
         ))}
 
