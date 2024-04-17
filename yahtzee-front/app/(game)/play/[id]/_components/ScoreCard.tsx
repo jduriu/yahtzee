@@ -1,15 +1,16 @@
-'use client'
-
-import { useState } from 'react'
-
-export default function ScoreCard() {
+export default function ScoreCard({ scorecard }) {
 
   const getUpperSubtotal = () => {
-    const initialValue = 0
     const values = [ones, twos, threes, fours, fives, sixes]
-    const subtotal = values.reduce((acc, val) => acc + val, initialValue)
+    let subtotal = 0
+    for (let value of values) {
+      if (value !== '-') {
+        subtotal += value
+      }
+    }
     return subtotal
   }
+
   const getUpperTotal = () => {
     if (bonus) {
       return upperSubTotal + 35
@@ -19,9 +20,13 @@ export default function ScoreCard() {
   }
 
   const getLowerTotal = () => {
-    const initialValue = 0
     const values  = [threeOfKind, fourOfKind, fullHouse, smStraight, lgStraight, yahtzee]
-    const subtotal = values.reduce((acc, val) => acc + val, initialValue)
+    let subtotal = 0
+      for (let value of values) {
+        if (value !== '-') {
+          subtotal += value
+        }
+      }
     return subtotal + (yahtzeeBonus * 100)
   }
 
@@ -29,26 +34,26 @@ export default function ScoreCard() {
     return upperTotal + lowerTotal
   }
 
-  const [ones, setOnes] = useState(0)
-  const [twos, setTwos] = useState(0)
-  const [threes, setThrees] = useState(0)
-  const [fours, setFours] = useState(0)
-  const [fives, setFives] = useState(0)
-  const [sixes, setSixes] = useState(0)
-  const [bonus, setBonus] = useState(false)
-  const [upperSubTotal, setUpperSubTotal] = useState(getUpperSubtotal)
-  const [upperTotal, setUpperTotal] = useState(getUpperTotal)
+  const ones = scorecard.ones ?? '-'
+  const twos = scorecard.ones ?? '-'
+  const threes  = scorecard.threes ?? '-'
+  const fours = scorecard.fours ?? '-'
+  const fives = scorecard.fives ?? '-'
+  const sixes = scorecard.sixes ?? '-'
+  const bonus = false
+  const upperSubTotal = getUpperSubtotal()
+  const upperTotal = getUpperTotal()
 
-  const [threeOfKind, setThreeOfKind] = useState(0)
-  const [fourOfKind, setFourOfKind] = useState(0)
-  const [fullHouse, setFullHouse] = useState(0)
-  const [smStraight, setSmStraight] = useState(0)
-  const [lgStraight, setLgStraight] = useState(0)
-  const [yahtzee, setYahtzee] = useState(0)
-  const [chance, setChance] = useState(0)
-  const [yahtzeeBonus, setYahtzeeBonus] = useState(0)
-  const [lowerTotal, setLowerTotal] = useState(getLowerTotal)
-  const [grandTotal, setGrandTotal] = useState(getGrandTotal)
+  const threeOfKind = scorecard.three_of_kind ?? '-'
+  const fourOfKind = scorecard.four_of_kind ?? '-'
+  const fullHouse = scorecard.full_house ?? '-'
+  const smStraight = scorecard.sm_straight ?? '-'
+  const lgStraight = scorecard.lg_straight ?? '-'
+  const yahtzee = scorecard.yahtzee ?? '-'
+  const chance = scorecard.chance ?? '-'
+  const yahtzeeBonus = scorecard.yahtzee_bonus ?? 0
+  const lowerTotal = getLowerTotal()
+  const grandTotal = getGrandTotal()
 
   return (
     <div className="w-full h-full px-10 py-5 text-md overflow-y-scroll">

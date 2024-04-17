@@ -32,6 +32,16 @@ class Mongo_Scorecards:
         scorecard = db.find_one({"_id": ObjectId(id)})
         return scorecard
 
+    def get_scorecard_by_user_and_game(self, user_id, game_id):
+        """
+        Obtain a single scorecard instance based on the input id
+        """
+        scorecard = db.find_one({
+            "user_id": user_id,
+            "game_id": game_id
+        })
+        return scorecard
+
     def get_scorecards(self):
         """
         Obtain all scorecard instances in the database.
