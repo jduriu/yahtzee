@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Body, HTTPException, Query
+from fastapi import APIRouter, Depends, Body, HTTPException
 from scorecards_api.database_utils import Mongo_Scorecards
 from scorecards_api.schema import Scorecard, Scorecards, UpdateScorecard
 
