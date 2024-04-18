@@ -1,7 +1,69 @@
 import DiceRoller from "./_diceBoardComps/DiceRoller"
+import { useState } from 'react'
+import ScoreButtons from "./_diceBoardComps/ScoreButtons";
+import processDice from "@/utils/processDice";
+import { errorHandler } from "@/utils/errorUtils";
+import { yahtzeeClient } from "@/utils/axiosClients";
 
-export default function DiceBoard({scorecard}) {
-  console.log(scorecard)
+interface Dice {
+  name: string;
+  value: number;
+  set: (num: number) => void;
+  open: boolean;
+  changeStatus: () => void;
+}
+
+
+const DiceBoard = ({scorecard, setScorecard}) => {
+  const [rollsRemaining, setRollsRemaining] = useState(3)
+  const [selectedCategory, setSelectedCategory] = useState('Select Category')
+  const [diceOne, setDiceOne] = useState(5)
+  const [diceOneOpen, setDiceOneOpen] = useState(true)
+  const [diceTwo, setDiceTwo] = useState(5)
+  const [diceTwoOpen, setDiceTwoOpen] = useState(true)
+  const [diceThree, setDiceThree] = useState(5)
+  const [diceThreeOpen, setDiceThreeOpen] = useState(true)
+  const [diceFour, setDiceFour] = useState(5)
+  const [diceFourOpen, setDiceFourOpen] = useState(true)
+  const [diceFive, setDiceFive] = useState(5)
+  const [diceFiveOpen, setDiceFiveOpen] = useState(true)
+  const dice: Dice[] = [
+    {
+      "name": "d1",
+      "value": diceOne,
+      "set": (num: number) => setDiceOne(num),
+      "open": diceOneOpen,
+      "changeStatus": () => setDiceOneOpen(!diceOneOpen)
+    },
+    {
+      "name": "d2",
+      "value": diceTwo,
+      "set": (num: number) => setDiceTwo(num),
+      "open": diceTwoOpen,
+      "changeStatus": () => setDiceTwoOpen(!diceTwoOpen)
+    },
+    {
+      "name": "d3",
+      "value": diceThree,
+      "set": (num: number) => setDiceThree(num),
+      "open": diceThreeOpen,
+      "changeStatus": () => setDiceThreeOpen(!diceThreeOpen)
+    },
+    {
+      "name": "d4",
+      "value": diceFour,
+      "set": (num: number) => setDiceFour(num),
+      "open": diceFourOpen,
+      "changeStatus": () => setDiceFourOpen(!diceFourOpen)
+    },
+    {
+      "name": "d5",
+      "value": diceFive,
+      "set": (num: number) => setDiceFive(num),
+      "open": diceFiveOpen,
+      "changeStatus": () => setDiceFiveOpen(!diceFiveOpen)
+    },
+  ]
 
   const getTurnsRemaining = () => {
     if (scorecard.scored) {
@@ -9,16 +71,50 @@ export default function DiceBoard({scorecard}) {
     }
   }
 
+  const startNewTurn = () => {
+    setRollsRemaining(3)
+    setSelectedCategory('Select Category')
+    setDiceOne(0)
+    setDiceOneOpen(true)
+    setDiceTwo(0)
+    setDiceTwoOpen(true)
+    setDiceThree(0)
+    setDiceThreeOpen(true)
+    setDiceFour(0)
+    setDiceFourOpen(true)
+    setDiceFive(0)
+    setDiceFiveOpen(true)
+  }
+
+  const recordScore = () => {
+    // Send POST request to yahtzee api to record turn
+    const scorecardId = scorecard._id
+    try {
+      const turnValue = processDice(dice, selectedCategory, scorecard)
+      if (turnValue === "yahtzeeBonus") {
+        scorecard.yahtzee_bonus += 1
+      } else {
+        scorecard[selectedCategory] = turnValue
+        scorecard.scored.push(selectedCategory)
+        const updated_scorecard = await yahtzeeClient.put(`/scorecard/${scorecardId}`, scorecard)
+      }
+    } catch (error) {
+      errorHandler(error)
+    }
+  }
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col p-5">
       <div>Turns remaining: {getTurnsRemaining()}</div>
-      <div className="h-1/3">
-        <DiceRoller/>
+      <div className="flex flex-col py-5">
+        <DiceRoller scorecard={scorecard} dice={dice} rollsRemaining={rollsRemaining} setRollsRemaining={setRollsRemaining}/>
+        <ScoreButtons selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} rollsRemaining={rollsRemaining} recordScore={recordScore}/>
       </div>
-      <div>
+      <div className="py-5">
         Suggestions:
       </div>
     </div>
   )
 }
+
+export default DiceBoard

@@ -13,13 +13,12 @@
 
 body {
   color: white;
-  /* background: linear-gradient(
+  background: linear-gradient(
       to bottom,
       transparent,
       var(--background-end)
     )
-    var(--background-start); */
-  background: black;
+    var(--background-start);
 }
 
 .modal-blur {

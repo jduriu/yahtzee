@@ -5,7 +5,7 @@ from users_api.database_utils import Mongo_Users
 from fastapi.security import OAuth2PasswordRequestForm
 from users_api.auth import Authenticator, RefreshAuthenticator
 
-users_router = APIRouter()
+users_router = APIRouter(prefix="/api")
 authenticator = Authenticator()
 refreshAuthenticator = RefreshAuthenticator()
 
@@ -15,7 +15,7 @@ refreshAuthenticator = RefreshAuthenticator()
 ################################################################
 
 
-@users_router.post("/api/signup", response_model=UserInDB,)
+@users_router.post("/signup", response_model=UserInDB,)
 def signup(
     user_form: UserSignup,
     database_utils: Mongo_Users = Depends(),
@@ -24,7 +24,7 @@ def signup(
     return database_utils.create_user(user_form)
 
 
-@users_router.post("/api/authenticate", response_model=Token)
+@users_router.post("/authenticate", response_model=Token)
 def login_for_access_token(
     user_form: UserLogin,
     database_utils: Mongo_Users = Depends(),
@@ -37,7 +37,7 @@ def login_for_access_token(
 ################################################################
 
 
-@users_router.post("/api/authenticate/refresh", response_model=Token)
+@users_router.post("/authenticate/refresh", response_model=Token)
 def refresh_token(
     request: Request,
     database_utils: Mongo_Users = Depends(),
@@ -53,7 +53,7 @@ def refresh_token(
 ################################################################
 
 
-@users_router.get("/api/user", response_model=User)
+@users_router.get("/user", response_model=User)
 def get_user_me(
     request: Request,
     database_utils: Mongo_Users = Depends(),
