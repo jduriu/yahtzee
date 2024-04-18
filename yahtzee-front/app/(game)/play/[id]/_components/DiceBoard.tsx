@@ -17,15 +17,15 @@ interface Dice {
 const DiceBoard = ({scorecard, setScorecard}) => {
   const [rollsRemaining, setRollsRemaining] = useState(3)
   const [selectedCategory, setSelectedCategory] = useState('Select Category')
-  const [diceOne, setDiceOne] = useState(5)
+  const [diceOne, setDiceOne] = useState(0)
   const [diceOneOpen, setDiceOneOpen] = useState(true)
-  const [diceTwo, setDiceTwo] = useState(5)
+  const [diceTwo, setDiceTwo] = useState(0)
   const [diceTwoOpen, setDiceTwoOpen] = useState(true)
-  const [diceThree, setDiceThree] = useState(5)
+  const [diceThree, setDiceThree] = useState(0)
   const [diceThreeOpen, setDiceThreeOpen] = useState(true)
-  const [diceFour, setDiceFour] = useState(5)
+  const [diceFour, setDiceFour] = useState(0)
   const [diceFourOpen, setDiceFourOpen] = useState(true)
-  const [diceFive, setDiceFive] = useState(5)
+  const [diceFive, setDiceFive] = useState(0)
   const [diceFiveOpen, setDiceFiveOpen] = useState(true)
   const dice: Dice[] = [
     {
@@ -86,19 +86,27 @@ const DiceBoard = ({scorecard, setScorecard}) => {
     setDiceFiveOpen(true)
   }
 
-  const recordScore = () => {
-    // Send POST request to yahtzee api to record turn
+  const recordScore = async () => {
     const scorecardId = scorecard._id
+    const tempScorecard = {...scorecard}
     try {
-      const turnValue = processDice(dice, selectedCategory, scorecard)
+      const turnValue = processDice(dice, selectedCategory, tempScorecard)
       if (turnValue === "yahtzeeBonus") {
-        scorecard.yahtzee_bonus += 1
+        tempScorecard.yahtzee_bonus += 1
       } else {
-        scorecard[selectedCategory] = turnValue
-        scorecard.scored.push(selectedCategory)
-        const updated_scorecard = await yahtzeeClient.put(`/scorecard/${scorecardId}`, scorecard)
+        tempScorecard[selectedCategory] = turnValue
+        tempScorecard.scored.push(selectedCategory)
       }
-    } catch (error) {
+      await yahtzeeClient.put(`/scorecards/${scorecardId}`, tempScorecard)
+        .then(async response => {
+          if (response.statusText === "OK") {
+            const updatedScorecard = response.data
+            console.log("Turn Taken")
+            setScorecard(updatedScorecard)
+            startNewTurn()
+          }
+        })
+      } catch (error) {
       errorHandler(error)
     }
   }
