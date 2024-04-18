@@ -2,11 +2,9 @@
 
 import { useState } from "react"
 import { TokenAuth } from "@/utils/authUtils"
-import { errorHandler } from "@/utils/errorUtils"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import SubmitButton from "./SubmitButton"
-import { accountsAuthClient } from "@/utils/axiosClients"
+import Button from "@/global_components/Button"
 
 
 
@@ -20,11 +18,11 @@ export default function LoginForm() {
 
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     await login(username, password)
     router.replace('/')
   }
+
 
 
   return (
@@ -47,6 +45,7 @@ export default function LoginForm() {
             onChange={(e) => setPassword(e.target.value)}
             id={hidePassword ? 'hide-password' : ''}
           />
+          {/* Custom button for show/hide need to update to use icons in future, potentially add to global button options? */}
           <button onClick={() => setHidePassword(!hidePassword)} className="border border-black rounded-full w-[75px]">
             {/* Replace with eye open/close symbols */}
             {hidePassword ? 'show' : 'hide'}
@@ -54,7 +53,7 @@ export default function LoginForm() {
         </div>
       </div>
       <div className="w-full flex flex-col gap-10 justify-center items-center">
-        <SubmitButton pushHandler={handleSubmit} name='Login'/>
+        <Button clickHandler={handleSubmit} content="Submit" style="submit"/>
         <div className="text-gray-200">
           <span>If you do not have an account, sign-up by clicking </span>
           <Link href="/signup" className="text-blue-500 hover:underline">here</Link>

@@ -35,7 +35,7 @@ export default function ScoreCard({ scorecard }) {
   }
 
   const ones = scorecard.ones ?? '-'
-  const twos = scorecard.ones ?? '-'
+  const twos = scorecard.twos ?? '-'
   const threes  = scorecard.threes ?? '-'
   const fours = scorecard.fours ?? '-'
   const fives = scorecard.fives ?? '-'
