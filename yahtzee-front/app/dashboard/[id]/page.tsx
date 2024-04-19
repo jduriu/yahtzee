@@ -32,7 +32,7 @@ export default function Dashboard ({ params }) {
         <div className={gridClasses}>
           <Link className="game-button" href='/tutorial'>How To Play</Link>
           <Link className="game-button red" href='/start'>Create Game</Link>
-          <Link className="game-button orange" href={`/find/${user && user.user_id}`}>Open Game</Link>
+          <Link className="game-button orange" href={`/open/${user && user.user_id}`}>Open Game</Link>
         </div>
         <div className={gridClasses}>
           Leaderboard
