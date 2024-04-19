@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { yahtzeeClient, accountsAuthClient} from "@/utils/axiosClients"
 import { useRouter } from 'next/navigation'
+import { errorHandler } from '@/utils/errorUtils'
 
 export default function StartForm({setMode}) {
   const router = useRouter()
@@ -11,7 +12,7 @@ export default function StartForm({setMode}) {
 
   useEffect(() => {
     accountsAuthClient.get('/user')
-      .then(async response => {
+      .then(response => {
         const data = response.data
         setUser(data)
         setPlayers([...players, data.user_id])
@@ -31,18 +32,33 @@ export default function StartForm({setMode}) {
     return JSON.stringify(game)
   }
 
-  async function selectSinglePlayer() {
+  function selectSinglePlayer() {
     setMode(true)
     const payload = createGame()
+    console.log("Trying to create game")
     yahtzeeClient.post('/game', payload)
-    .then(async response => {
-      const game = response.data
-      router.replace(`/play/${game._id}`)
-    })
-    .catch(error => {
-      console.log("Whoops, something went wrong creating the game")
-    })
-
+      .then(response => {
+        if (response.statusText === "OK") {
+          console.log("Game Created, attempting to make Scorecard")
+          const game = response.data
+          console.log(game)
+          const scorecardParams = {
+            user_id: user.user_id,
+            game_id: game._id,
+          }
+          console.log
+          yahtzeeClient.post('/scorecard', scorecardParams)
+            .then(response => {
+              if (response.statusText === "OK") {
+                console.log("Scorecard created, redirecting...")
+                router.replace(`/play/${game._id}`)
+              }
+            })
+        }
+      })
+      .catch(error => {
+        errorHandler(error)
+      });
   }
 
   return (
