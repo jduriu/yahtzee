@@ -86,30 +86,29 @@ const DiceBoard = ({scorecard, setScorecard}) => {
     setDiceFiveOpen(true)
   }
 
-  const recordScore = async () => {
+  const recordScore = () => {
     const scorecardId = scorecard._id
     const tempScorecard = {...scorecard}
-    try {
-      const turnValue = processDice(dice, selectedCategory, tempScorecard)
-      if (turnValue === "yahtzeeBonus") {
-        tempScorecard.yahtzee_bonus += 1
-      } else {
-        tempScorecard[selectedCategory] = turnValue
-        tempScorecard.scored.push(selectedCategory)
-      }
-      await yahtzeeClient.put(`/scorecards/${scorecardId}`, tempScorecard)
-        .then(async response => {
-          if (response.statusText === "OK") {
-            const updatedScorecard = response.data
-            console.log("Turn Taken")
-            setScorecard(updatedScorecard)
-            startNewTurn()
-          }
-        })
-      } catch (error) {
-      errorHandler(error)
+    const turnValue = processDice(dice, selectedCategory, tempScorecard)
+    if (turnValue === "yahtzeeBonus") {
+      tempScorecard.yahtzee_bonus += 1
+    } else {
+      tempScorecard[selectedCategory] = turnValue
+      tempScorecard.scored.push(selectedCategory)
     }
-  }
+    yahtzeeClient.put(`/scorecards/${scorecardId}`, tempScorecard)
+      .then(response => {
+        if (response.statusText === "OK") {
+          const updatedScorecard = response.data
+          console.log("Turn Taken")
+          setScorecard(updatedScorecard)
+          startNewTurn()
+        }
+      })
+      .catch(error => {
+        errorHandler(error)
+      })
+    }
 
   return (
     <div className="w-full h-full flex flex-col p-5">
