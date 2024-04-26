@@ -1,17 +1,16 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { yahtzeeClient } from "@/utils/axiosClients"
-import Link from 'next/link'
-import Button from '@/global_components/Button'
-import { redirect } from 'next/navigation'
+import React, { useState, useEffect } from 'react';
+import { yahtzeeClient } from "@/utils/axiosClients";
+import Link from 'next/link';
+import Button from '@/global_components/Button';
 
 
-const SearchPage = ({ params }) => {
+const SearchPage = ({ params }: { params: { id: number } }) => {
   const[games, setGames] = useState([])
 
-  const getTime = (pythonTime) => {
-    const startTime = new Date(pythonTime * 1000)
+  const getTime = (unixTime: number) => {
+    const startTime = new Date(unixTime * 1000)
     const year = startTime.getFullYear()
     const month = startTime.getMonth() + 1
     const day = startTime.getDate()
