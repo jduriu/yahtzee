@@ -1,3 +1,4 @@
+import React from "react";
 import DiceRoller from "./DiceRoller";
 import { useState } from "react";
 import ScoreButtons from "./ScoreButtons";
@@ -13,12 +14,7 @@ interface Dice {
   changeStatus: () => void;
 }
 
-// type DiceBoardProps = {
-//   scorecard: Scorecard;
-//   setScorecard: React.Dispatch<React.SetStateAction<Scorecard>>;
-// };
-
-const DiceBoard = ({ scorecard, setScorecard }: DiceBoardProps) => {
+const DiceBoard = ({ scorecard, setScorecard }) => {
   const [rollsRemaining, setRollsRemaining] = useState(3);
   const [selectedCategory, setSelectedCategory] = useState("Select Category");
   const [diceOne, setDiceOne] = useState(0);
@@ -90,30 +86,29 @@ const DiceBoard = ({ scorecard, setScorecard }: DiceBoardProps) => {
     setDiceFiveOpen(true);
   };
 
-  const recordScore = async () => {
+  const recordScore = () => {
     const scorecardId = scorecard._id;
     const tempScorecard = { ...scorecard };
-    try {
-      const turnValue = processDice(dice, selectedCategory, tempScorecard);
-      if (turnValue === "yahtzeeBonus") {
-        tempScorecard.yahtzee_bonus += 1;
-      } else {
-        tempScorecard[selectedCategory] = turnValue;
-        tempScorecard.scored.push(selectedCategory);
-      }
-      await yahtzeeClient
-        .put(`/scorecards/${scorecardId}`, tempScorecard)
-        .then(async (response) => {
-          if (response.statusText === "OK") {
-            const updatedScorecard = response.data;
-            console.log("Turn Taken");
-            setScorecard(updatedScorecard);
-            startNewTurn();
-          }
-        });
-    } catch (error) {
-      errorHandler(error);
+    const turnValue = processDice(dice, selectedCategory, tempScorecard);
+    if (turnValue === "yahtzeeBonus") {
+      tempScorecard.yahtzee_bonus += 1;
+    } else {
+      tempScorecard[selectedCategory] = turnValue;
+      tempScorecard.scored.push(selectedCategory);
     }
+    yahtzeeClient
+      .put(`/scorecards/${scorecardId}`, tempScorecard)
+      .then((response) => {
+        if (response.statusText === "OK") {
+          const updatedScorecard = response.data;
+          console.log("Turn Taken");
+          setScorecard(updatedScorecard);
+          startNewTurn();
+        }
+      })
+      .catch((error) => {
+        errorHandler(error);
+      });
   };
 
   return (

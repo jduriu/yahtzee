@@ -3,7 +3,7 @@ import React from "react";
 interface ButtonProps {
   clickHandler: () => void;
   content: string;
-  style: "default" | "small" | "large" | "submit" | "logout" | "score";
+  style: "default" | "small" | "large" | "submit" | "list-play" | "logout" | "score";
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -20,6 +20,8 @@ const Button: React.FC<ButtonProps> = ({
     large: `px-6 py-2 rounded-xl text-xl border-2 border-white bg-blue-400
       hover:bg-red-400 hover:text-white hover:border-black
       duration-500`,
+
+    list-play: "py-1 px-4 rounded-full text-sm border border-white hover:bg-blue-500 shadow-xl",
 
     submit: `px-10 py-2 text-white bg-blue-500 border-4 border-gray-300 rounded-full
     hover:bg-gray-300 hover:border-black hover:text-black duration-300`,
