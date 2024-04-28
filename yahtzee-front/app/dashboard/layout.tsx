@@ -1,22 +1,21 @@
-import Header from '@/global_components/Header'
-import Footer from '@/global_components/Footer'
+import React from "react";
+import Header from "@/components/global/Header";
+import Footer from "@/components/global/Footer";
 
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <>
       <div className="w-full h-[75px]">
-        <Header/>
+        <Header />
       </div>
-      <main className='h-[calc(100%-150px)]'>
-          {children}
-      </main>
+      <main className="h-[calc(100%-150px)]">{children}</main>
       <div className="w-full h-[75px]">
-        <Footer/>
+        <Footer />
       </div>
     </>
-  )
+  );
 }

@@ -1,59 +1,67 @@
-export default function ScoreCard({ scorecard }) {
+import React from "react";
 
+const ScoreCard = ({ scorecard }) => {
   const getUpperSubtotal = () => {
-    const values = [ones, twos, threes, fours, fives, sixes]
-    let subtotal = 0
+    const values = [ones, twos, threes, fours, fives, sixes];
+    let subtotal = 0;
     for (let value of values) {
-      if (value !== '-') {
-        subtotal += value
+      if (value !== "-") {
+        subtotal += value;
       }
     }
-    return subtotal
-  }
+    return subtotal;
+  };
 
   const getUpperTotal = () => {
     if (bonus) {
-      return upperSubTotal + 35
+      return upperSubTotal + 35;
     } else {
-      return upperSubTotal
+      return upperSubTotal;
     }
-  }
+  };
 
   const getLowerTotal = () => {
-    const values  = [threeOfKind, fourOfKind, fullHouse, smStraight, lgStraight, yahtzee]
-    let subtotal = 0
-      for (let value of values) {
-        if (value !== '-') {
-          subtotal += value
-        }
+    const values = [
+      threeOfKind,
+      fourOfKind,
+      fullHouse,
+      smStraight,
+      lgStraight,
+      yahtzee,
+    ];
+    let subtotal = 0;
+    for (let value of values) {
+      if (value !== "-") {
+        subtotal += value;
       }
-    return subtotal + (yahtzeeBonus * 100)
-  }
+    }
+    return subtotal + yahtzeeBonus * 100;
+  };
 
   const getGrandTotal = () => {
-    return upperTotal + lowerTotal
-  }
+    return upperTotal + lowerTotal;
+  };
 
-  const ones = scorecard.ones ?? '-'
-  const twos = scorecard.twos ?? '-'
-  const threes  = scorecard.threes ?? '-'
-  const fours = scorecard.fours ?? '-'
-  const fives = scorecard.fives ?? '-'
-  const sixes = scorecard.sixes ?? '-'
-  const bonus = false
-  const upperSubTotal = getUpperSubtotal()
-  const upperTotal = getUpperTotal()
+  const ones = scorecard.ones ?? "-";
+  const twos = scorecard.twos ?? "-";
+  const threes = scorecard.threes ?? "-";
+  const fours = scorecard.fours ?? "-";
+  const fives = scorecard.fives ?? "-";
+  const sixes = scorecard.sixes ?? "-";
+  const bonus = false;
+  const upperSubTotal = getUpperSubtotal();
+  const upperTotal = getUpperTotal();
 
-  const threeOfKind = scorecard.three_of_kind ?? '-'
-  const fourOfKind = scorecard.four_of_kind ?? '-'
-  const fullHouse = scorecard.full_house ?? '-'
-  const smStraight = scorecard.sm_straight ?? '-'
-  const lgStraight = scorecard.lg_straight ?? '-'
-  const yahtzee = scorecard.yahtzee ?? '-'
-  const chance = scorecard.chance ?? '-'
-  const yahtzeeBonus = scorecard.yahtzee_bonus ?? 0
-  const lowerTotal = getLowerTotal()
-  const grandTotal = getGrandTotal()
+  const threeOfKind = scorecard.three_of_kind ?? "-";
+  const fourOfKind = scorecard.four_of_kind ?? "-";
+  const fullHouse = scorecard.full_house ?? "-";
+  const smStraight = scorecard.sm_straight ?? "-";
+  const lgStraight = scorecard.lg_straight ?? "-";
+  const yahtzee = scorecard.yahtzee ?? "-";
+  const chance = scorecard.chance ?? "-";
+  const yahtzeeBonus = scorecard.yahtzee_bonus ?? 0;
+  const lowerTotal = getLowerTotal();
+  const grandTotal = getGrandTotal();
 
   return (
     <div className="w-full h-full px-10 py-5 text-md overflow-y-scroll">
@@ -135,5 +143,7 @@ export default function ScoreCard({ scorecard }) {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
+
+export default ScoreCard;

@@ -21,8 +21,9 @@
     "paths": {
       "@/*": ["./*"],
       "@/utils/*": ["./utils/*"],
+      "@/components/*": ["./components/*"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "global_components/Modal.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/global/Modal.tsx"],
   "exclude": ["node_modules"]
 }
