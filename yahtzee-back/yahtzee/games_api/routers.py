@@ -18,7 +18,18 @@ def get_all_games(
     db_utils: Mongo_Games = Depends(),
     response_model_by_alias=False,
 ):
-    return Games(games=db_utils.get_all_games())
+    all_games = db_utils.get_all_games()
+    return Games(games=all_games)
+
+
+@games_router.get("/games-by-user", response_model=Games)
+def get_games_by_user(
+    id: str,
+    db_utils: Mongo_Games = Depends(),
+    response_model_by_alias=False,
+):
+    user_games = db_utils.get_games_by_user(id)
+    return Games(games=user_games)
 
 
 @games_router.get("/game", response_model=Game)

@@ -33,6 +33,15 @@ class Mongo_Games:
         all_games = [game for game in db.find()]
         return all_games
 
+    def get_games_by_user(self, id):
+        """
+        Obtain all game instances associated with input user id
+        """
+        users_games = db.find({
+            "player_ids": id
+        })
+        return users_games
+
     def get_game(self, id):
         """
         Obtain a single game instance based on the input id
