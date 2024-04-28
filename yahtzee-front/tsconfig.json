@@ -22,8 +22,9 @@
       "@/*": ["./*"],
       "@/utils/*": ["./utils/*"],
       "@/components/*": ["./components/*"],
+      "@/schema/*": ["./schema/*"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/global/Modal.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts",],
   "exclude": ["node_modules"]
 }

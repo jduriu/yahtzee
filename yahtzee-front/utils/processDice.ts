@@ -1,175 +1,169 @@
+import { z } from 'zod';
+import { Scorecard, UpperCategoryKeys, CategoryKeys } from '@/schema/ScorecardSchema';
+
+type UpperCategories = z.infer<typeof UpperCategoryKeys>
+type Categories = z.infer<typeof CategoryKeys>
+type ScorecardProps = z.infer<typeof Scorecard>
+interface Dice {
+  name: string;
+  value: number;
+  set: (num: number) => void;
+  open: boolean;
+  changeStatus: () => void;
+}
+
+const upperSectionCategories = [
+  "ones",
+  "twos",
+  "threes",
+  "fours",
+  "fives",
+  "sixes",
+];
 
 const categoryMap = {
-  "ones": 1,
-  "twos": 2,
-  "threes": 3,
-  "fours": 4,
-  "fives": 5,
-  "sixes": 6,
-}
+  ones: 1,
+  twos: 2,
+  threes: 3,
+  fours: 4,
+  fives: 5,
+  sixes: 6,
+};
 
-const convertToArray = (dice) => {
-  const diceArray = []
-  for (let die of dice) {
-    diceArray.push(die.value)
-  }
-  return diceArray
-}
+const count = (diceArray: number[]): Record<number, number> => {
+  return diceArray.reduce((values, die) => {
+    values[die] = (values[die] || 0) + 1;
+    return values;
+  }, {} as Record<number, number>);
+};
 
-const count = (diceArray) => {
-  const values = {}
-  for (let die of diceArray) {
-    if (die in values) {
-      values[die] += 1
-    } else {
-      values[die] = 1
-    }
-  }
-  return values
-}
+const sum = (diceArray: number[]) => {
+  return diceArray.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue;
+  }, 0);
+};
 
-const sum = (diceArray) => {
-  let result = diceArray.reduce((accumulator, currentValue) => {
-    return accumulator + currentValue
-  },0);
-  return result
-}
-
-const processUpperSectionScore = ( diceArray, category ) => {
-  const counts = count(diceArray)
-  const dieNumber = categoryMap[category]
-  const categoryCount = counts[dieNumber]
+const processUpperSectionScore = (diceArray: number[], category: UpperCategories) => {
+  const counts = count(diceArray);
+  const dieNumber = categoryMap[category];
+  const categoryCount = counts[dieNumber];
   if (categoryCount) {
-    return dieNumber * categoryCount
+    return dieNumber * categoryCount;
   }
-  return 0
-}
+  return 0;
+};
 
-const checkThreeOrFourOfKind = ( diceArray ) => {
-  const counts = count(diceArray)
-  for (const count of Object.values(counts)) {
-    if (count === 3 || count === 4) {
-      return true
+const checkThreeOrFourOfKind = (diceArray: number[]) => {
+  const counts = count(diceArray);
+
+  Object.values(counts).forEach((count) => {
+    if (count === 4 || count === 4) {
+      return true;
     }
-  }
-  return false
-}
+  });
+  return false;
+};
 
-const checkFullHouse = ( diceArray ) => {
-  const counts = count(diceArray)
-  let pair = false
-  let triple = false
+const checkFullHouse = (diceArray: number[]) => {
+  const counts = count(diceArray);
+  let pair = false;
+  let triple = false;
 
-  for (const count of Object.values(counts)) {
+  Object.values(counts).forEach((count) => {
     if (count === 2) {
-      pair = true
+      pair = true;
     } else if (count === 3) {
-      triple = true
+      triple = true;
     }
-  }
+  });
+  return pair && triple;
+};
 
-  return pair && triple
-}
+const checkSmStraight = (diceArray: number[]) => {
+  const sortedArray = [...diceArray].sort((a, b) => a - b);
+  let maxStraight = 1;
+  let currentStraight = 1;
 
-const checkSmStraight = (diceArray) => {
-  diceArray.sort()
-  let l = 0
-  let r = 0
-  let straight = 1
-  while (r < diceArray.length) {
-    r += 1
-    if (straight === 4) {
-      return true
-    }
-    if (diceArray[r] - straight === diceArray[l]) {
-      straight += 1
-      if (straight === 4) {
-        return true
-      }
+  for (let i = 1; i < sortedArray.length; i++) {
+    if (sortedArray[i] === sortedArray[i - 1] + 1) {
+      currentStraight++;
     } else {
-      l = r
+      currentStraight = 1;
+    }
+    maxStraight = Math.max(maxStraight, currentStraight);
+    if (maxStraight >= 4) {
+      return true;
     }
   }
-  return false
-}
 
-const checkLgStraight = (diceArray) => {
-  diceArray.sort()
-  let l = 0
-  let r = 0
-  let straight = 1
-  while (r < diceArray.length) {
-    r += 1
-    if (diceArray[r] - straight === diceArray[l]) {
-      straight += 1
-      if (straight === 5) {
-        return true
-      }
+  return false;
+};
+
+const checkLgStraight = (diceArray: number[]) => {
+  const sortedArray = [...diceArray].sort((a, b) => a - b);
+  let maxStraight = 1;
+  let currentStraight = 1;
+
+  for (let i = 1; i < sortedArray.length; i++) {
+    if (sortedArray[i] === sortedArray[i - 1] + 1) {
+      currentStraight++;
     } else {
-      l = r
+      currentStraight = 1;
+    }
+    maxStraight = Math.max(maxStraight, currentStraight);
+    if (maxStraight >= 5) {
+      return true;
     }
   }
-  return false
-}
+  return false;
+};
 
+const checkYahtzee = (diceArray: number[]) => {
+  const counts = count(diceArray);
+  return Object.keys(counts).length === 1;
+};
 
-const checkYahtzee = (diceArray) => {
-  let count = 0
-  for (let die of diceArray) {
-    if (die === diceArray[0]) {
-      count += 1
-    }
-  }
-  return count === 5
-}
-
-
-const processDice = ( dice, selectedCategory, scorecard ) => {
-  const upperSectionCategories = ["ones", "twos", "threes", "fours", "fives", "sixes"]
-  const diceArray = convertToArray(dice)
-  let turnValue = 0;
+const processDice = (dice: Dice[], selectedCategory: Categories, scorecard: ScorecardProps ) => {
+  const diceArray = dice.map(die => (die.value));
+  let turnValue: number | string = 0;
   if (scorecard.scored.includes(selectedCategory)) {
     // Add error handling here!
     // Shouldn't occur if fine-grained happens in UI (e.g. not able to submit a category that isn't available)
-    return
+    return;
   }
   if (upperSectionCategories.includes(selectedCategory)) {
-    turnValue = processUpperSectionScore(diceArray, selectedCategory)
-    console.log(`Scored ${selectedCategory}`)
-  } else if (selectedCategory === "three_of_kind" || selectedCategory === "four_of_kind") {
+    turnValue = processUpperSectionScore(diceArray, selectedCategory);
+  } else if (
+    selectedCategory === "three_of_kind" ||
+    selectedCategory === "four_of_kind"
+  ) {
     if (checkThreeOrFourOfKind(diceArray)) {
-      turnValue = sum(diceArray)
-      console.log(`Scored ${selectedCategory}`)
+      turnValue = sum(diceArray);
     }
   } else if (selectedCategory === "full_house") {
     if (checkFullHouse(diceArray)) {
-      turnValue = 25
-      console.log(`Scored ${selectedCategory}`)
+      turnValue = 25;
     }
   } else if (selectedCategory === "sm_straight") {
     if (checkSmStraight(diceArray)) {
-      turnValue = 30
-      console.log(`Scored ${selectedCategory}`)
+      turnValue = 30;
     }
   } else if (selectedCategory === "lg_straight") {
     if (checkLgStraight(diceArray)) {
-      turnValue = 40
-      console.log(`Scored ${selectedCategory}`)
-
+      turnValue = 40;
     }
-  }  else if (selectedCategory === "yahtzee") {
+  } else if (selectedCategory === "yahtzee") {
     if (checkYahtzee(diceArray)) {
       if (scorecard.scored.includes("yahtzee")) {
-        turnValue = "yahtzeeBonus"
+        turnValue = "yahtzeeBonus";
       } else {
-        turnValue = 50
+        turnValue = 50;
       }
     }
-  }  else if (selectedCategory === "chance") {
-    turnValue = sum(diceArray)
-    console.log(`Scored ${selectedCategory}`)
+  } else if (selectedCategory === "chance") {
+    turnValue = sum(diceArray);
   }
-  return turnValue
-}
+  return turnValue;
+};
 
-export default processDice
+export default processDice;
