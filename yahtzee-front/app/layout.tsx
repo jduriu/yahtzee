@@ -1,8 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Play } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const play = Play({
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: '--font-play'
+})
 
 export const metadata: Metadata = {
   title: 'Yahtzee',
@@ -16,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className + "w-screen h-screen"}>
+      <body className={`${play.variable} font-sans w-screen h-screen`}>
         {children}
       </body>
     </html>

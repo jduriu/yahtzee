@@ -42,10 +42,10 @@ export default function Play({ params }) {
 
   return (
     <div className="w-full h-full flex gap-3 p-5 border-2 border-black">
-      <div className="w-1/2 h-full border-2 border-black">
+      <div className="w-1/2 h-full">
         <DiceBoard scorecard={scorecard} setScorecard={setScorecard} />
       </div>
-      <div className="w-1/2 h-full border-2 border-black">
+      <div className="w-1/2 h-full ">
         <ScoreCard scorecard={scorecard} />
       </div>
     </div>

@@ -1,9 +1,9 @@
 import React from "react";
 
 interface ButtonProps {
-  clickHandler: () => void;
+  clickHandler?: () => void;
   content: string;
-  style: "default" | "small" | "large" | "submit" | "list-play" | "logout" | "score";
+  style?: "default" | "small" | "large" | "submit" | "list-play" | "logout" | "score";
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -12,7 +12,7 @@ const Button: React.FC<ButtonProps> = ({
   style = "default",
 }) => {
   const buttonClasses = {
-    "default": "px-4 py-2 rounded-xl text-lg border border-white hover:bg-blue-500",
+    "default": "px-4 py-2 rounded-xl text-lg border border-red hover:bg-blue-500 duration-300",
 
     "small": "p-1 rounded-xl text-lg bg-white",
 
@@ -22,7 +22,8 @@ const Button: React.FC<ButtonProps> = ({
 
     "list-play": "py-1 px-4 rounded-full text-sm border border-white hover:bg-blue-500 shadow-xl",
 
-    "submit": "px-10 py-2 text-white bg-blue-500 border-4 border-gray-300 rounded-full hover:bg-gray-300 hover:border-black hover:text-black duration-300",
+    "submit": `px-10 py-2 text-white bg-blue-500 border-4 border-gray-300 rounded-full hover:bg-gray-300
+     hover:border-black hover:text-black duration-300`,
 
     "logout": "border border-black rounded-full w-[75px]",
 
