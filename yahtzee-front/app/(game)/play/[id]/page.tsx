@@ -41,7 +41,7 @@ export default function Play({ params }) {
   }, [fetchUserAndScorecard, params.id]);
 
   return (
-    <div className="w-full h-full flex gap-3 p-5 border-2 border-black">
+    <div className="w-full h-full flex gap-3 p-10 ">
       <div className="w-1/2 h-full">
         <DiceBoard scorecard={scorecard} setScorecard={setScorecard} />
       </div>

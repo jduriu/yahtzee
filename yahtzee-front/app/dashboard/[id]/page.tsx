@@ -39,7 +39,7 @@ export default function Dashboard({ params }) {
           </Link>
           <Link
             className="game-button orange"
-            href={`/find/${user && user.user_id}`}
+            href={`/open/${user && user.user_id}`}
           >
             Open Game
           </Link>

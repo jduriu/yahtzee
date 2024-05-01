@@ -7,6 +7,7 @@ export function errorHandler(error: Error | AxiosError) {
     console.log(error)
     if (error.status === 401) {
       revokeTokens()
+      return error
     }
   } else {
     // stock error

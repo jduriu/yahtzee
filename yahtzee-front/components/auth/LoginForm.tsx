@@ -10,13 +10,18 @@ export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
+  const [error, setError] = useState(false)
   const tokenAuth = TokenAuth();
   const login = tokenAuth.login;
   const router = useRouter();
 
   const handleSubmit = async () => {
-    await login(username, password);
-    router.replace("/");
+    try {
+      await login({username, password});
+      // router.replace("/");
+    } catch (error) {
+      setError(true)
+    }
   };
 
   return (
@@ -33,7 +38,10 @@ export default function LoginForm() {
           className="bg-white w-2/3 p-2 text-black"
           type="text"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            setError(false)
+            setUsername(e.target.value)
+          }}
         />
         <div>Password:</div>
         <div className="w-2/3 flex justify-center items-center gap-3">
@@ -41,7 +49,10 @@ export default function LoginForm() {
             className="w-full bg-white p-2 text-black"
             type="text"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setError(false)
+              setPassword(e.target.value)
+            }}
             id={hidePassword ? "hide-password" : ""}
           />
           {/* Custom button for show/hide need to update to use icons in future, potentially add to global button options? */}
@@ -56,6 +67,7 @@ export default function LoginForm() {
       </div>
       <div className="w-full flex flex-col gap-10 justify-center items-center">
         <Button clickHandler={handleSubmit} content="Submit" style="submit" />
+        {error && <div>Unable to process login, double check credentials and try again</div>}
         <div className="text-gray-200">
           <span>If you do not have an account, sign-up by clicking </span>
           <Link href="/signup" className="text-blue-500 hover:underline">
