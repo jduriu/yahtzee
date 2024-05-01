@@ -112,7 +112,7 @@ const DiceBoard = ({ scorecard, setScorecard }) => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col p-5">
+    <div className="w-full flex flex-col p-5">
       <div>Turns remaining: {getTurnsRemaining()}</div>
       <div className="flex flex-col py-5">
         <DiceRoller

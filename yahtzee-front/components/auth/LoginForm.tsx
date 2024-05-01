@@ -18,7 +18,7 @@ export default function LoginForm() {
   const handleSubmit = async () => {
     try {
       await login({username, password});
-      // router.replace("/");
+      router.replace("/");
     } catch (error) {
       setError(true)
     }

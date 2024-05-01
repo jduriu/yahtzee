@@ -5,6 +5,7 @@ import { yahtzeeClient, accountsAuthClient } from "@/utils/axiosClients";
 import { useRouter } from "next/navigation";
 import DiceBoard from "@/components/game/DiceBoard";
 import ScoreCard from "@/components/game/ScoreCard";
+import GameFeed from "@/components/game/GameFeed";
 
 export default function Play({ params }) {
   const router = useRouter();
@@ -42,8 +43,9 @@ export default function Play({ params }) {
 
   return (
     <div className="w-full h-full flex gap-3 p-10 ">
-      <div className="w-1/2 h-full">
+      <div className="w-1/2 h-full flex flex-col">
         <DiceBoard scorecard={scorecard} setScorecard={setScorecard} />
+        <GameFeed scorecard={scorecard}/>
       </div>
       <div className="w-1/2 h-full ">
         <ScoreCard scorecard={scorecard} />
