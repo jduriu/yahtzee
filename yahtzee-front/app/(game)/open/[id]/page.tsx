@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { yahtzeeClient } from "@/utils/axiosClients";
 import Link from 'next/link';
-import Button from '@/global_components/Button';
+import Button from '@/components/global/Button';
 
 
 const SearchPage = ({ params }: { params: { id: number } }) => {

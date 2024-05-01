@@ -128,7 +128,6 @@ const DiceBoard = ({ scorecard, setScorecard }) => {
           recordScore={recordScore}
         />
       </div>
-      <div className="py-5">Suggestions:</div>
     </div>
   );
 };
