@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from games_api.routers import games_router
 from scorecards_api.routers import scorecards_router
+from logs_api.routers import logs_router
 
 app = FastAPI()
 
@@ -20,3 +21,4 @@ app.add_middleware(
 
 app.include_router(games_router)
 app.include_router(scorecards_router)
+app.include_router(logs_router)
