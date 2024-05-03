@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, Body, HTTPException
+from fastapi import APIRouter, Depends
 from logs_api.database_utils import Mongo_Logs
 from scorecards_api.database_utils import Mongo_Scorecards
 from logs_api.schema import LogHistory, Log, LogHistories
-from typing import List
+
 
 logs_router = APIRouter(prefix="/api")
 
