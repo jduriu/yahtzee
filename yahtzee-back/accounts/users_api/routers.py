@@ -21,6 +21,10 @@ def signup(
     database_utils: Mongo_Users = Depends(),
     response_model_by_alias=False,
 ):
+    """
+    Create a User instance in the database by taking in user
+    information from UserSignup schema
+    """
     return database_utils.create_user(user_form)
 
 
@@ -29,6 +33,9 @@ def login_for_access_token(
     user_form: UserLogin,
     database_utils: Mongo_Users = Depends(),
 ):
+    """
+    Login with user credentials and receive access tokens
+    """
     return database_utils.login_for_access_token(user_form)
 
 
@@ -42,6 +49,10 @@ def refresh_token(
     request: Request,
     database_utils: Mongo_Users = Depends(),
 ):
+    """
+    Authenticate and refresh token if user credentials are within
+    expiration timelines
+    """
     token_data = refreshAuthenticator(request)
     return database_utils.refresh_token(
         token_data.username,
@@ -58,5 +69,8 @@ def get_user_me(
     request: Request,
     database_utils: Mongo_Users = Depends(),
 ):
+    """
+    Authenticate and get user data based on received token
+    """
     token_data = authenticator(request)
     return database_utils.get_user(token_data.username)

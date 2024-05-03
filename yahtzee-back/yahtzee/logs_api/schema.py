@@ -45,3 +45,7 @@ class LogHistory(BaseModel):
     model_config = ConfigDict(
         json_encoders={ObjectId: str}
     )
+
+
+class LogHistories(BaseModel):
+    log_histories: List[LogHistory]

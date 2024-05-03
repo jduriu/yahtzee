@@ -10,6 +10,9 @@ def create_scorecard(
     scorecard: Scorecard,
     db_utils: Mongo_Scorecards = Depends()
 ):
+    """
+    Create a scorecard instance and return the instance
+    """
     return db_utils.create_scorecard(scorecard)
 
 
@@ -17,6 +20,9 @@ def create_scorecard(
 def get_scorecards(
     db_utils: Mongo_Scorecards = Depends()
 ):
+    """
+    Obtain all scorecard instances in the database.
+    """
     all_scorecards = db_utils.get_scorecards()
     return Scorecards(scorecards=all_scorecards)
 
@@ -26,6 +32,9 @@ def get_scorecard(
     id: str,
     db_utils: Mongo_Scorecards = Depends()
 ):
+    """
+    Obtain a single scorecard instance based on the input id
+    """
     return db_utils.get_scorecard(id)
 
 
@@ -35,6 +44,9 @@ def get_scorecard_by_user_and_game(
     game_id: str,
     db_utils: Mongo_Scorecards = Depends()
 ):
+    """
+    Obtain a single scorecard instance based on the input id
+    """
     scorecard = db_utils.get_scorecard_by_user_and_game(user_id, game_id)
     if not scorecard:
         raise HTTPException(status_code=404, detail="Scorecard not found")
@@ -47,6 +59,9 @@ def update_scorecard(
     db_utils: Mongo_Scorecards = Depends(),
     scorecard: UpdateScorecard = Body(...),
 ):
+    """
+    Update optional fields on a scorecard instance.
+    """
     return db_utils.update_scorecard(id, scorecard)
 
 
@@ -55,4 +70,7 @@ def delete_scorecard(
     id: str,
     db_utils: Mongo_Scorecards = Depends(),
 ):
+    """
+    Remove scorecard instance from the database.
+    """
     return db_utils.delete_scorecard(id)
