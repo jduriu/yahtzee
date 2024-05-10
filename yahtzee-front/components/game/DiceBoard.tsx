@@ -12,6 +12,7 @@ type ScorecardSchema = z.infer<typeof Scorecard>
 interface DiceBoardProps {
   scorecard: ScorecardSchema;
   setScorecard: React.Dispatch<React.SetStateAction<ScorecardSchema>>;
+  gameFeed: {};
   setGameFeed: React.Dispatch<React.SetStateAction<{}>>;
 }
 interface Dice {
@@ -23,7 +24,7 @@ interface Dice {
 }
 
 
-const DiceBoard = ({ scorecard, setScorecard, setGameFeed }: DiceBoardProps) => {
+const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoardProps) => {
   const [rollsRemaining, setRollsRemaining] = useState(3);
   const [selectedCategory, setSelectedCategory] = useState("ones");
   const [categoryError, setCategoryError] = useState(false);
@@ -120,6 +121,18 @@ const DiceBoard = ({ scorecard, setScorecard, setGameFeed }: DiceBoardProps) => 
         .catch((error) => {
           errorHandler(error);
         });
+      const log = {
+        log_time: 0.0,
+        type: "score",
+        category: selectedCategory,
+        value: turnValue,
+      }
+      yahtzeeClient
+        .put(`/add-log/${gameFeed._id}`, log)
+        .then((response) => {
+          const logHistory = response.data
+          setGameFeed(logHistory);
+        })
     } else {
       setCategoryError(true)
     }

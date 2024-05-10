@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { yahtzeeClient, accountsAuthClient } from "@/utils/axiosClients";
@@ -8,7 +8,7 @@ import ScoreCard from "@/components/game/ScoreCard";
 import GameFeed from "@/components/game/GameFeed";
 
 interface PlayProps {
-  params: { id: string }
+  params: { id: string };
 }
 
 export default function Play({ params }: PlayProps) {
@@ -36,7 +36,7 @@ export default function Play({ params }: PlayProps) {
     chance: 0,
     yahtzee_bonus: 0,
   });
-  const [gameFeed, setGameFeed] = useState({})
+  const [gameFeed, setGameFeed] = useState({});
 
   const fetchUserAndScorecard = useCallback(() => {
     accountsAuthClient
@@ -63,15 +63,17 @@ export default function Play({ params }: PlayProps) {
 
   const fetchGameFeed = useCallback(() => {
     yahtzeeClient
-    .get(`/log-history-by-scorecard`, { params: { scorecard_id: scorecard._id } })
+      .get(`/log-history-by-scorecard`, {
+        params: { scorecard_id: scorecard._id },
+      })
       .then((response) => {
-        const logsHistory = response.data
-        setGameFeed(logsHistory.logs)
+        const logHistory = response.data;
+        setGameFeed(logHistory);
       })
       .catch((error) => {
         console.error("Game feed unable to be accessed", error);
       });
-  }, [scorecard._id])
+  }, [scorecard._id]);
 
   useEffect(() => {
     if (params.id) {
@@ -85,12 +87,16 @@ export default function Play({ params }: PlayProps) {
     }
   }, [fetchGameFeed, scorecard]);
 
-
   return (
     <div className="w-full h-full flex gap-3 p-10 ">
       <div className="w-1/2 h-full flex flex-col">
-        <DiceBoard scorecard={scorecard} setScorecard={setScorecard} setGameFeed={setGameFeed}/>
-        <GameFeed scorecard={scorecard}/>
+        <DiceBoard
+          scorecard={scorecard}
+          setScorecard={setScorecard}
+          gameFeed={gameFeed}
+          setGameFeed={setGameFeed}
+        />
+        <GameFeed scorecard={scorecard} gameFeed={gameFeed}/>
       </div>
       <div className="w-1/2 h-full ">
         <ScoreCard scorecard={scorecard} />

@@ -21,7 +21,7 @@ def create_log_history(
     return db_utils.create_log_history(new_logs)
 
 
-@logs_router.put("/log", response_model=LogHistory)
+@logs_router.put("/add-log/{log_history_id}", response_model=LogHistory)
 def add_log(
     log_history_id: str,
     log: Log,
@@ -33,15 +33,15 @@ def add_log(
     return db_utils.add_log(log_history_id, log)
 
 
-@logs_router.get("/log-history/{log_id}", response_model=LogHistory)
+@logs_router.get("/log-history/{log_history_id}", response_model=LogHistory)
 def get_log_history_by_id(
-    log_id: str,
+    log_history_id: str,
     db_utils: Mongo_Logs = Depends()
 ):
     """
     Obtain a log history instance based on the input id
     """
-    return db_utils.get_log_history(log_id)
+    return db_utils.get_log_history(log_history_id)
 
 
 @logs_router.get("/log-history-by-scorecard", response_model=LogHistory)
