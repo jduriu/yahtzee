@@ -6,7 +6,12 @@ import Link from "next/link";
 import Button from "@/components/global/Button";
 import { useRouter } from "next/navigation";
 
-export default function SignUpForm({ setLoading, setLoggingIn }) {
+interface SignUpFormProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoggingIn: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function SignUpForm({ setLoading, setLoggingIn }: SignUpFormProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -27,7 +32,7 @@ export default function SignUpForm({ setLoading, setLoggingIn }) {
     setTimeout(() => {
       setLoggingIn(true);
     }, 2000);
-    await login(username, password);
+    await login({username, password});
     setTimeout(() => {
       router.replace("/");
     }, 5000);
@@ -64,7 +69,7 @@ export default function SignUpForm({ setLoading, setLoggingIn }) {
         ))}
       </div>
       <div className="w-full justify-center items-center flex flex-col gap-10">
-        <Button clickHandler={handleSubmit} content="Submit" style="Submit" />
+        <Button clickHandler={handleSubmit} content="Submit" style="submit" />
         <div className="text-gray-200">
           <span>If you already have an account, click </span>
           <Link href="/login" className="text-blue-500 hover:underline">

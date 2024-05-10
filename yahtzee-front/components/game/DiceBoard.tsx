@@ -25,7 +25,7 @@ interface Dice {
 
 const DiceBoard = ({ scorecard, setScorecard, setGameFeed }: DiceBoardProps) => {
   const [rollsRemaining, setRollsRemaining] = useState(3);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("ones");
   const [categoryError, setCategoryError] = useState(false);
   const [diceOne, setDiceOne] = useState(0);
   const [diceOneOpen, setDiceOneOpen] = useState(true);
@@ -139,6 +139,7 @@ const DiceBoard = ({ scorecard, setScorecard, setGameFeed }: DiceBoardProps) => 
           rollsRemaining={rollsRemaining}
           recordScore={recordScore}
         />
+        {/* ADD ERROR HANDLING HERE OR INSIDE ScoreButtons */}
       </div>
     </div>
   );

@@ -16,9 +16,9 @@ export default function Play({ params }: PlayProps) {
   const [user, setUser] = useState({});
   const [scorecard, setScorecard] = useState({
     _id: "",
-    user_id: "string",
+    user_id: "",
     player_order_id: 0,
-    game_id: "string",
+    game_id: "",
     scored: [""],
     bonus: 0,
     ones: 0,

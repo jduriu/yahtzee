@@ -1,15 +1,22 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { yahtzeeClient, accountsAuthClient } from "@/utils/axiosClients";
 import { useRouter } from "next/navigation";
 import { errorHandler } from "@/utils/errorUtils";
 import Button from "../global/Button";
 
-const StartForm = ({ setMode }) => {
+interface StartFormProps {
+  setMode: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const StartForm = ({ setMode }: StartFormProps) => {
   const router = useRouter();
-  const [user, setUser] = useState({});
-  const [players, setPlayers] = useState([]);
+  const [user, setUser] = useState({
+    user_id: "",
+    game_id: "",
+  });
+  const [players, setPlayers] = useState([""]);
 
   useEffect(() => {
     accountsAuthClient
@@ -22,7 +29,7 @@ const StartForm = ({ setMode }) => {
       .catch((error) => {
         router.replace("/login");
       });
-  }, []);
+  }, [players, router]);
 
   const createGame = () => {
     const game = {

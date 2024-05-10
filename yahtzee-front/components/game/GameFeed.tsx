@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { yahtzeeClient } from '@/utils/axiosClients';
+import { Scorecard } from '@/schema/ScorecardSchema';
+import { z } from 'zod';
 
+type ScorecardSchema = z.infer<typeof Scorecard>
+interface GameFeedProps {
+  scorecard: ScorecardSchema
+}
 
-const GameFeed = ({ scorecard }) => {
+const GameFeed = ({ scorecard }: GameFeedProps) => {
   const [gameFeed, setGameFeed] = useState({
     _id: "",
     scorecard_id: "",

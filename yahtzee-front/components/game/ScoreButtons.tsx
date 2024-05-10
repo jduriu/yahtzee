@@ -1,14 +1,22 @@
 import React from 'react';
 import DropDown from "@/components/global/DropDown";
 import Button from "@/components/global/Button";
+import { z } from 'zod';
+import { Categories } from '@/schema/ScorecardSchema';
+
+type Categories = z.infer<typeof Categories>
+interface ScoreButtonsProps {
+  setSelectedCategory: React.Dispatch<React.SetStateAction<Categories>>;
+  rollsRemaining: number;
+  recordScore: () => void;
+}
 
 const ScoreButtons = ({
   setSelectedCategory,
   rollsRemaining,
   recordScore,
-}) => {
+}: ScoreButtonsProps) => {
   const dropOptions = [
-    { name: "Select Category", value: "Select Category" },
     { name: "Ones", value: "ones" },
     { name: "Twos", value: "twos" },
     { name: "Threes", value: "threes" },

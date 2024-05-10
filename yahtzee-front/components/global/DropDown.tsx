@@ -1,14 +1,27 @@
 "use client"
 
 import React, { useState } from "react";
+import { z } from 'zod';
+import { Categories } from "@/schema/ScorecardSchema";
 
-const DropDown = ({ setSelected, options }) => {
+type Categories = z.infer<typeof Categories>
+
+interface DropDownOption {
+  name: string;
+  value: Categories;
+}
+interface DropDownProps {
+  setSelected: React.Dispatch<React.SetStateAction<Categories>>;
+  options: DropDownOption[]
+}
+
+const DropDown = ({ setSelected, options }: DropDownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedName, setSelectedName] = useState("Select Category");
 
   const toggling = () => setIsOpen(!isOpen);
 
-  const onOptionClicked = (option) => () => {
+  const onOptionClicked = (option: DropDownOption) => () => {
     setSelectedName(option.name);
     setSelected(option.value);
     setIsOpen(false);
@@ -51,7 +64,7 @@ const DropDown = ({ setSelected, options }) => {
                 href="#"
                 className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900"
                 role="menuitem"
-                key={option.value}
+                key={option.name}
                 onClick={onOptionClicked(option)}
               >
                 {option.name}
