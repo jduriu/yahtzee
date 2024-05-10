@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-const DropDown = ({ selected, setSelected, options }) => {
+const DropDown = ({ setSelected, options }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedName, setSelectedName] = useState("Select Category");
 

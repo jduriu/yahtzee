@@ -1,15 +1,25 @@
 "use client";
 
-import { useState } from "react";
 import Button from "@/components/global/Button";
+
+interface Dice {
+  name: string;
+  value: number;
+  set: (num: number) => void;
+  open: boolean;
+  changeStatus: () => void;
+}
+interface DiceRollerProps {
+  dice: Dice[];
+  rollsRemaining: number;
+  setRollsRemaining: React.Dispatch<React.SetStateAction<number>>;
+}
 
 export default function DiceRoller({
   dice,
   rollsRemaining,
   setRollsRemaining,
-}) {
-  const [selectedCategory, setSelectedCategory] = useState("");
-
+}: DiceRollerProps) {
   const diceRoll = () => {
     const randomNum = Math.random() * (6 - 1) + 1;
     return Math.round(randomNum);

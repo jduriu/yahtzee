@@ -5,7 +5,15 @@ import ScoreButtons from "./ScoreButtons";
 import processDice from "@/utils/processDice";
 import { errorHandler } from "@/utils/errorUtils";
 import { yahtzeeClient } from "@/utils/axiosClients";
+import { Scorecard } from "@/schema/ScorecardSchema";
+import { z } from 'zod';
 
+type ScorecardSchema = z.infer<typeof Scorecard>
+interface DiceBoardProps {
+  scorecard: ScorecardSchema;
+  setScorecard: React.Dispatch<React.SetStateAction<ScorecardSchema>>;
+  setGameFeed: React.Dispatch<React.SetStateAction<{}>>;
+}
 interface Dice {
   name: string;
   value: number;
@@ -14,9 +22,11 @@ interface Dice {
   changeStatus: () => void;
 }
 
-const DiceBoard = ({ scorecard, setScorecard }) => {
+
+const DiceBoard = ({ scorecard, setScorecard, setGameFeed }: DiceBoardProps) => {
   const [rollsRemaining, setRollsRemaining] = useState(3);
-  const [selectedCategory, setSelectedCategory] = useState("Select Category");
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categoryError, setCategoryError] = useState(false);
   const [diceOne, setDiceOne] = useState(0);
   const [diceOneOpen, setDiceOneOpen] = useState(true);
   const [diceTwo, setDiceTwo] = useState(0);
@@ -87,28 +97,32 @@ const DiceBoard = ({ scorecard, setScorecard }) => {
   };
 
   const recordScore = () => {
-    const scorecardId = scorecard._id;
-    const tempScorecard = { ...scorecard };
-    const turnValue = processDice(dice, selectedCategory, tempScorecard);
-    if (turnValue === "yahtzeeBonus") {
-      tempScorecard.yahtzee_bonus += 1;
+    if (selectedCategory !== null) {
+      const scorecardId = scorecard._id;
+      const tempScorecard = { ...scorecard };
+      const turnValue = processDice(dice, selectedCategory, tempScorecard);
+      if (turnValue === "yahtzeeBonus") {
+        tempScorecard.yahtzee_bonus += 1;
+      } else {
+        tempScorecard[selectedCategory] = turnValue;
+        tempScorecard.scored.push(selectedCategory);
+      }
+      yahtzeeClient
+        .put(`/scorecards/${scorecardId}`, tempScorecard)
+        .then((response) => {
+          if (response.statusText === "OK") {
+            const updatedScorecard = response.data;
+            console.log("Turn Taken");
+            setScorecard(updatedScorecard);
+            startNewTurn();
+          }
+        })
+        .catch((error) => {
+          errorHandler(error);
+        });
     } else {
-      tempScorecard[selectedCategory] = turnValue;
-      tempScorecard.scored.push(selectedCategory);
+      setCategoryError(true)
     }
-    yahtzeeClient
-      .put(`/scorecards/${scorecardId}`, tempScorecard)
-      .then((response) => {
-        if (response.statusText === "OK") {
-          const updatedScorecard = response.data;
-          console.log("Turn Taken");
-          setScorecard(updatedScorecard);
-          startNewTurn();
-        }
-      })
-      .catch((error) => {
-        errorHandler(error);
-      });
   };
 
   return (
@@ -116,13 +130,11 @@ const DiceBoard = ({ scorecard, setScorecard }) => {
       <div>Turns remaining: {getTurnsRemaining()}</div>
       <div className="flex flex-col py-5">
         <DiceRoller
-          scorecard={scorecard}
           dice={dice}
           rollsRemaining={rollsRemaining}
           setRollsRemaining={setRollsRemaining}
         />
         <ScoreButtons
-          selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           rollsRemaining={rollsRemaining}
           recordScore={recordScore}

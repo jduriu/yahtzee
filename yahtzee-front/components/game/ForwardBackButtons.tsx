@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@/components/global/Button";
 
-type ForwardBackButtonsProps = {
+interface ForwardBackButtonsProps {
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
 };

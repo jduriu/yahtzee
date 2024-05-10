@@ -4,7 +4,7 @@ import { z } from 'zod';
 import Tooltip from '@mui/material/Tooltip';
 
 type ScorecardSchema = z.infer<typeof Scorecard>
-type ScoreCardProps = {
+interface ScoreCardProps {
   scorecard: ScorecardSchema
 }
 

@@ -1,9 +1,13 @@
-import { z } from 'zod';
-import { Scorecard, UpperCategoryKeys, CategoryKeys } from '@/schema/ScorecardSchema';
+import { z } from "zod";
+import {
+  Scorecard,
+  UpperCategoryKeys,
+  CategoryKeys,
+} from "@/schema/ScorecardSchema";
 
-type UpperCategories = z.infer<typeof UpperCategoryKeys>
-type Categories = z.infer<typeof CategoryKeys>
-type ScorecardProps = z.infer<typeof Scorecard>
+type UpperCategories = z.infer<typeof UpperCategoryKeys>;
+type Categories = z.infer<typeof CategoryKeys>;
+type ScorecardProps = z.infer<typeof Scorecard>;
 interface Dice {
   name: string;
   value: number;
@@ -43,7 +47,10 @@ const sum = (diceArray: number[]) => {
   }, 0);
 };
 
-const processUpperSectionScore = (diceArray: number[], category: UpperCategories) => {
+const processUpperSectionScore = (
+  diceArray: number[],
+  category: UpperCategories
+) => {
   const counts = count(diceArray);
   const dieNumber = categoryMap[category];
   const categoryCount = counts[dieNumber];
@@ -123,8 +130,12 @@ const checkYahtzee = (diceArray: number[]) => {
   return Object.keys(counts).length === 1;
 };
 
-const processDice = (dice: Dice[], selectedCategory: Categories, scorecard: ScorecardProps ) => {
-  const diceArray = dice.map(die => (die.value));
+const processDice = (
+  dice: Dice[],
+  selectedCategory: Categories,
+  scorecard: ScorecardProps
+) => {
+  const diceArray = dice.map((die) => die.value);
   let turnValue: number | string = 0;
   if (scorecard.scored.includes(selectedCategory)) {
     // Add error handling here!

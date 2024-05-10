@@ -1,7 +1,7 @@
 import React, { SetStateAction } from "react";
 import Button from "@/components/global/Button";
 
-type StartTutorialProps = {
+interface StartTutorialProps {
   step: number;
   setStep: React.Dispatch<SetStateAction<number>>;
 };

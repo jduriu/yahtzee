@@ -7,7 +7,7 @@ import DiceBoard from "@/components/game/DiceBoard";
 import ScoreCard from "@/components/game/ScoreCard";
 import GameFeed from "@/components/game/GameFeed";
 
-type PlayProps = {
+interface PlayProps {
   params: { id: string }
 }
 
@@ -19,7 +19,7 @@ export default function Play({ params }: PlayProps) {
     user_id: "string",
     player_order_id: 0,
     game_id: "string",
-    scored: [],
+    scored: [""],
     bonus: 0,
     ones: 0,
     twos: 0,
@@ -89,7 +89,7 @@ export default function Play({ params }: PlayProps) {
   return (
     <div className="w-full h-full flex gap-3 p-10 ">
       <div className="w-1/2 h-full flex flex-col">
-        <DiceBoard scorecard={scorecard} setScorecard={setScorecard} />
+        <DiceBoard scorecard={scorecard} setScorecard={setScorecard} setGameFeed={setGameFeed}/>
         <GameFeed scorecard={scorecard}/>
       </div>
       <div className="w-1/2 h-full ">

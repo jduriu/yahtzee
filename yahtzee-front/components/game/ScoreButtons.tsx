@@ -3,7 +3,6 @@ import DropDown from "@/components/global/DropDown";
 import Button from "@/components/global/Button";
 
 const ScoreButtons = ({
-  selectedCategory,
   setSelectedCategory,
   rollsRemaining,
   recordScore,
@@ -30,7 +29,6 @@ const ScoreButtons = ({
       <div className="w-full flex gap-10 items-center justify-center">
         <Button clickHandler={recordScore} content="Score" style="score" />
         <DropDown
-          selected={selectedCategory}
           setSelected={setSelectedCategory}
           options={dropOptions}
         />
