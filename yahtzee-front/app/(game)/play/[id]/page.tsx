@@ -36,7 +36,11 @@ export default function Play({ params }: PlayProps) {
     chance: 0,
     yahtzee_bonus: 0,
   });
-  const [gameFeed, setGameFeed] = useState({});
+  const [gameFeed, setGameFeed] = useState({
+    _id: "",
+    scorecard_id: "",
+    logs: [],
+  });
 
   const fetchUserAndScorecard = useCallback(() => {
     accountsAuthClient
