@@ -7,10 +7,35 @@ import DiceBoard from "@/components/game/DiceBoard";
 import ScoreCard from "@/components/game/ScoreCard";
 import GameFeed from "@/components/game/GameFeed";
 
-export default function Play({ params }) {
+type PlayProps = {
+  params: { id: string }
+}
+
+export default function Play({ params }: PlayProps) {
   const router = useRouter();
   const [user, setUser] = useState({});
-  const [scorecard, setScorecard] = useState({});
+  const [scorecard, setScorecard] = useState({
+    _id: "",
+    user_id: "string",
+    player_order_id: 0,
+    game_id: "string",
+    scored: [],
+    bonus: 0,
+    ones: 0,
+    twos: 0,
+    threes: 0,
+    fours: 0,
+    fives: 0,
+    sixes: 0,
+    three_of_kind: 0,
+    four_of_kind: 0,
+    full_house: 0,
+    sm_straight: 0,
+    lg_straight: 0,
+    yahtzee: 0,
+    chance: 0,
+    yahtzee_bonus: 0,
+  });
   const [gameFeed, setGameFeed] = useState({})
 
   const fetchUserAndScorecard = useCallback(() => {
@@ -38,7 +63,7 @@ export default function Play({ params }) {
 
   const fetchGameFeed = useCallback(() => {
     yahtzeeClient
-      .get(`/log-history/${scorecard._id}`)
+    .get(`/log-history-by-scorecard`, { params: { scorecard_id: scorecard._id } })
       .then((response) => {
         const logsHistory = response.data
         setGameFeed(logsHistory.logs)
@@ -55,10 +80,11 @@ export default function Play({ params }) {
   }, [fetchUserAndScorecard, params.id]);
 
   useEffect(() => {
-    if (scorecard) {
+    if (scorecard._id) {
       fetchGameFeed();
     }
-  }, [scorecard, fetchGameFeed]);
+  }, [fetchGameFeed, scorecard]);
+
 
   return (
     <div className="w-full h-full flex gap-3 p-10 ">

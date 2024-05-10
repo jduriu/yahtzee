@@ -1,27 +1,9 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import Button from "@/components/global/Button";
-import DropDown from "@/components/global/DropDown";
-
-const scorecardCategories = [
-  "ones",
-  "twos",
-  "threes",
-  "fours",
-  "fives",
-  "sixes",
-  "three_of_kind",
-  "four_of_kind",
-  "full_house",
-  "sm_straight",
-  "lg_straight",
-  "yahtzee",
-  "chance",
-];
 
 export default function DiceRoller({
-  scorecard,
   dice,
   rollsRemaining,
   setRollsRemaining,

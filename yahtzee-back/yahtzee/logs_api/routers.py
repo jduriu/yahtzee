@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from logs_api.database_utils import Mongo_Logs
 from scorecards_api.database_utils import Mongo_Scorecards
 from logs_api.schema import LogHistory, Log, LogHistories
@@ -44,14 +44,15 @@ def get_log_history_by_id(
     return db_utils.get_log_history(log_id)
 
 
-@logs_router.get("/log-history/{scorecard_id}", response_model=LogHistory)
+@logs_router.get("/log-history-by-scorecard", response_model=LogHistory)
 def get_log_history_by_scorecard(
     scorecard_id: str,
     db_utils: Mongo_Logs = Depends(),
     validate_utils: Mongo_Scorecards = Depends()
 ):
     """
-    Obtain a log history instance based on the input id
+    Obtain a log history instance based on the scorecard_id
+    If an instance doesn't exist, create a new log history
     """
     validate_utils.get_scorecard(scorecard_id)
     log_history = db_utils.get_log_history_by_scorecard(scorecard_id)

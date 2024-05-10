@@ -23,7 +23,7 @@ const LowerCategories = z.object({
 const Categories = UpperCategories.merge(LowerCategories);
 
 const Scorecard = Categories.extend({
-  id: z.string(),
+  _id: z.string(),
   user_id: z.string(),
   player_order_id: z.number(),
   game_id: z.string(),
