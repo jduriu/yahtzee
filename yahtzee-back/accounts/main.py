@@ -1,9 +1,16 @@
 from fastapi import FastAPI
-from users_api.routers import users_router
 from fastapi.middleware.cors import CORSMiddleware
 
+from users_api.routers import users_router
 
-app = FastAPI()
+from openapi_docs_lib.description import description
+from openapi_docs_lib.tags import tags_metadata
+
+app = FastAPI(
+    title="Accounts",
+    openapi_tags=tags_metadata,
+    description=description
+)
 
 origins = [
     "http://localhost:3000",
@@ -17,4 +24,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(users_router)
+app.include_router(users_router, tags="users-api")

@@ -29,12 +29,19 @@ class Mongo_Logs:
         return log_histories
 
     def get_log_history(self, id):
-
         log_history = db.find_one({"_id": ObjectId(id)})
         return log_history
 
-    def add_log(self, log_history_id, log):
+    def get_log_history_by_scorecard(self, scorecard_id):
+        log_history = db.find_one({"scorecard_id": scorecard_id})
+        if not log_history:
+            raise HTTPException(
+                status_code=400,
+                detail=f"logs not found for scorecard_id: {scorecard_id}"
+            )
+        return log_history
 
+    def add_log(self, log_history_id, log):
         new_log = log.model_dump()
         new_log["log_time"] = time()
         db.find_one_and_update(

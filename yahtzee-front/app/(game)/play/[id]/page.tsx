@@ -11,6 +11,7 @@ export default function Play({ params }) {
   const router = useRouter();
   const [user, setUser] = useState({});
   const [scorecard, setScorecard] = useState({});
+  const [gameFeed, setGameFeed] = useState({})
 
   const fetchUserAndScorecard = useCallback(() => {
     accountsAuthClient
@@ -35,11 +36,29 @@ export default function Play({ params }) {
       });
   }, [params.id, router]);
 
+  const fetchGameFeed = useCallback(() => {
+    yahtzeeClient
+      .get(`/log-history/${scorecard._id}`)
+      .then((response) => {
+        const logsHistory = response.data
+        setGameFeed(logsHistory.logs)
+      })
+      .catch((error) => {
+        console.error("Game feed unable to be accessed", error);
+      });
+  }, [scorecard._id])
+
   useEffect(() => {
     if (params.id) {
       fetchUserAndScorecard();
     }
   }, [fetchUserAndScorecard, params.id]);
+
+  useEffect(() => {
+    if (scorecard) {
+      fetchGameFeed();
+    }
+  }, [scorecard, fetchGameFeed]);
 
   return (
     <div className="w-full h-full flex gap-3 p-10 ">
