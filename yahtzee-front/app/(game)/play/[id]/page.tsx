@@ -100,7 +100,7 @@ export default function Play({ params }: PlayProps) {
           gameFeed={gameFeed}
           setGameFeed={setGameFeed}
         />
-        <GameFeed scorecard={scorecard} gameFeed={gameFeed}/>
+        <GameFeed user={user} gameFeed={gameFeed}/>
       </div>
       <div className="w-1/2 h-full ">
         <ScoreCard scorecard={scorecard} />
