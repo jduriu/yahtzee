@@ -29,7 +29,7 @@ class Log(BaseModel):
     """
     log_time: float = Field(...)
     type: LogType
-    category: Optional[str] = Field(...)
+    category: Optional[str]
     value: Union[List[int], int] = Field(...)
 
 

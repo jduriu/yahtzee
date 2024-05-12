@@ -1,6 +1,12 @@
 "use client";
 
 import Button from "@/components/global/Button";
+import { Log, GameFeed } from "@/schema/GameFeedSchema";
+import { z } from 'zod';
+import { yahtzeeClient } from "@/utils/axiosClients";
+
+type LogSchema = z.infer<typeof Log>
+type GameFeedSchema = z.infer<typeof GameFeed>
 
 interface Dice {
   name: string;
@@ -13,12 +19,16 @@ interface DiceRollerProps {
   dice: Dice[];
   rollsRemaining: number;
   setRollsRemaining: React.Dispatch<React.SetStateAction<number>>;
+  gameFeed: GameFeedSchema;
+  setGameFeed: React.Dispatch<React.SetStateAction<GameFeedSchema>>;
 }
 
 export default function DiceRoller({
   dice,
   rollsRemaining,
   setRollsRemaining,
+  gameFeed,
+  setGameFeed,
 }: DiceRollerProps) {
   const diceRoll = () => {
     const randomNum = Math.random() * (6 - 1) + 1;
@@ -26,13 +36,29 @@ export default function DiceRoller({
   };
 
   const rollOpenDice = () => {
+    let roll = []
     for (let die of dice) {
       if (die["open"]) {
         const newDiceValue = diceRoll();
         die.set(newDiceValue);
+        roll.push(newDiceValue)
+      } else {
+        roll.push(die.value)
       }
     }
     setRollsRemaining(rollsRemaining - 1);
+    const log: LogSchema  = {
+      log_time: 0.0,
+      type: "roll",
+      category: "",
+      value: roll,
+    }
+    yahtzeeClient
+      .put(`/add-log/${gameFeed._id}`, log)
+      .then((response) => {
+        const logHistory = response.data
+        setGameFeed(logHistory);
+      })
   };
 
   return (

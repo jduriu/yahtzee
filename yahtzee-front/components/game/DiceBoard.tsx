@@ -117,7 +117,6 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
         .then((response) => {
           if (response.statusText === "OK") {
             const updatedScorecard = response.data;
-            console.log("Turn Taken");
             setScorecard(updatedScorecard);
             startNewTurn();
           }
@@ -150,6 +149,8 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
           dice={dice}
           rollsRemaining={rollsRemaining}
           setRollsRemaining={setRollsRemaining}
+          gameFeed={gameFeed}
+          setGameFeed={setGameFeed}
         />
         <ScoreButtons
           setSelectedCategory={setSelectedCategory}
