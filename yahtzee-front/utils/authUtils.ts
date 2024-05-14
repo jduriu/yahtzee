@@ -8,7 +8,11 @@ type LoginProps = z.infer<typeof Login>
 
 // Token Handlers
 export function getJwtToken() {
-  return sessionStorage.getItem("jwt");
+  const jwt = sessionStorage.getItem("jwt");
+  if (!jwt) {
+    throw new Error('Token not found')
+  }
+  return jwt
 }
 
 export function setJwtToken(token: string) {

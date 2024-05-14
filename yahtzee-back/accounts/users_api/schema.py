@@ -44,3 +44,8 @@ class User(BaseModel):
 
 class UserInDB(User):
     hashed_password: str
+
+
+class UserToClient(BaseModel):
+    user_id: str
+    username: str

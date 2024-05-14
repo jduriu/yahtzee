@@ -6,14 +6,17 @@ import { useRouter } from "next/navigation";
 import DiceBoard from "@/components/game/DiceBoard";
 import ScoreCard from "@/components/game/ScoreCard";
 import GameFeed from "@/components/game/GameFeed";
+import { z } from 'zod';
+import { User } from '@/schema/UserSchema';
 
+type UserSchema = z.infer<typeof User>
 interface PlayProps {
   params: { id: string };
 }
 
 export default function Play({ params }: PlayProps) {
   const router = useRouter();
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({} as UserSchema);
   const [scorecard, setScorecard] = useState({
     _id: "",
     user_id: "",
@@ -93,13 +96,15 @@ export default function Play({ params }: PlayProps) {
 
   return (
     <div className="w-full h-full flex gap-3 p-10 ">
-      <div className="w-1/2 h-full flex flex-col">
+      <div className="w-1/2 h-full flex flex-col justify-between gap-2">
+        <h1 className="text-2xl">Dice Board</h1>
         <DiceBoard
           scorecard={scorecard}
           setScorecard={setScorecard}
           gameFeed={gameFeed}
           setGameFeed={setGameFeed}
         />
+        <h1 className="text-2xl">Game Feed</h1>
         <GameFeed user={user} gameFeed={gameFeed}/>
       </div>
       <div className="w-1/2 h-full ">

@@ -1,11 +1,15 @@
 import React from 'react';
-import { Scorecard } from '@/schema/ScorecardSchema';
 import { z } from 'zod';
+import { LogHistory, Log } from '@/schema/GameFeedSchema';
+import { User } from '@/schema/UserSchema';
 
-type ScorecardSchema = z.infer<typeof Scorecard>
+type LogSchema = z.infer<typeof Log>
+type LogHistorySchema = z.infer<typeof LogHistory>
+type UserSchema = z.infer<typeof User>
+
 interface GameFeedProps {
-  scorecard: ScorecardSchema
-  gameFeed: {};
+  user: UserSchema;
+  gameFeed: LogHistorySchema;
 }
 
 const CategoryNameMap = {
@@ -27,7 +31,7 @@ const CategoryNameMap = {
 }
 
 const GameFeed = ({ user, gameFeed }: GameFeedProps) => {
-  const processLogs = (log, index) => {
+  const processLogs = (log: LogSchema, index: number) => {
     if (log.type === 'score') {
       return (
         <div key={index}>{`... ${user.username} scored ${log.value} on ${CategoryNameMap[log.category]}`}</div>
@@ -47,15 +51,15 @@ const GameFeed = ({ user, gameFeed }: GameFeedProps) => {
   }
 
   return (
-    <div className="w-full h-full p-5">
-      <h1 className="text-2xl pb-4">Game History</h1>
-      <div className="flex flex-col gap-1">
+    <div className="w-full p-5 overflow-y-auto">
+      <div className="h-[73%] flex flex-col gap-1">
         {gameFeed.logs &&
-          gameFeed.logs.map((log, index) => (
+          gameFeed.logs.map((log: LogSchema, index: number) => (
             processLogs(log, index)
           ))
         }
       </div>
+
     </div>
   )
 };

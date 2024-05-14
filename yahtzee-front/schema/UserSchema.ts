@@ -1,11 +1,16 @@
 import { z } from 'zod';
 
-const User = z.object({
+const UserSignup = z.object({
   username: z.string(),
   password: z.string(),
   email: z.string(),
 });
 
-const Login = User.pick({username: true, password: true})
+const Login = UserSignup.pick({username: true, password: true})
 
-export { User, Login };
+const User = z.object({
+  user_id: z.string(),
+  username: z.string(),
+})
+
+export { UserSignup, Login, User };

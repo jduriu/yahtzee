@@ -33,7 +33,9 @@ class Mongo_Logs:
         return log_history
 
     def get_log_history_by_scorecard(self, scorecard_id):
-        log_history = db.find_one({"scorecard_id": scorecard_id})
+        log_history = db.find_one(
+            {"scorecard_id": scorecard_id},
+        )
         return log_history
 
     def add_log(self, log_history_id, log):

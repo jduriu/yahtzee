@@ -12,8 +12,8 @@ export default function GameLayout({
       <div className="w-full h-[75px]">
         <Header />
       </div>
-      <main className="h-[calc(100%-150px)]">{children}</main>
-      <div className="w-full h-[75px]">
+      <main className="h-[calc(100%-125px)]">{children}</main>
+      <div className="w-full h-[50px]">
         <Footer />
       </div>
     </>

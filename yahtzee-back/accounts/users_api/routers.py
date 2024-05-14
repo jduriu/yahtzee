@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Request
-from users_api.schema import UserSignup, UserInDB, Token, User, UserLogin
+from users_api.schema import UserSignup, UserInDB, Token, UserLogin, UserToClient
 from users_api.database_utils import Mongo_Users
 from users_api.auth import Authenticator, RefreshAuthenticator
 
@@ -62,7 +62,7 @@ def refresh_token(
 ################################################################
 
 
-@users_router.get("/user", response_model=User)
+@users_router.get("/user", response_model=UserToClient)
 def get_user_me(
     request: Request,
     database_utils: Mongo_Users = Depends(),
@@ -71,4 +71,4 @@ def get_user_me(
     Authenticate and get user data based on received token
     """
     token_data = authenticator(request)
-    return database_utils.get_user(token_data.username)
+    return database_utils.get_user_for_client(token_data.username)

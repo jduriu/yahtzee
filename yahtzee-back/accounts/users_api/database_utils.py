@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from fastapi import HTTPException, status
-from users_api.schema import UserInDB
+from users_api.schema import UserInDB, UserToClient
 from users_api.config import Settings
 from users_api.auth import AuthenticationUtilities
 from fastapi.encoders import jsonable_encoder
@@ -36,9 +36,20 @@ class Mongo_Users:
             del user_info["password"]
             user_info["user_id"] = new_uuid
             users_db.insert_one(user_info)
-            user = self.get_user(user_info["username"])
+            user = self.get_user_for_client(user_info["username"])
             return user
         raise HTTPException(status_code=404, detail="Username taken")
+
+    def get_user_for_client(self, username):
+        user = users_db.find_one({
+            "username": username
+        })
+        if not user:
+            raise HTTPException(
+                status_code=400,
+                detail="User not found",
+            )
+        return UserToClient(**user)
 
     def get_user(self, username):
         user = users_db.find_one({

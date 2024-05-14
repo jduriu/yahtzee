@@ -4,10 +4,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { accountsAuthClient } from "@/utils/axiosClients";
 import { useRouter } from "next/navigation";
+import { z } from 'zod';
+import { User } from '@/schema/UserSchema';
+
+type UserSchema = z.infer<typeof User>
 
 export default function Dashboard({ params }) {
   const router = useRouter();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({} as UserSchema);
   useEffect(() => {
     accountsAuthClient
       .get("/user")

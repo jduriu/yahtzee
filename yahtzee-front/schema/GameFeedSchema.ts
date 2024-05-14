@@ -9,7 +9,7 @@ const Log = z.object({
   value: z.number().or(z.number().array())
 })
 
-const GameFeed = z.object({
+const LogHistory = z.object({
   _id: z.string(),
   scorecard_id: z.string(),
   logs: z.array(Log)
@@ -17,5 +17,5 @@ const GameFeed = z.object({
 
 export {
   Log,
-  GameFeed
+  LogHistory
 };
