@@ -8,8 +8,13 @@ import ScoreCard from "@/components/game/ScoreCard";
 import GameFeed from "@/components/game/GameFeed";
 import { z } from 'zod';
 import { User } from '@/schema/UserSchema';
+import { Scorecard } from "@/schema/ScorecardSchema";
+import { LogHistory } from "@/schema/GameFeedSchema";
 
 type UserSchema = z.infer<typeof User>
+type ScorecardSchema = z.infer<typeof Scorecard>
+type GameFeedSchema = z.infer<typeof LogHistory>
+
 interface PlayProps {
   params: { id: string };
 }
@@ -17,33 +22,8 @@ interface PlayProps {
 export default function Play({ params }: PlayProps) {
   const router = useRouter();
   const [user, setUser] = useState({} as UserSchema);
-  const [scorecard, setScorecard] = useState({
-    _id: "",
-    user_id: "",
-    player_order_id: 0,
-    game_id: "",
-    scored: [""],
-    bonus: 0,
-    ones: 0,
-    twos: 0,
-    threes: 0,
-    fours: 0,
-    fives: 0,
-    sixes: 0,
-    three_of_kind: 0,
-    four_of_kind: 0,
-    full_house: 0,
-    sm_straight: 0,
-    lg_straight: 0,
-    yahtzee: 0,
-    chance: 0,
-    yahtzee_bonus: 0,
-  });
-  const [gameFeed, setGameFeed] = useState({
-    _id: "",
-    scorecard_id: "",
-    logs: [],
-  });
+  const [scorecard, setScorecard] = useState({} as ScorecardSchema);
+  const [gameFeed, setGameFeed] = useState({} as GameFeedSchema);
 
   const fetchUserAndScorecard = useCallback(() => {
     accountsAuthClient

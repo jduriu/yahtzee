@@ -6,18 +6,18 @@ import processDice from "@/utils/processDice";
 import { errorHandler } from "@/utils/errorUtils";
 import { yahtzeeClient } from "@/utils/axiosClients";
 import { Scorecard } from "@/schema/ScorecardSchema";
-import { GameFeed, Log } from "@/schema/GameFeedSchema";
+import { LogHistory, Log } from "@/schema/GameFeedSchema";
 import { z } from 'zod';
 
 type ScorecardSchema = z.infer<typeof Scorecard>
-type GameFeedSchema = z.infer<typeof GameFeed>
+type LogHistorySchema = z.infer<typeof LogHistory>
 type LogSchema = z.infer<typeof Log>
 
 interface DiceBoardProps {
   scorecard: ScorecardSchema;
   setScorecard: React.Dispatch<React.SetStateAction<ScorecardSchema>>;
-  gameFeed: GameFeedSchema;
-  setGameFeed: React.Dispatch<React.SetStateAction<GameFeedSchema>>;
+  gameFeed: LogHistorySchema;
+  setGameFeed: React.Dispatch<React.SetStateAction<LogHistorySchema>>;
 }
 interface Dice {
   name: string;
