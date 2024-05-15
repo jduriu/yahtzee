@@ -30,6 +30,7 @@ export default function DiceRoller({
   gameFeed,
   setGameFeed,
 }: DiceRollerProps) {
+
   const diceRoll = () => {
     const randomNum = Math.random() * (6 - 1) + 1;
     return Math.round(randomNum);
@@ -61,6 +62,28 @@ export default function DiceRoller({
       })
   };
 
+  const checkGameFeed = () => {
+    let logIndex = gameFeed.logs.length - 1
+    let log = gameFeed.logs[logIndex]
+
+    if (logIndex > 0) {
+      if (log.type === 'roll') {
+        dice.map((die, index) => {
+          die.set(log.value[index])
+        })
+      }
+
+      let remainingRolls = 3
+
+      while (log.type === 'roll' && remainingRolls !== 0) {
+        remainingRolls -= 1
+        logIndex -= 1
+        log = gameFeed.logs[logIndex]
+      }
+      setRollsRemaining(remainingRolls)
+    }
+  }
+
   return (
     <div className="w-full h-full flex flex-col gap-3 items-center justify-center p-5">
       <div className="self-start">Rolls Remaining: {rollsRemaining}</div>
@@ -75,9 +98,9 @@ export default function DiceRoller({
             </button>
           ) : (
             <button
-              key={die.name}
-              className="-translate-y-3 font-bold"
-              onClick={die.changeStatus}
+            key={die.name}
+            className="-translate-y-3 font-bold"
+            onClick={die.changeStatus}
             >
               {die.value}
             </button>

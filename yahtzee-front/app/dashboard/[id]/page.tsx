@@ -9,7 +9,7 @@ import { User } from '@/schema/UserSchema';
 
 type UserSchema = z.infer<typeof User>
 
-export default function Dashboard({ params }) {
+export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState({} as UserSchema);
   useEffect(() => {
