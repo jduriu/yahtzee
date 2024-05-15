@@ -55,7 +55,7 @@ const ScoreCard = ({ scorecard }: ScoreCardProps) => {
                 {category.name}
             </div>
           </Tooltip>
-          <div className="w-[10%] border-l flex items-center justify-center">{category.value ? category.value : '-'}</div>
+          <div className="w-[10%] border-l flex items-center justify-center">{category.value !== null ? category.value : '-'}</div>
         </div>
       ))}
       <div className="w-full border flex h-10 items-center text-lg bg-gray-100">
@@ -70,7 +70,7 @@ const ScoreCard = ({ scorecard }: ScoreCardProps) => {
                 {category.name}
             </div>
           </Tooltip>
-          <div className="w-[10%] border-l flex items-center justify-center">{category.value ? category.value : '-'}</div>
+          <div className="w-[10%] border-l flex items-center justify-center">{category.value !== null ? category.value : '-'}</div>
         </div>
       ))}
       <div className="w-full border flex h-10 items-center text-lg bg-gray-100">
