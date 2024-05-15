@@ -1,12 +1,13 @@
 "use client";
 
 import Button from "@/components/global/Button";
-import { Log, GameFeed } from "@/schema/GameFeedSchema";
+import { Log, LogHistory } from "@/schema/GameFeedSchema";
 import { z } from 'zod';
 import { yahtzeeClient } from "@/utils/axiosClients";
+import { useCallback, useEffect } from "react";
 
 type LogSchema = z.infer<typeof Log>
-type GameFeedSchema = z.infer<typeof GameFeed>
+type GameFeedSchema = z.infer<typeof LogHistory>
 
 interface Dice {
   name: string;
@@ -62,7 +63,7 @@ export default function DiceRoller({
       })
   };
 
-  const checkGameFeed = () => {
+  const checkGameFeed = useCallback(() => {
     let logIndex = gameFeed.logs.length - 1
     let log = gameFeed.logs[logIndex]
 
@@ -82,7 +83,13 @@ export default function DiceRoller({
       }
       setRollsRemaining(remainingRolls)
     }
-  }
+  }, [dice, setRollsRemaining, gameFeed])
+
+  useEffect(() => {
+    if (gameFeed.logs) {
+      checkGameFeed()
+    }
+  }, [gameFeed, checkGameFeed])
 
   return (
     <div className="w-full h-full flex flex-col gap-3 items-center justify-center p-5">
