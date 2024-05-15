@@ -133,15 +133,11 @@ const checkYahtzee = (diceArray: number[]) => {
 const processDice = (
   dice: Dice[],
   selectedCategory: Categories,
-  scorecard: ScorecardProps
+  scorecard: ScorecardProps,
+  setSelectedCategory: React.Dispatch<React.SetStateAction<Categories>>
 ) => {
   const diceArray = dice.map((die) => die.value);
   let turnValue: number | string = 0;
-  if (scorecard.scored.includes(selectedCategory)) {
-    // Add error handling here!
-    // Shouldn't occur if fine-grained happens in UI (e.g. not able to submit a category that isn't available)
-    return;
-  }
   if (upperSectionCategories.includes(selectedCategory)) {
     turnValue = processUpperSectionScore(diceArray, selectedCategory);
   } else if (
@@ -166,7 +162,8 @@ const processDice = (
   } else if (selectedCategory === "yahtzee") {
     if (checkYahtzee(diceArray)) {
       if (scorecard.scored.includes("yahtzee")) {
-        turnValue = "yahtzeeBonus";
+        setSelectedCategory("yahtzee_bonus")
+        turnValue = scorecard.yahtzee_bonus += 1
       } else {
         turnValue = 50;
       }

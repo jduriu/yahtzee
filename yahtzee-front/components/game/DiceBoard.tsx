@@ -5,13 +5,14 @@ import ScoreButtons from "./ScoreButtons";
 import processDice from "@/utils/processDice";
 import { errorHandler } from "@/utils/errorUtils";
 import { yahtzeeClient } from "@/utils/axiosClients";
-import { Scorecard } from "@/schema/ScorecardSchema";
+import { Scorecard, CategoryKeys } from "@/schema/ScorecardSchema";
 import { LogHistory, Log } from "@/schema/GameFeedSchema";
 import { z } from 'zod';
 
 type ScorecardSchema = z.infer<typeof Scorecard>
 type LogHistorySchema = z.infer<typeof LogHistory>
 type LogSchema = z.infer<typeof Log>
+type Categories = z.infer<typeof CategoryKeys>
 
 interface DiceBoardProps {
   scorecard: ScorecardSchema;
@@ -30,7 +31,7 @@ interface Dice {
 
 const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoardProps) => {
   const [rollsRemaining, setRollsRemaining] = useState(3);
-  const [selectedCategory, setSelectedCategory] = useState("ones");
+  const [selectedCategory, setSelectedCategory] = useState("" as Categories);
   const [categoryError, setCategoryError] = useState(false);
   const [diceOne, setDiceOne] = useState(0);
   const [diceOneOpen, setDiceOneOpen] = useState(true);
@@ -88,7 +89,7 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
 
   const startNewTurn = () => {
     setRollsRemaining(3);
-    setSelectedCategory("Select Category");
+    setSelectedCategory("" as Categories);
     setDiceOne(0);
     setDiceOneOpen(true);
     setDiceTwo(0);
@@ -105,13 +106,10 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
     if (selectedCategory !== null) {
       const scorecardId = scorecard._id;
       const tempScorecard = { ...scorecard };
-      const turnValue = processDice(dice, selectedCategory, tempScorecard);
-      if (turnValue === "yahtzeeBonus") {
-        tempScorecard.yahtzee_bonus += 1;
-      } else {
-        tempScorecard[selectedCategory] = turnValue;
-        tempScorecard.scored.push(selectedCategory);
-      }
+      const turnValue = processDice(dice, selectedCategory, tempScorecard, setSelectedCategory);
+      tempScorecard[selectedCategory] = turnValue;
+      tempScorecard.scored.push(selectedCategory);
+
       yahtzeeClient
         .put(`/scorecards/${scorecardId}`, tempScorecard)
         .then((response) => {

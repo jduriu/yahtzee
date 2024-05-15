@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { z } from 'zod';
-import { Categories } from "@/schema/ScorecardSchema";
+import { CategoryKeys } from "@/schema/ScorecardSchema";
 
-type Categories = z.infer<typeof Categories>
+type Categories = z.infer<typeof CategoryKeys>
 
 interface DropDownOption {
   name: string;
@@ -12,7 +12,7 @@ interface DropDownOption {
 }
 interface DropDownProps {
   setSelected: React.Dispatch<React.SetStateAction<Categories>>;
-  options: DropDownOption[]
+  options: DropDownOption[];
 }
 
 const DropDown = ({ setSelected, options }: DropDownProps) => {
