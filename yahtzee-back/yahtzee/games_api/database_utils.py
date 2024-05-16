@@ -12,9 +12,6 @@ db = client.yahtzee.games
 
 class Mongo_Games:
     def create_game(self, game):
-        """
-        Create a game instance and initialize a start time
-        """
         document = game.model_dump(by_alias=True, exclude=["id"])
         document["start_time"] = time()
         created_game = db.insert_one(document)
@@ -27,33 +24,20 @@ class Mongo_Games:
         )
 
     def get_all_games(self):
-        """
-        Obtain all game instances in the games collection.
-        """
         all_games = [game for game in db.find()]
         return all_games
 
     def get_games_by_user(self, id):
-        """
-        Obtain all game instances associated with input user id
-        """
         users_games = db.find({
             "player_ids": id
         })
         return users_games
 
     def get_game(self, id):
-        """
-        Obtain a single game instance based on the input id
-        """
         game = db.find_one({"_id": ObjectId(id)})
         return game
 
     def update_game(self, id, game):
-        """
-        Update optional fields on a game instance.
-        Fields include player_ids, scorecard_ids, and turns_taken
-        """
         fields = {
             k: v for k, v in game.model_dump(by_alias=True).items() if v is not None  # noqa
         }
@@ -75,9 +59,6 @@ class Mongo_Games:
         raise HTTPException(status_code=404, detail=f"Game {id} not found")
 
     def delete_game(self, id):
-        """
-        Remove game instance from the database.
-        """
         mongo_response = db.delete_one({"_id": ObjectId(id)})
         if mongo_response.deleted_count == 1:
             return Response(status_code=status.HTTP_204_NO_CONTENT)

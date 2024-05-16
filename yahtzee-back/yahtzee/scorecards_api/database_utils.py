@@ -11,9 +11,6 @@ db = client.yahtzee.scorecards
 
 class Mongo_Scorecards:
     def create_scorecard(self, scorecard):
-        """
-        Create a scorecard instance and return the instance
-        """
         new_scorecard = db.insert_one(
             scorecard.model_dump(by_alias=True, exclude=["id"])
         )
@@ -25,34 +22,29 @@ class Mongo_Scorecards:
                 detail="scorecard unable to be created"
             )
 
+    def get_scorecards(self):
+
+        all_scorecards = [scorecard for scorecard in db.find()]  # noqa
+        return all_scorecards
+
     def get_scorecard(self, id):
-        """
-        Obtain a single scorecard instance based on the input id
-        """
         scorecard = db.find_one({"_id": ObjectId(id)})
-        return scorecard
+        if scorecard:
+            return scorecard
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="scorecard not found"
+            )
 
     def get_scorecard_by_user_and_game(self, user_id, game_id):
-        """
-        Obtain a single scorecard instance based on the input id
-        """
         scorecard = db.find_one({
             "user_id": user_id,
             "game_id": game_id
         })
         return scorecard
 
-    def get_scorecards(self):
-        """
-        Obtain all scorecard instances in the database.
-        """
-        all_scorecards = [scorecard for scorecard in db.find()]  # noqa
-        return all_scorecards
-
     def update_scorecard(self, id, scorecard):
-        """
-        Update optional fields on a scorecard instance.
-        """
         fields = {
             k: v for k, v in scorecard.model_dump(by_alias=True).items() if v is not None  # noqa
         }
@@ -80,9 +72,6 @@ class Mongo_Scorecards:
         )
 
     def delete_scorecard(self, id):
-        """
-        Remove scorecard instance from the database.
-        """
         mongo_response = db.delete_one(
             {"_id": ObjectId(id)}
         )

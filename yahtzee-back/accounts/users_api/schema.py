@@ -1,4 +1,4 @@
-from pydantic import  BaseModel, Field
+from pydantic import BaseModel, Field
 from pydantic.functional_validators import BeforeValidator
 from typing_extensions import Annotated
 from typing import Optional
@@ -44,3 +44,8 @@ class User(BaseModel):
 
 class UserInDB(User):
     hashed_password: str
+
+
+class UserToClient(BaseModel):
+    user_id: str
+    username: str

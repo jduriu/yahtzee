@@ -10,6 +10,9 @@ def create_game(
     game: Game,
     db_utils: Mongo_Games = Depends(),
 ):
+    """
+    Create a game instance and initialize a start time
+    """
     return db_utils.create_game(game)
 
 
@@ -18,6 +21,9 @@ def get_all_games(
     db_utils: Mongo_Games = Depends(),
     response_model_by_alias=False,
 ):
+    """
+    Obtain all game instances in the games collection.
+    """
     all_games = db_utils.get_all_games()
     return Games(games=all_games)
 
@@ -28,6 +34,9 @@ def get_games_by_user(
     db_utils: Mongo_Games = Depends(),
     response_model_by_alias=False,
 ):
+    """
+    Obtain all game instances associated with input user id
+    """
     user_games = db_utils.get_games_by_user(id)
     return Games(games=user_games)
 
@@ -37,6 +46,9 @@ def get_game(
     id: str,
     db_utils: Mongo_Games = Depends(),
 ):
+    """
+    Obtain a single game instance based on the input id
+    """
     return db_utils.get_game(id)
 
 
@@ -46,6 +58,10 @@ def update_game(
     db_utils: Mongo_Games = Depends(),
     game: UpdateGame = Body(...),
 ):
+    """
+    Update optional fields on a game instance.
+    Fields include player_ids, scorecard_ids, and turns_taken
+    """
     return db_utils.update_game(id, game)
 
 
@@ -54,4 +70,7 @@ def delete_game(
     id: str,
     db_utils: Mongo_Games = Depends(),
 ):
+    """
+    Remove game instance from the database.
+    """
     return db_utils.delete_game(id)

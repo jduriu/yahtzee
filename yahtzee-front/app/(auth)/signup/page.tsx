@@ -1,20 +1,19 @@
-'use client'
+"use client"
 
-import SignUpForm from '../_components/SignupForm'
-import { useState } from 'react'
+import SignUpForm from "@/components/auth/SignupForm";
+import { useState } from "react";
 
 export default function SignUp() {
-  const [loading, setLoading] = useState(false)
-  const [loggingIn, setLoggingIn] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [loggingIn, setLoggingIn] = useState(false);
 
-  return (
-    loading ?
-      (loggingIn ?
+  return loading ? (
+    loggingIn ? (
       <div>Successfully signed up. Logging in and redirecting to dashboard</div>
-      :
+    ) : (
       <div>Loading...</div>
-      )
-    :
-    <SignUpForm setLoading={setLoading} setLoggingIn={setLoggingIn}/>
-  )
+    )
+  ) : (
+    <SignUpForm setLoading={setLoading} setLoggingIn={setLoggingIn} />
+  );
 }

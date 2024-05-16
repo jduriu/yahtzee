@@ -3,11 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import { yahtzeeClient } from "@/utils/axiosClients";
 import Link from 'next/link';
-import Button from '@/global_components/Button';
+import Button from '@/components/global/Button';
+import { z } from 'zod';
+import { Game } from '@/schema/GamesSchema';
+
+type GameSchema = z.infer<typeof Game>
 
 
 const SearchPage = ({ params }: { params: { id: number } }) => {
-  const[games, setGames] = useState([])
+  const[games, setGames] = useState([] as GameSchema[])
 
   const getTime = (unixTime: number) => {
     const startTime = new Date(unixTime * 1000)
