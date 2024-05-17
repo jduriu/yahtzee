@@ -127,7 +127,8 @@ const checkLgStraight = (diceArray: number[]) => {
 
 const checkYahtzee = (diceArray: number[]) => {
   const counts = count(diceArray);
-  return Object.keys(counts).length === 1;
+  const numCheck = diceArray[0] > 0
+  return Object.keys(counts).length === 1 && numCheck;
 };
 
 const processDice = (

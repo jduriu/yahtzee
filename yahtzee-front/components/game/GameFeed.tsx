@@ -32,6 +32,16 @@ const CategoryNameMap = {
 }
 
 const GameFeed = ({ user, gameFeed }: GameFeedProps) => {
+
+  const getLogs = () => {
+    if (gameFeed.logs.length > 10) {
+      const logsLength =  gameFeed.logs.length
+      return gameFeed.logs.slice(logsLength - 10, logsLength)
+    }
+    return gameFeed.logs
+  }
+
+
   const processLogs = (log: LogSchema, index: number) => {
     return (
       <div key={index} className="flex justify-between">
@@ -50,7 +60,7 @@ const GameFeed = ({ user, gameFeed }: GameFeedProps) => {
       <h1 className="h-[15%] text-3xl">Game Feed</h1>
       <div className=" h-[85%] flex flex-col gap-1 overflow-y-auto px-5">
         {gameFeed.logs &&
-          gameFeed.logs.map((log: LogSchema, index: number) => (
+          getLogs().map((log: LogSchema, index: number) => (
             processLogs(log, index)
           ))
         }

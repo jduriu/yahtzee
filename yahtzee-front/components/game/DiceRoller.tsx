@@ -95,22 +95,25 @@ export default function DiceRoller({
   }, [gameFeed, checkGameFeed]);
 
   return (
-    <div className="w-full h-full flex flex-col gap-3 items-center justify-center p-5">
-      <div className="self-start">Rolls Remaining: {rollsRemaining}</div>
+    <div className="w-full h-full flex flex-col items-center justify-end p-5">
       {rollsRemaining ?
         <Button clickHandler={rollOpenDice} content="Roll" style="score" />
         : null
       }
-     <div className="w-full h-[100px] flex items-center justify-center gap-20 text-xl">
+     <div className="w-full mt-10 flex justify-center gap-[10%] text-xl">
         {dice.map((die) =>
           die.open ? (
-            <button key={die.name} onClick={die.changeStatus}>
+            <button
+              key={die.name}
+              onClick={die.changeStatus}
+              className="bg-white text-black border-4 border-black py-3 px-4 rounded-xl hover:bg-black hover:text-white shadow-dark"
+            >
               {die.value}
             </button>
           ) : (
             <button
               key={die.name}
-              className="-translate-y-3 font-bold"
+              className="bg-white text-black border-black -translate-y-3 font-bold py-3 px-4 border-4 rounded-xl hover:bg-black hover:text-white shadow-dark"
               onClick={die.changeStatus}
             >
               {die.value}
