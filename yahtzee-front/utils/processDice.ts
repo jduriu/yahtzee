@@ -134,7 +134,6 @@ const processDice = (
   dice: Dice[],
   selectedCategory: Categories,
   scorecard: ScorecardProps,
-  setSelectedCategory: React.Dispatch<React.SetStateAction<Categories>>
 ) => {
   const diceArray = dice.map((die) => die.value);
   let turnValue: number | string = 0;
@@ -162,11 +161,9 @@ const processDice = (
   } else if (selectedCategory === "yahtzee") {
     if (checkYahtzee(diceArray)) {
       if (scorecard.scored.includes("yahtzee")) {
-        setSelectedCategory("yahtzee_bonus")
-        turnValue = scorecard.yahtzee_bonus += 1
-      } else {
-        turnValue = 50;
+        scorecard.yahtzee_bonus += 1
       }
+      turnValue = 50;
     }
   } else if (selectedCategory === "chance") {
     turnValue = sum(diceArray);

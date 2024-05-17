@@ -43,43 +43,38 @@ const ScoreCard = ({ scorecard }: ScoreCardProps) => {
 
   const grandTotal = upperTotal + lowerTotal
 
+  const scorecardSections = [
+    {name: "Upper", content: upperSection, total: upperTotal},
+    {name: "Lower", content: lowerSection, total: lowerTotal}
+  ]
 
   return (
-    <div className="w-full h-full px-10 py-5 text-md overflow-y-scroll border border-black bg-white text-black shadow-xl">
-      <div className="text-3xl py-3">SCORE CARD</div>
-      <div className="text-2xl pb-2">Upper Section</div>
-      {upperSection.map(category => (
-        <div key={category.name} className="w-full border flex h-10 items-center bg-gray-50">
-          <Tooltip title={category.tooltip}>
-            <div className="w-[90%] pl-5">
-                {category.name}
+    <div className="w-full h-full p-10 py-7 text-md overflow-y-auto bg-gray-800 shadow-dark rounded-3xl">
+      <div className="text-3xl pb-2">SCORE CARD</div>
+      {scorecardSections.map(section => (
+        <div key={section.name}>
+          <div className="text-2xl py-3">{section.name} Section</div>
+          {section.content.map(category => (
+            <div key={category.name} className="mx-5 border border-black flex h-8 items-center bg-gray-600">
+              <Tooltip title={category.tooltip}>
+                <div className="w-[90%] pl-5">
+                  {category.name}
+                </div>
+              </Tooltip>
+              <div className="w-[10%] border-l border-black flex items-center justify-center">
+                {category.value !== null ? category.value : '-'}
+              </div>
             </div>
-          </Tooltip>
-          <div className="w-[10%] border-l flex items-center justify-center">{category.value !== null ? category.value : '-'}</div>
+          ))}
+          <div className="mx-5 border border-black flex h-8 items-center text-lg bg-gray-700">
+            <div className="w-[90%] pl-5">{section.name} Total</div>
+            <div className="w-[10%] border-l border-black flex items-center justify-center">{section.total}</div>
+          </div>
         </div>
       ))}
-      <div className="w-full border flex h-10 items-center text-lg bg-gray-100">
-        <div className="w-[90%] pl-5">Upper Total</div>
-        <div className="w-[10%] border-l flex items-center justify-center">{upperTotal}</div>
-      </div>
-      <div className="text-2xl py-2">Lower Section</div>
-      {lowerSection.map(category => (
-        <div key={category.name} className="w-full border flex h-10 items-center bg-gray-50">
-          <Tooltip title={category.tooltip}>
-            <div className="w-[90%] pl-5">
-                {category.name}
-            </div>
-          </Tooltip>
-          <div className="w-[10%] border-l flex items-center justify-center">{category.value !== null ? category.value : '-'}</div>
-        </div>
-      ))}
-      <div className="w-full border flex h-10 items-center text-lg bg-gray-100">
-        <div className="w-[90%] pl-5">Lower Total</div>
-        <div className="w-[10%] border-l flex items-center justify-center">{lowerTotal}</div>
-      </div>
-      <div className="w-full border flex h-10 items-center text-lg bg-gray-300 mt-5">
-        <div className="w-[90%] pl-5">Grand Total</div>
-        <div className="w-[10%] border-l flex items-center justify-center">{grandTotal}</div>
+      <div className="w-full border border-black flex h-8 items-center text-xl bg-gray-950 mt-5">
+        <div className="w-[90%] pl-5 ">Grand Total</div>
+        <div className="w-[10%] border-l border-black flex items-center justify-center">{grandTotal}</div>
       </div>
     </div>
   );

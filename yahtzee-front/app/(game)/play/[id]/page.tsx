@@ -75,16 +75,14 @@ export default function Play({ params }: PlayProps) {
   }, [fetchGameFeed, scorecard]);
 
   return (
-    <div className="w-full h-full flex gap-3 p-10 ">
-      <div className="w-1/2 h-full flex flex-col justify-between gap-2">
-        <h1 className="text-2xl">Dice Board</h1>
+    <div className="w-full h-full flex gap-10 px-10 py-2">
+      <div className="w-1/2 h-full flex flex-col justify-between gap-5">
         <DiceBoard
           scorecard={scorecard}
           setScorecard={setScorecard}
           gameFeed={gameFeed}
           setGameFeed={setGameFeed}
         />
-        <h1 className="text-2xl">Game Feed</h1>
         <GameFeed user={user} gameFeed={gameFeed}/>
       </div>
       <div className="w-1/2 h-full ">
