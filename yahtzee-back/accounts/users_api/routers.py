@@ -5,11 +5,12 @@ from users_api.schema import (
     Token,
     UserLogin,
     UserToClient,
-    UsersToClient
+    UsersToClient,
+    UserIDs,
 )
 from users_api.database_utils import Mongo_Users
 from users_api.auth import Authenticator, RefreshAuthenticator
-from typing import List
+
 
 users_router = APIRouter(prefix="/api")
 authenticator = Authenticator()
@@ -87,12 +88,12 @@ def get_user_me(
 ################################################################
 
 
-@users_router.get("/leaderboard-users", response_model=UsersToClient)
+@users_router.post("/leaderboard-users", response_model=UsersToClient)
 def get_leaderboard_users(
-    users: List[str],
+    body: UserIDs,
     database_utils: Mongo_Users = Depends(),
 ):
     """
     Get a list of user data from a list of user_ids
     """
-    return database_utils.get_leaderboard_users(users)
+    return database_utils.get_leaderboard_users(body)

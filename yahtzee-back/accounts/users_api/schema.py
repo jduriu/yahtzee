@@ -53,3 +53,7 @@ class UserToClient(BaseModel):
 
 class UsersToClient(BaseModel):
     users: List[UserToClient]
+
+
+class UserIDs(BaseModel):
+    users: List[str]

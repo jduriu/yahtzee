@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from fastapi import HTTPException, status
-from users_api.schema import UserInDB, UserToClient
+from users_api.schema import UserInDB, UserToClient, UsersToClient
 from users_api.config import Settings
 from users_api.auth import AuthenticationUtilities
 from fastapi.encoders import jsonable_encoder
@@ -62,14 +62,19 @@ class Mongo_Users:
             )
         return UserInDB(**user)
 
-    def get_leaderboard_users(self, users):
+    def get_leaderboard_users(self, body):
         user_data = []
-        for user in users:
+        for user in body.users:
             user = users_db.find_one({
                 "user_id": user
             })
+            if not user:
+                raise HTTPException(
+                    status_code=400,
+                    detail="User not found",
+                )
             user_data.append(UserToClient(**user))
-        return user_data
+        return UsersToClient(users=user_data)
 
     def login_for_access_token(self, user_form):
         username = user_form.username
