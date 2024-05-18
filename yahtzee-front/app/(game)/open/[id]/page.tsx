@@ -6,31 +6,13 @@ import Link from 'next/link';
 import Button from '@/components/global/Button';
 import { z } from 'zod';
 import { Game } from '@/schema/GamesSchema';
+import { getTime } from '@/utils/processDate';
 
 type GameSchema = z.infer<typeof Game>
 
 
 const SearchPage = ({ params }: { params: { id: number } }) => {
   const[games, setGames] = useState([] as GameSchema[])
-
-  const getTime = (unixTime: number) => {
-    const startTime = new Date(unixTime * 1000)
-    const year = startTime.getFullYear()
-    const month = startTime.getMonth() + 1
-    const day = startTime.getDate()
-    let signature = ""
-    const getHour = () => {
-      const hour = startTime.getHours()
-      if (hour > 12) {
-        signature = "PM"
-        return hour - 12
-      }
-      signature = "AM"
-      return hour
-    }
-    const min = startTime.getMinutes()
-    return `${month}/${day}/${year} ${getHour()}:${min} ${signature}`
-  }
 
   useEffect(() => {
     yahtzeeClient.get('/games-by-user', { params: {id: params.id} })

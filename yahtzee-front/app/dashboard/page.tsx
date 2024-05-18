@@ -41,7 +41,7 @@ export default function Home() {
               <Link className="game-button red" href="/login">
                 Login / Sign Up
               </Link>
-              <Link className="game-button orange" href="/guest">
+              <Link className="game-button orange" href="/play/guest">
                 Play as Guest
               </Link>
             </div>

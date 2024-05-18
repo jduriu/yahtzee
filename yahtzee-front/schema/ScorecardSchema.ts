@@ -1,23 +1,23 @@
 import { z } from 'zod';
 
 const UpperCategories = z.object({
-  ones: z.number(),
-  twos: z.number(),
-  threes: z.number(),
-  fours: z.number(),
-  fives: z.number(),
-  sixes: z.number(),
+  ones: z.union([z.number(), z.null()]),
+  twos: z.union([z.number(), z.null()]),
+  threes: z.union([z.number(), z.null()]),
+  fours: z.union([z.number(), z.null()]),
+  fives: z.union([z.number(), z.null()]),
+  sixes: z.union([z.number(), z.null()]),
 });
 
 const LowerCategories = z.object({
-  three_of_kind: z.number(),
-  four_of_kind: z.number(),
-  full_house: z.number(),
-  sm_straight: z.number(),
-  lg_straight: z.number(),
-  yahtzee: z.number(),
-  chance: z.number(),
-  yahtzee_bonus: z.number(),
+  three_of_kind: z.union([z.number(), z.null()]),
+  four_of_kind: z.union([z.number(), z.null()]),
+  full_house: z.union([z.number(), z.null()]),
+  sm_straight: z.union([z.number(), z.null()]),
+  lg_straight: z.union([z.number(), z.null()]),
+  yahtzee: z.union([z.number(), z.null()]),
+  chance: z.union([z.number(), z.null()]),
+  yahtzee_bonus: z.union([z.number(), z.null()]),
 });
 
 const Categories = UpperCategories.merge(LowerCategories);
@@ -28,7 +28,7 @@ const Scorecard = Categories.extend({
   player_order_id: z.number(),
   game_id: z.string(),
   scored: z.array(z.string()),
-  bonus: z.number(),
+  bonus: z.union([z.number(), z.null()]),
 });
 
 const UpperCategoryKeys = UpperCategories.keyof();

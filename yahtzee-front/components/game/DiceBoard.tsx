@@ -8,6 +8,7 @@ import { yahtzeeClient } from "@/utils/axiosClients";
 import { Scorecard, CategoryKeys } from "@/schema/ScorecardSchema";
 import { LogHistory, Log } from "@/schema/GameFeedSchema";
 import { z } from 'zod';
+import { usePathname } from "next/navigation";
 
 type ScorecardSchema = z.infer<typeof Scorecard>
 type LogHistorySchema = z.infer<typeof LogHistory>
@@ -30,6 +31,7 @@ interface Dice {
 
 
 const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoardProps) => {
+  const pathname = usePathname();
   const [rollsRemaining, setRollsRemaining] = useState(3);
   const [selectedCategory, setSelectedCategory] = useState("" as Categories);
   const [categoryError, setCategoryError] = useState(false);
@@ -88,61 +90,74 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
   };
 
   const startNewTurn = () => {
-    setRollsRemaining(3);
     setSelectedCategory("" as Categories);
-    setDiceOne(0);
+    setDiceOne(1);
     setDiceOneOpen(true);
-    setDiceTwo(0);
+    setDiceTwo(1);
     setDiceTwoOpen(true);
-    setDiceThree(0);
+    setDiceThree(1);
     setDiceThreeOpen(true);
-    setDiceFour(0);
+    setDiceFour(1);
     setDiceFourOpen(true);
-    setDiceFive(0);
+    setDiceFive(1);
     setDiceFiveOpen(true);
   };
 
+
   const recordScore = () => {
-    if (selectedCategory !== null) {
+    if (!scorecard.scored.includes(selectedCategory) || selectedCategory === 'yahtzee') {
       const scorecardId = scorecard._id;
       const tempScorecard = { ...scorecard };
-      const turnValue = processDice(dice, selectedCategory, tempScorecard, setSelectedCategory);
+      const turnValue = processDice(dice, selectedCategory, tempScorecard);
       tempScorecard[selectedCategory] = turnValue;
       tempScorecard.scored.push(selectedCategory);
 
-      yahtzeeClient
-        .put(`/scorecards/${scorecardId}`, tempScorecard)
-        .then((response) => {
-          if (response.statusText === "OK") {
-            const updatedScorecard = response.data;
-            setScorecard(updatedScorecard);
-            startNewTurn();
-          }
-        })
-        .catch((error) => {
-          errorHandler(error);
-        });
       const log: LogSchema  = {
-        log_time: 0.0,
+        log_time: Date.now() / 1000,
         type: "score",
         category: selectedCategory,
         value: turnValue,
       }
-      yahtzeeClient
-        .put(`/add-log/${gameFeed._id}`, log)
-        .then((response) => {
-          const logHistory = response.data
-          setGameFeed(logHistory);
-        })
+
+      if (pathname === '/play/guest') {
+        setScorecard(tempScorecard)
+        const tempGameFeed = {...gameFeed};
+        tempGameFeed.logs.push(log)
+        setGameFeed(tempGameFeed)
+        startNewTurn();
+      } else {
+        yahtzeeClient
+          .put(`/scorecards/${scorecardId}`, tempScorecard)
+          .then((response) => {
+            if (response.statusText === "OK") {
+              const updatedScorecard = response.data;
+              setScorecard(updatedScorecard);
+              startNewTurn();
+            }
+          })
+          .catch((error) => {
+            errorHandler(error);
+          });
+        yahtzeeClient
+          .put(`/add-log/${gameFeed._id}`, log)
+          .then((response) => {
+            const logHistory = response.data
+            setGameFeed(logHistory);
+          })
+      }
     } else {
       setCategoryError(true)
     }
   };
 
   return (
-    <div className="w-full flex flex-col p-5">
-      <div>Turns remaining: {getTurnsRemaining()}</div>
-      <div className="flex flex-col py-5">
+    <div className="w-full h-1/2 flex flex-col gap-5 px-10 py-7 shadow-dark bg-gray-800 rounded-3xl">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl">Dice Board</h1>
+        <div>Rolls remaining: {rollsRemaining}   </div>
+        <div>Turns remaining: {getTurnsRemaining()}</div>
+      </div>
+      <div className="flex flex-col py-5 gap-[10%]">
         <DiceRoller
           dice={dice}
           rollsRemaining={rollsRemaining}
