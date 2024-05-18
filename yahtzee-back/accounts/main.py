@@ -24,4 +24,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(users_router, tags="users-api")
+app.include_router(users_router, tags=["users-api"])
