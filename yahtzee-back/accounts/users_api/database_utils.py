@@ -62,6 +62,15 @@ class Mongo_Users:
             )
         return UserInDB(**user)
 
+    def get_leaderboard_users(self, users):
+        user_data = []
+        for user in users:
+            user = users_db.find_one({
+                "user_id": user
+            })
+            user_data.append(UserToClient(**user))
+        return user_data
+
     def login_for_access_token(self, user_form):
         username = user_form.username
         password = user_form.password

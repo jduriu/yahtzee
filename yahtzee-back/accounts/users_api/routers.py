@@ -1,7 +1,15 @@
 from fastapi import APIRouter, Depends, Request
-from users_api.schema import UserSignup, UserInDB, Token, UserLogin, UserToClient
+from users_api.schema import (
+    UserSignup,
+    UserInDB,
+    Token,
+    UserLogin,
+    UserToClient,
+    UsersToClient
+)
 from users_api.database_utils import Mongo_Users
 from users_api.auth import Authenticator, RefreshAuthenticator
+from typing import List
 
 users_router = APIRouter(prefix="/api")
 authenticator = Authenticator()
@@ -72,3 +80,19 @@ def get_user_me(
     """
     token_data = authenticator(request)
     return database_utils.get_user_for_client(token_data.username)
+
+
+################################################################
+#                    Unprotected Endpoints
+################################################################
+
+
+@users_router.get("/leaderboard-users", response_model=UsersToClient)
+def get_leaderboard_users(
+    users: List[str],
+    database_utils: Mongo_Users = Depends(),
+):
+    """
+    Get a list of user data from a list of user_ids
+    """
+    return database_utils.get_leaderboard_users(users)
