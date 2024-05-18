@@ -105,7 +105,7 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
 
 
   const recordScore = () => {
-    if (!scorecard.scored.includes(selectedCategory)) {
+    if (!scorecard.scored.includes(selectedCategory) || selectedCategory === 'yahtzee') {
       const scorecardId = scorecard._id;
       const tempScorecard = { ...scorecard };
       const turnValue = processDice(dice, selectedCategory, tempScorecard);

@@ -15,31 +15,31 @@ type GameFeedSchema = z.infer<typeof LogHistory>
 
 
 export default function Play() {
-  const [user, setUser] = useState({
+  const user: UserSchema = {
     user_id: "guest",
     username: "Guest",
-  } as UserSchema);
+  }
   const [scorecard, setScorecard] = useState({
     _id: "",
     user_id: "",
     player_order_id: 0,
     game_id: "",
     scored: [""],
-    bonus: 0,
-    ones: 0,
-    twos: 0,
-    threes: 0,
-    fours: 0,
-    fives: 0,
-    sixes: 0,
-    three_of_kind: 0,
-    four_of_kind: 0,
-    full_house: 0,
-    sm_straight: 0,
-    lg_straight: 0,
-    yahtzee: 0,
-    chance: 0,
-    yahtzee_bonus: 0,
+    bonus: null,
+    ones: null,
+    twos: null,
+    threes: null,
+    fours: null,
+    fives: null,
+    sixes: null,
+    three_of_kind: null,
+    four_of_kind: null,
+    full_house: null,
+    sm_straight: null,
+    lg_straight: null,
+    yahtzee: null,
+    chance: null,
+    yahtzee_bonus: null,
   } as ScorecardSchema);
   const [gameFeed, setGameFeed] = useState({
     _id: "guestScorecard",
