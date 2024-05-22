@@ -109,8 +109,12 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
       const scorecardId = scorecard._id;
       const tempScorecard = { ...scorecard };
       const turnValue = processDice(dice, selectedCategory, tempScorecard);
-      tempScorecard[selectedCategory] = turnValue;
-      tempScorecard.scored.push(selectedCategory);
+
+      if (!scorecard.scored.includes(selectedCategory)) {
+        tempScorecard.scored.push(selectedCategory)
+      }
+      tempScorecard[selectedCategory] = turnValue
+
 
       const log: LogSchema  = {
         log_time: Date.now() / 1000,

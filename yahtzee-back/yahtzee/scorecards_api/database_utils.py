@@ -48,6 +48,8 @@ class Mongo_Scorecards:
         fields = {
             k: v for k, v in scorecard.model_dump(by_alias=True).items() if v is not None  # noqa
         }
+        if len(scorecard.scored) == 13:
+            fields["completed"] = True
 
         if len(fields) >= 1:
             updated_scorecard = db.find_one_and_update(

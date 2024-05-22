@@ -31,6 +31,7 @@ class Scorecard(BaseModel):
     chance: Optional[int] = Field(default=None)
     yahtzee_bonus: Optional[int] = Field(default=None)
     scored: Optional[List[str]] = Field(default=[])
+    completed: bool = Field(default=False)
 
 
 class Scorecards(BaseModel):
@@ -60,6 +61,7 @@ class UpdateScorecard(BaseModel):
     chance: Optional[int] = None
     yahtzee_bonus: Optional[int] = None
     scored: Optional[List[str]] = None
+    completed: Optional[bool] = None
     model_config = ConfigDict(
         json_encoders={ObjectId: str}
     )

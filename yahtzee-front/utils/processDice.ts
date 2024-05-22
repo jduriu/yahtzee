@@ -87,12 +87,14 @@ const checkFullHouse = (diceArray: number[]) => {
 };
 
 const checkSmStraight = (diceArray: number[]) => {
-  const sortedArray = [...diceArray].sort((a, b) => a - b);
+  let sortedArray = [...diceArray]
+  sortedArray.sort((a, b) => a - b)
+  let cleanedArray = Array.from(new Set(sortedArray))
   let maxStraight = 1;
   let currentStraight = 1;
 
-  for (let i = 1; i < sortedArray.length; i++) {
-    if (sortedArray[i] === sortedArray[i - 1] + 1) {
+  for (let i = 1; i < cleanedArray.length; i++) {
+    if (cleanedArray[i] === cleanedArray[i - 1] + 1) {
       currentStraight++;
     } else {
       currentStraight = 1;
@@ -164,11 +166,12 @@ const processDice = (
       if (scorecard.scored.includes("yahtzee")) {
         scorecard.yahtzee_bonus += 1
       }
-      turnValue = 50;
+      turnValue = 1;
     }
   } else if (selectedCategory === "chance") {
     turnValue = sum(diceArray);
   }
+
   return turnValue;
 };
 
