@@ -91,15 +91,15 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
 
   const startNewTurn = () => {
     setSelectedCategory("" as Categories);
-    setDiceOne(1);
+    setDiceOne(0);
     setDiceOneOpen(true);
-    setDiceTwo(1);
+    setDiceTwo(0);
     setDiceTwoOpen(true);
-    setDiceThree(1);
+    setDiceThree(0);
     setDiceThreeOpen(true);
-    setDiceFour(1);
+    setDiceFour(0);
     setDiceFourOpen(true);
-    setDiceFive(1);
+    setDiceFive(0);
     setDiceFiveOpen(true);
   };
 
@@ -108,28 +108,35 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
     if (!scorecard.scored.includes(selectedCategory) || selectedCategory === 'yahtzee') {
       const scorecardId = scorecard._id;
       const tempScorecard = { ...scorecard };
+      let category = selectedCategory;
       const turnValue = processDice(dice, selectedCategory, tempScorecard);
 
-      if (!scorecard.scored.includes(selectedCategory)) {
-        tempScorecard.scored.push(selectedCategory)
+      if (scorecard.yahtzee == 50 && selectedCategory == 'yahtzee') {
+        category = 'yahtzee_bonus'
       }
-      tempScorecard[selectedCategory] = turnValue
 
+      tempScorecard[category] = turnValue
+
+      if (category !== "yahtzee_bonus") {
+        tempScorecard.scored.push(category)
+      }
 
       const log: LogSchema  = {
         log_time: Date.now() / 1000,
         type: "score",
-        category: selectedCategory,
+        category: category,
         value: turnValue,
       }
 
       if (pathname === '/play/guest') {
+        // Guest Route
         setScorecard(tempScorecard)
         const tempGameFeed = {...gameFeed};
         tempGameFeed.logs.push(log)
         setGameFeed(tempGameFeed)
         startNewTurn();
       } else {
+        // User Route
         yahtzeeClient
           .put(`/scorecards/${scorecardId}`, tempScorecard)
           .then((response) => {

@@ -39,7 +39,6 @@ export default function Play({ params }: PlayProps) {
           .get("/scorecard_by_user_and_game", { params: scorecardParams })
           .then((response) => {
             setScorecard(response.data);
-            console.log("Response for scorecard received");
           });
       })
       .catch((error) => {
