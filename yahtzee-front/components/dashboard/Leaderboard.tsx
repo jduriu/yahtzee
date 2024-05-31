@@ -1,4 +1,5 @@
 import { yahtzeeClient, accountsClient } from '@/utils/axiosClients';
+import { errorHandler } from '@/utils/errorUtils';
 import React from 'react';
 
 
@@ -8,11 +9,43 @@ const Leaderboard = () => {
     {avatar: "circle", username: "Jon", score: 150, date: "5/15/24"},
   ]
 
+  const getTopScores = () => {
+    let leaderboardUsers = {}
 
+    // Get scorecards
+    yahtzeeClient
+      .get(`/scorecards`)
+      .then((response) => {
+        if (response.statusText === "OK") {
+          const scorecards = response.data.scorecards;
+          // Create a set of users
+          for (let scorecard of scorecards) {
+            if (!(scorecard.user_id in leaderboardUsers)) {
+              leaderboardUsers[scorecard.user_id] = 1
+            }
+          }
+        }
+        console.log(leaderboardUsers)
+      })
+      .catch((error) => {
+        errorHandler(error);
+      });
+    // Obtain user info object
+    // accountsClient
+    //   .post('/leaderboard-users', Object.keys(leaderboardUsers))
+    //   .then((response) => {
+    //     if (response.statusText === "OK") {
+
+    //     }
+    //   })
+    // Update score objects with user information
+
+  }
 
 
   return (
     <div className="w-full h-full p-10 flex flex-col gap-5">
+      <button onClick={getTopScores} className="border px-3 py-2">Click</button>
       <h1 className="text-3xl self-center">Leaderboard</h1>
       <div className="w-full h-full flex flex-col">
         {scores.map((score, index) => (

@@ -163,26 +163,34 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
 
   return (
     <div className="w-full h-1/2 flex flex-col gap-5 px-10 py-7 shadow-dark bg-gray-800 rounded-3xl">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl">Dice Board</h1>
-        <div>Rolls remaining: {rollsRemaining}   </div>
-        <div>Turns remaining: {getTurnsRemaining()}</div>
-      </div>
-      <div className="flex flex-col py-5 gap-[10%]">
-        <DiceRoller
-          dice={dice}
-          rollsRemaining={rollsRemaining}
-          setRollsRemaining={setRollsRemaining}
-          gameFeed={gameFeed}
-          setGameFeed={setGameFeed}
-        />
-        <ScoreButtons
-          setSelectedCategory={setSelectedCategory}
-          rollsRemaining={rollsRemaining}
-          recordScore={recordScore}
-        />
-        {/* ADD ERROR HANDLING HERE OR INSIDE ScoreButtons */}
-      </div>
+      {scorecard.completed ?
+        <div className="w-full h-full flex justify-center items-center text-3xl">GAME COMPLETED!</div>
+      :
+        <>
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl">Dice Board</h1>
+            <div>Rolls remaining: {rollsRemaining}   </div>
+            <div>Turns remaining: {getTurnsRemaining()}</div>
+          </div>
+          <div className="h-full flex flex-col py-5 gap-[10%]">
+            <>
+              <DiceRoller
+                dice={dice}
+                rollsRemaining={rollsRemaining}
+                setRollsRemaining={setRollsRemaining}
+                gameFeed={gameFeed}
+                setGameFeed={setGameFeed}
+                />
+              <ScoreButtons
+                setSelectedCategory={setSelectedCategory}
+                rollsRemaining={rollsRemaining}
+                recordScore={recordScore}
+                />
+              {/* ADD ERROR HANDLING HERE OR INSIDE ScoreButtons */}
+            </>
+          </div>
+        </>
+      }
     </div>
   );
 };
