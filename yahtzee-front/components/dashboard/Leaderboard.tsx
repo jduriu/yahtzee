@@ -10,11 +10,14 @@ const Leaderboard = () => {
   ]
 
   const getTopScores = () => {
-    let leaderboardUsers = {}
+    let leaderboardUsers = {
+      "d3a54a63bd6f47a4b4ca164e93904921": 1,
+      "7f7967f311d84dc0a980398adf6b5654": 1,
+    }
 
     // Get scorecards
     yahtzeeClient
-      .get(`/scorecards`)
+      .get(`/scorecards/completed`)
       .then((response) => {
         if (response.statusText === "OK") {
           const scorecards = response.data.scorecards;
@@ -25,7 +28,6 @@ const Leaderboard = () => {
             }
           }
         }
-        console.log(leaderboardUsers)
       })
       .catch((error) => {
         errorHandler(error);

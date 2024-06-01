@@ -27,6 +27,11 @@ class Mongo_Scorecards:
         all_scorecards = [scorecard for scorecard in db.find()]  # noqa
         return all_scorecards
 
+    def get_completed_scorecards(self):
+
+        all_scorecards = [scorecard for scorecard in db.find({"completed": True})]  # noqa
+        return all_scorecards
+
     def get_scorecard(self, id):
         scorecard = db.find_one({"_id": ObjectId(id)})
         if scorecard:
