@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from bson import ObjectId
+from time import time
 from fastapi import HTTPException, Response, status
 from pymongo import ReturnDocument
 import os
@@ -55,6 +56,7 @@ class Mongo_Scorecards:
         }
         if len(scorecard.scored) == 13:
             fields["completed"] = True
+            fields["completed_date"] = time()
 
         if len(fields) >= 1:
             updated_scorecard = db.find_one_and_update(
