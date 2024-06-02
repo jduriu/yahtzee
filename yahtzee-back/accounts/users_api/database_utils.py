@@ -63,7 +63,7 @@ class Mongo_Users:
         return UserInDB(**user)
 
     def get_leaderboard_users(self, body):
-        user_data = []
+        user_data = {}
         for user in body.users:
             user = users_db.find_one({
                 "user_id": user
@@ -73,7 +73,9 @@ class Mongo_Users:
                     status_code=400,
                     detail="User not found",
                 )
-            user_data.append(UserToClient(**user))
+            user_id = user["user_id"]
+            username = user["username"]
+            user_data[user_id] = username
         return UsersToClient(users=user_data)
 
     def login_for_access_token(self, user_form):

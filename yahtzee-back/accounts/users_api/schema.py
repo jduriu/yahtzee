@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from pydantic.functional_validators import BeforeValidator
 from typing_extensions import Annotated
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 
 PyObjectId = Annotated[str, BeforeValidator(str)]
@@ -52,7 +52,7 @@ class UserToClient(BaseModel):
 
 
 class UsersToClient(BaseModel):
-    users: List[UserToClient]
+    users: Dict[str, str]
 
 
 class UserIDs(BaseModel):
