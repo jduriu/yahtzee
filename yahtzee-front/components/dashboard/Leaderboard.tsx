@@ -17,45 +17,43 @@ const Leaderboard = () => {
       'd3a54a63bd6f47a4b4ca164e93904921',
     ]
 
-    // Get scorecards
-    console.log(leaderboardUsers)
-    // yahtzeeClient
-    // .get(`/scorecards/completed`)
-    // .then((response) => {
-    //   if (response.statusText === "OK") {
-    //     const scorecards = response.data.scorecards; // Update api to send back ordered list?
-    //     // Create leaderboardScores and a set of users
-    //     for (let scorecard of scorecards) {
-    //       // leaderboardScores.push({
-    //       //   avatar: null,
-    //       //   username: "",
-    //       //   score: scorecard.final_score,
-    //       //   date: scorecard.completed_date,
-    //       // })
-    //       if (!(scorecard.user_id in leaderboardUsers)) {
-    //         leaderboardUsers[scorecard.user_id] = {
+    // Get scorecards ********************
+    yahtzeeClient
+    .get(`/scorecards/completed`)
+    .then((response) => {
+      if (response.statusText === "OK") {
+        const scorecards = response.data.scorecards; // Update api to send back ordered list?  ********************
+        // Create leaderboardScores and a set of users ********************
+        for (let scorecard of scorecards) {
+          // leaderboardScores.push({
+          //   avatar: null,
+          //   username: "",
+          //   score: scorecard.final_score,
+          //   date: scorecard.completed_date,
+          // })
+          if (!(scorecard.user_id in leaderboardUsers)) {
+            leaderboardUsers[scorecard.user_id] = {
 
-    //         }
-    //       }
-    //     }
-    //   }
-      // Send an array of user ids to obtain usernames in an object
-      const payload = {
-        // users: Object.keys(leaderboardUsers)
-        users: userIDs
-      }
-      accountsClient
-        .post('/leaderboard-users', JSON.stringify(payload))
-        .then((response) => {
-          if (response.statusText === "OK") {
-            const users = response.data
-            console.log(users)
-            // for (let user of leaderboardUsers) {
-            //   const username =
-            //   leaderboardUsers[user.user_id].username =
-            // }
+            }
           }
-        })
+        }
+      }
+      // Send an array of user ids to obtain usernames in an object  ********************
+      // const payload = {
+      //   // users: Object.keys(leaderboardUsers)
+      // }
+      // accountsClient
+      //   .post('/leaderboard-users', JSON.stringify(payload))
+      //   .then((response) => {
+      //     if (response.statusText === "OK") {
+      //       const users = response.data
+      //       console.log(users)
+      //       // for (let user of leaderboardUsers) {
+      //       //   const username =
+      //       //   leaderboardUsers[user.user_id].username =
+      //       // }
+      //     }
+      //   })
     // })
     // .catch((error) => {
     //   errorHandler(error);
