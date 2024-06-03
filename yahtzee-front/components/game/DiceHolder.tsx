@@ -66,7 +66,7 @@ export default function DiceRoller({
           ) : (
             <button
               key={die.name}
-              className="bg-white text-black border-black -translate-y-3 font-bold py-3 px-4 border-4 rounded-xl hover:bg-black hover:text-white shadow-dark"
+              className="bg-gray-400 text-black border-black -translate-y-3 font-bold py-3 px-4 border-4 rounded-xl hover:bg-black hover:text-white shadow-dark"
               onClick={die.changeStatus}
             >
               {die.value}
