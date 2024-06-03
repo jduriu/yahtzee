@@ -34,11 +34,12 @@ const categoryMap = {
   sixes: 6,
 };
 
-const count = (diceArray: number[]): Record<number, number> => {
-  return diceArray.reduce((values, die) => {
-    values[die] = (values[die] || 0) + 1;
-    return values;
-  }, {} as Record<number, number>);
+const count = (diceArray: number[]) => {
+  let diceCounts = {} as Record<string, number>
+  diceArray.forEach((die: number) => {
+    diceCounts[die] = (diceCounts[die] || 0) + 1;
+  })
+  return diceCounts
 };
 
 const sum = (diceArray: number[]) => {
@@ -60,14 +61,23 @@ const processUpperSectionScore = (
   return 0;
 };
 
-const checkThreeOrFourOfKind = (diceArray: number[]) => {
+const checkThreeOfKind = (diceArray: number[]) => {
   const counts = count(diceArray);
-
-  Object.values(counts).forEach((count) => {
-    if (count === 4 || count === 4) {
+  for (let count of Object.values(counts)) {
+    if (count === 3) {
       return true;
     }
-  });
+  };
+  return false;
+};
+
+const checkFourOfKind = (diceArray: number[]) => {
+  const counts = count(diceArray);
+  for (let count of Object.values(counts)) {
+    if (count === 4) {
+      return true;
+    }
+  };
   return false;
 };
 
@@ -87,12 +97,14 @@ const checkFullHouse = (diceArray: number[]) => {
 };
 
 const checkSmStraight = (diceArray: number[]) => {
-  const sortedArray = [...diceArray].sort((a, b) => a - b);
+  let sortedArray = [...diceArray]
+  sortedArray.sort((a, b) => a - b)
+  let cleanedArray = Array.from(new Set(sortedArray))
   let maxStraight = 1;
   let currentStraight = 1;
 
-  for (let i = 1; i < sortedArray.length; i++) {
-    if (sortedArray[i] === sortedArray[i - 1] + 1) {
+  for (let i = 1; i < cleanedArray.length; i++) {
+    if (cleanedArray[i] === cleanedArray[i - 1] + 1) {
       currentStraight++;
     } else {
       currentStraight = 1;
@@ -140,11 +152,12 @@ const processDice = (
   let turnValue: number | string = 0;
   if (upperSectionCategories.includes(selectedCategory)) {
     turnValue = processUpperSectionScore(diceArray, selectedCategory);
-  } else if (
-    selectedCategory === "three_of_kind" ||
-    selectedCategory === "four_of_kind"
-  ) {
-    if (checkThreeOrFourOfKind(diceArray)) {
+  } else if (selectedCategory === "three_of_kind") {
+    if (checkThreeOfKind(diceArray)) {
+      turnValue = sum(diceArray);
+    }
+  } else if (selectedCategory === "four_of_kind") {
+    if (checkFourOfKind(diceArray)) {
       turnValue = sum(diceArray);
     }
   } else if (selectedCategory === "full_house") {
@@ -161,14 +174,16 @@ const processDice = (
     }
   } else if (selectedCategory === "yahtzee") {
     if (checkYahtzee(diceArray)) {
-      if (scorecard.scored.includes("yahtzee")) {
-        scorecard.yahtzee_bonus += 1
+      if (!scorecard.scored.includes("yahtzee")) {
+        turnValue = 50
+      } else {
+        turnValue = scorecard.yahtzee_bonus ? scorecard.yahtzee_bonus += 1 : 1
       }
-      turnValue = 50;
     }
   } else if (selectedCategory === "chance") {
     turnValue = sum(diceArray);
   }
+
   return turnValue;
 };
 

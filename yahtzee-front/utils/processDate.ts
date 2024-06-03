@@ -13,7 +13,10 @@ const getTime = (unixTime: number) => {
     signature = "AM"
     return hour
   }
-  const min = startTime.getMinutes()
+  let min = startTime.getMinutes()
+  if (min < 10) {
+    min = `0${min}`
+  }
   return `${month}/${day}/${year} ${getHour()}:${min} ${signature}`
 }
 

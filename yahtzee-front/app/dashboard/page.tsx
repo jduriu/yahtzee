@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { accountsAuthClient } from "@/utils/axiosClients";
 import { useRouter } from "next/navigation";
+import Leaderboard from "@/components/dashboard/Leaderboard";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -45,8 +46,8 @@ export default function Home() {
                 Play as Guest
               </Link>
             </div>
-            <div className="flex flex-col justify-center items-center gap-10 border-pink-300 border-4 rounded-3xl shadow-2xl">
-              Leaderboard
+            <div className="flex flex-col justify-center items-center gap-10 border-pink-300 border-4 rounded-3xl shadow-2xl bg-gray-800">
+              <Leaderboard />
             </div>
           </div>
         </>

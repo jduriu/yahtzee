@@ -91,15 +91,15 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
 
   const startNewTurn = () => {
     setSelectedCategory("" as Categories);
-    setDiceOne(1);
+    setDiceOne(0);
     setDiceOneOpen(true);
-    setDiceTwo(1);
+    setDiceTwo(0);
     setDiceTwoOpen(true);
-    setDiceThree(1);
+    setDiceThree(0);
     setDiceThreeOpen(true);
-    setDiceFour(1);
+    setDiceFour(0);
     setDiceFourOpen(true);
-    setDiceFive(1);
+    setDiceFive(0);
     setDiceFiveOpen(true);
   };
 
@@ -108,24 +108,35 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
     if (!scorecard.scored.includes(selectedCategory) || selectedCategory === 'yahtzee') {
       const scorecardId = scorecard._id;
       const tempScorecard = { ...scorecard };
+      let category = selectedCategory;
       const turnValue = processDice(dice, selectedCategory, tempScorecard);
-      tempScorecard[selectedCategory] = turnValue;
-      tempScorecard.scored.push(selectedCategory);
+
+      if (scorecard.yahtzee == 50 && selectedCategory == 'yahtzee') {
+        category = 'yahtzee_bonus'
+      }
+
+      tempScorecard[category] = turnValue
+
+      if (category !== "yahtzee_bonus") {
+        tempScorecard.scored.push(category)
+      }
 
       const log: LogSchema  = {
         log_time: Date.now() / 1000,
         type: "score",
-        category: selectedCategory,
+        category: category,
         value: turnValue,
       }
 
       if (pathname === '/play/guest') {
+        // Guest Route
         setScorecard(tempScorecard)
         const tempGameFeed = {...gameFeed};
         tempGameFeed.logs.push(log)
         setGameFeed(tempGameFeed)
         startNewTurn();
       } else {
+        // User Route
         yahtzeeClient
           .put(`/scorecards/${scorecardId}`, tempScorecard)
           .then((response) => {
@@ -152,26 +163,34 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
 
   return (
     <div className="w-full h-1/2 flex flex-col gap-5 px-10 py-7 shadow-dark bg-gray-800 rounded-3xl">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl">Dice Board</h1>
-        <div>Rolls remaining: {rollsRemaining}   </div>
-        <div>Turns remaining: {getTurnsRemaining()}</div>
-      </div>
-      <div className="flex flex-col py-5 gap-[10%]">
-        <DiceRoller
-          dice={dice}
-          rollsRemaining={rollsRemaining}
-          setRollsRemaining={setRollsRemaining}
-          gameFeed={gameFeed}
-          setGameFeed={setGameFeed}
-        />
-        <ScoreButtons
-          setSelectedCategory={setSelectedCategory}
-          rollsRemaining={rollsRemaining}
-          recordScore={recordScore}
-        />
-        {/* ADD ERROR HANDLING HERE OR INSIDE ScoreButtons */}
-      </div>
+      {scorecard.completed ?
+        <div className="w-full h-full flex justify-center items-center text-3xl">GAME COMPLETED!</div>
+      :
+        <>
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl">Dice Board</h1>
+            <div>Rolls remaining: {rollsRemaining}   </div>
+            <div>Turns remaining: {getTurnsRemaining()}</div>
+          </div>
+          <div className="h-full flex flex-col py-5 gap-[10%]">
+            <>
+              <DiceRoller
+                dice={dice}
+                rollsRemaining={rollsRemaining}
+                setRollsRemaining={setRollsRemaining}
+                gameFeed={gameFeed}
+                setGameFeed={setGameFeed}
+                />
+              <ScoreButtons
+                setSelectedCategory={setSelectedCategory}
+                rollsRemaining={rollsRemaining}
+                recordScore={recordScore}
+                />
+              {/* ADD ERROR HANDLING HERE OR INSIDE ScoreButtons */}
+            </>
+          </div>
+        </>
+      }
     </div>
   );
 };

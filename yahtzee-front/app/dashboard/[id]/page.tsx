@@ -6,6 +6,7 @@ import { accountsAuthClient } from "@/utils/axiosClients";
 import { useRouter } from "next/navigation";
 import { z } from 'zod';
 import { User } from '@/schema/UserSchema';
+import Leaderboard from "@/components/dashboard/Leaderboard";
 
 type UserSchema = z.infer<typeof User>
 
@@ -48,7 +49,9 @@ export default function Dashboard() {
             Open Game
           </Link>
         </div>
-        <div className={gridClasses}>Leaderboard</div>
+        <div className={gridClasses}>
+          <Leaderboard/>
+        </div>
       </div>
     </div>
   );

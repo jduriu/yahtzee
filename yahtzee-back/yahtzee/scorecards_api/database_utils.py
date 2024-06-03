@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from bson import ObjectId
+from time import time
 from fastapi import HTTPException, Response, status
 from pymongo import ReturnDocument
 import os
@@ -7,6 +8,9 @@ import os
 db_url = os.environ.get("DATABASE_URL")
 client = MongoClient(db_url, uuidRepresentation="standard")
 db = client.yahtzee.scorecards
+
+upper_section = ["ones", "twos", "threes", "fours", "fives", "sixes"]
+lower_section = ["three_of_kind", "four_of_kind", "full_house", "sm_straight", "lg_straight", "yahtzee", "chance"]
 
 
 class Mongo_Scorecards:
@@ -23,9 +27,12 @@ class Mongo_Scorecards:
             )
 
     def get_scorecards(self):
-
-        all_scorecards = [scorecard for scorecard in db.find()]  # noqa
+        all_scorecards = db.find()  # noqa
         return all_scorecards
+
+    def get_completed_scorecards(self):
+        completed_scorecards = db.find({"completed": True}).sort("final_score", -1)  # noqa
+        return completed_scorecards
 
     def get_scorecard(self, id):
         scorecard = db.find_one({"_id": ObjectId(id)})
@@ -48,6 +55,16 @@ class Mongo_Scorecards:
         fields = {
             k: v for k, v in scorecard.model_dump(by_alias=True).items() if v is not None  # noqa
         }
+
+        if not fields.get("bonus"):
+            bonus = self.check_bonus(fields)
+            if bonus:
+                fields["bonus"] = 35
+
+        if len(scorecard.scored) == 13:
+            fields["completed"] = True
+            fields["completed_date"] = time()
+            fields["final_score"] = self.calc_final_score(fields)
 
         if len(fields) >= 1:
             updated_scorecard = db.find_one_and_update(
@@ -79,3 +96,27 @@ class Mongo_Scorecards:
             return Response(status_code=status.HTTP_204_NO_CONTENT)
 
         raise HTTPException(status_code=404, detail=f"Game {id} not found")
+
+    def calc_final_score(self, fields):
+        total = 0
+        for category in upper_section:
+            if fields.get(category):
+                total += fields.get(category)
+
+        for category in lower_section:
+            if fields.get(category):
+                total += fields.get(category)
+
+        if fields.get("bonus"):
+            total += fields.get("bonus")
+
+        if fields.get("yahtzee_bonus"):
+            total += (fields.get("yahtzee_bonus") * 100)
+        return total
+
+    def check_bonus(self, fields):
+        upper_total = 0
+        for category in upper_section:
+            if fields.get(category):
+                upper_total += fields.get(category)
+        return upper_total >= 63

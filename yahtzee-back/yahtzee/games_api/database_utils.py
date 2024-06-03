@@ -42,6 +42,10 @@ class Mongo_Games:
             k: v for k, v in game.model_dump(by_alias=True).items() if v is not None  # noqa
         }
 
+        scored = fields.get("scored")
+        if scored and len(scored) == 13:
+            fields["completed"] = True
+
         if len(fields) >= 1:
             updated_game = db.find_one_and_update(
                 {"_id": ObjectId(id)},

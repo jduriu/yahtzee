@@ -44,22 +44,17 @@ const StartForm = ({ setMode }: StartFormProps) => {
   function selectSinglePlayer() {
     setMode(true);
     const payload = createGame();
-    console.log("Trying to create game");
     yahtzeeClient
       .post("/game", payload)
       .then((response) => {
         if (response.statusText === "OK") {
-          console.log("Game Created, attempting to make Scorecard");
           const game = response.data;
-          console.log(game);
           const scorecardParams = {
             user_id: user.user_id,
             game_id: game._id,
           };
-          console.log;
           yahtzeeClient.post("/scorecard", scorecardParams).then((response) => {
             if (response.statusText === "OK") {
-              console.log("Scorecard created, redirecting...");
               router.replace(`/play/${game._id}`);
             }
           });

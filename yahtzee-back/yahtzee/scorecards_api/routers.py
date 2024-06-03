@@ -27,6 +27,17 @@ def get_scorecards(
     return Scorecards(scorecards=all_scorecards)
 
 
+@scorecards_router.get("/scorecards/completed", response_model=Scorecards)
+def get_completed_scorecards(
+    db_utils: Mongo_Scorecards = Depends()
+):
+    """
+    Obtain all scorecard instances in the database.
+    """
+    all_scorecards = db_utils.get_completed_scorecards()
+    return Scorecards(scorecards=all_scorecards)
+
+
 @scorecards_router.get("/scorecard", response_model=Scorecard)
 def get_scorecard(
     id: str,

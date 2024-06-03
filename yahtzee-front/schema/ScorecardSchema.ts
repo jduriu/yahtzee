@@ -29,6 +29,7 @@ const Scorecard = Categories.extend({
   game_id: z.string(),
   scored: z.array(z.string()),
   bonus: z.union([z.number(), z.null()]),
+  completed: z.boolean(),
 });
 
 const UpperCategoryKeys = UpperCategories.keyof();
