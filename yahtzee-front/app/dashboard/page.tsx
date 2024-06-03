@@ -47,7 +47,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="flex flex-col justify-center items-center gap-10 border-pink-300 border-4 rounded-3xl shadow-2xl bg-gray-800">
-              {/* <Leaderboard /> */}
+              <Leaderboard />
             </div>
           </div>
         </>

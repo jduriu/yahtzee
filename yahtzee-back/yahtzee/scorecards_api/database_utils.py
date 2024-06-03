@@ -9,8 +9,9 @@ db_url = os.environ.get("DATABASE_URL")
 client = MongoClient(db_url, uuidRepresentation="standard")
 db = client.yahtzee.scorecards
 
-upper_section = [  "ones", "twos", "threes", "fours", "fives", "sixes"]
-lower_section = [ "three_of_kind", "four_of_kind", "full_house", "sm_straight", "lg_straight", "yahtzee", "chance"]
+upper_section = ["ones", "twos", "threes", "fours", "fives", "sixes"]
+lower_section = ["three_of_kind", "four_of_kind", "full_house", "sm_straight", "lg_straight", "yahtzee", "chance"]
+
 
 class Mongo_Scorecards:
     def create_scorecard(self, scorecard):
@@ -26,12 +27,12 @@ class Mongo_Scorecards:
             )
 
     def get_scorecards(self):
-        all_scorecards = [scorecard for scorecard in db.find()]  # noqa
+        all_scorecards = db.find()  # noqa
         return all_scorecards
 
     def get_completed_scorecards(self):
-        all_scorecards = [scorecard for scorecard in db.find({"completed": True})]  # noqa
-        return all_scorecards
+        completed_scorecards = db.find({"completed": True}).sort("final_score", -1)  # noqa
+        return completed_scorecards
 
     def get_scorecard(self, id):
         scorecard = db.find_one({"_id": ObjectId(id)})
