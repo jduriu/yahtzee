@@ -1,7 +1,7 @@
 import React from "react";
-import DiceRoller from "./DiceRoller";
+import DiceHolder from "./DiceHolder";
 import { useState } from "react";
-import ScoreButtons from "./ScoreButtons";
+import DiceButtons from "./DiceButtons";
 import processDice from "@/utils/processDice";
 import { errorHandler } from "@/utils/errorUtils";
 import { yahtzeeClient } from "@/utils/axiosClients";
@@ -103,6 +103,41 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
     setDiceFiveOpen(true);
   };
 
+  const diceRoll = () => {
+    const randomNum = Math.random() * (6 - 1) + 1;
+    return Math.round(randomNum);
+  };
+
+  const rollOpenDice = () => {
+    let roll = [];
+    for (let die of dice) {
+      if (die["open"]) {
+        const newDiceValue = diceRoll();
+        die.set(newDiceValue);
+        roll.push(newDiceValue);
+      } else {
+        roll.push(die.value);
+      }
+    }
+    setRollsRemaining(rollsRemaining - 1);
+    const log: LogSchema = {
+      log_time: Date.now() / 1000,
+      type: "roll",
+      category: "",
+      value: roll,
+    };
+    if (pathname === "/play/guest" || pathname === '/tutorial') {
+      const tempGameFeed = { ...gameFeed };
+      tempGameFeed.logs.push(log);
+      setGameFeed(tempGameFeed);
+    } else {
+      yahtzeeClient.put(`/add-log/${gameFeed._id}`, log).then((response) => {
+        const logHistory = response.data;
+        setGameFeed(logHistory);
+      });
+    }
+  };
+
 
   const recordScore = () => {
     if (!scorecard.scored.includes(selectedCategory) || selectedCategory === 'yahtzee') {
@@ -128,7 +163,7 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
         value: turnValue,
       }
 
-      if (pathname === '/play/guest') {
+      if (pathname === '/play/guest' || pathname === '/tutorial') {
         // Guest Route
         setScorecard(tempScorecard)
         const tempGameFeed = {...gameFeed};
@@ -166,30 +201,27 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
       {scorecard.completed ?
         <div className="w-full h-full flex justify-center items-center text-3xl">GAME COMPLETED!</div>
       :
-        <>
-          <div className="flex justify-between items-center">
+        <div className="h-full">
+          <div className="h-[25%] flex justify-between items-center">
             <h1 className="text-3xl">Dice Board</h1>
             <div>Rolls remaining: {rollsRemaining}   </div>
             <div>Turns remaining: {getTurnsRemaining()}</div>
           </div>
-          <div className="h-full flex flex-col py-5 gap-[10%]">
-            <>
-              <DiceRoller
+          <div className="h-[75%] shrink">
+              <DiceHolder
                 dice={dice}
-                rollsRemaining={rollsRemaining}
                 setRollsRemaining={setRollsRemaining}
                 gameFeed={gameFeed}
-                setGameFeed={setGameFeed}
                 />
-              <ScoreButtons
+              <DiceButtons
                 setSelectedCategory={setSelectedCategory}
                 rollsRemaining={rollsRemaining}
                 recordScore={recordScore}
-                />
+                rollOpenDice={rollOpenDice}
+              />
               {/* ADD ERROR HANDLING HERE OR INSIDE ScoreButtons */}
-            </>
           </div>
-        </>
+        </div>
       }
     </div>
   );
