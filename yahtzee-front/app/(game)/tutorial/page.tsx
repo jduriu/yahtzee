@@ -5,6 +5,8 @@ import ForwardBackButtons from "@/components/game/ForwardBackButtons";
 import StartTutorial from "@/components/tutorial/00_StartTutorial";
 import GameLayoutBlurWithModal from "@/components/tutorial/01_GameLayoutBlurWithModal";
 import GameLayout from "@/components/tutorial/02_GameLayout";
+import DiceBoardLayout from "@/components/tutorial/03_DiceBoardLayout";
+import ScorecardLayout from "@/components/tutorial/04_ScorecardLayout";
 import { z } from 'zod';
 import { User } from "@/schema/UserSchema";
 import { Scorecard } from "@/schema/ScorecardSchema";
@@ -56,7 +58,9 @@ const Tutorial = () => {
   const frames = [
     <StartTutorial key={0} step={step} setStep={setStep} />,
     <GameLayoutBlurWithModal key={1} scorecard={scorecard} setScorecard={setScorecard} gameFeed={gameFeed} setGameFeed={setGameFeed} user={user}/>,
-    <GameLayout key={2} scorecard={scorecard} setScorecard={setScorecard} gameFeed={gameFeed} setGameFeed={setGameFeed}user={user}/>
+    <GameLayout key={2} scorecard={scorecard} setScorecard={setScorecard} gameFeed={gameFeed} setGameFeed={setGameFeed} user={user}/>,
+    <DiceBoardLayout key={3} scorecard={scorecard} setScorecard={setScorecard} gameFeed={gameFeed} setGameFeed={setGameFeed} user={user} />,
+    <ScorecardLayout key={3} scorecard={scorecard} setScorecard={setScorecard} gameFeed={gameFeed} setGameFeed={setGameFeed} user={user} />,
   ];
 
   return (
