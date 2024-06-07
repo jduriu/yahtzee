@@ -56,7 +56,7 @@ const GameFeed = ({ user, gameFeed }: GameFeedProps) => {
   };
 
   return (
-    <div className="w-full h-1/2 px-10 py-7 shadow-dark bg-gray-800 rounded-3xl">
+    <div className="w-full h-full px-10 py-7 shadow-dark bg-gray-800 rounded-3xl">
       <h1 className="h-[15%] text-3xl">Game Feed</h1>
       <div className=" h-[85%] flex flex-col gap-1 overflow-y-auto px-5">
         {gameFeed.logs &&

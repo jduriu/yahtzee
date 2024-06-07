@@ -197,7 +197,7 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
   };
 
   return (
-    <div className="w-full h-1/2 flex flex-col gap-5 px-10 py-7 shadow-dark bg-gray-800 rounded-3xl">
+    <div className="w-full h-full flex flex-col gap-5 px-10 py-7 shadow-dark bg-gray-800 rounded-3xl">
       {scorecard.completed ?
         <div className="w-full h-full flex justify-center items-center text-3xl">GAME COMPLETED!</div>
       :
