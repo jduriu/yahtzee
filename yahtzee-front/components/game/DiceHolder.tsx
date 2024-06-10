@@ -1,13 +1,9 @@
 "use client";
 
-import Button from "@/components/global/Button";
 import { Log, LogHistory } from "@/schema/GameFeedSchema";
 import { z } from "zod";
-import { yahtzeeClient } from "@/utils/axiosClients";
 import { useCallback, useEffect } from "react";
-import { usePathname } from "next/navigation";
 
-type LogSchema = z.infer<typeof Log>;
 type GameFeedSchema = z.infer<typeof LogHistory>;
 
 interface Dice {
@@ -19,55 +15,16 @@ interface Dice {
 }
 interface DiceRollerProps {
   dice: Dice[];
-  rollsRemaining: number;
   setRollsRemaining: React.Dispatch<React.SetStateAction<number>>;
   gameFeed: GameFeedSchema;
-  setGameFeed: React.Dispatch<React.SetStateAction<GameFeedSchema>>;
 }
 
 export default function DiceRoller({
   dice,
-  rollsRemaining,
   setRollsRemaining,
   gameFeed,
-  setGameFeed,
 }: DiceRollerProps) {
-  const pathname = usePathname();
 
-  const diceRoll = () => {
-    const randomNum = Math.random() * (6 - 1) + 1;
-    return Math.round(randomNum);
-  };
-
-  const rollOpenDice = () => {
-    let roll = [];
-    for (let die of dice) {
-      if (die["open"]) {
-        const newDiceValue = diceRoll();
-        die.set(newDiceValue);
-        roll.push(newDiceValue);
-      } else {
-        roll.push(die.value);
-      }
-    }
-    setRollsRemaining(rollsRemaining - 1);
-    const log: LogSchema = {
-      log_time: Date.now() / 1000,
-      type: "roll",
-      category: "",
-      value: roll,
-    };
-    if (pathname === "/play/guest") {
-      const tempGameFeed = { ...gameFeed };
-      tempGameFeed.logs.push(log);
-      setGameFeed(tempGameFeed);
-    } else {
-      yahtzeeClient.put(`/add-log/${gameFeed._id}`, log).then((response) => {
-        const logHistory = response.data;
-        setGameFeed(logHistory);
-      });
-    }
-  };
 
   const checkGameFeed = useCallback(() => {
     let logIndex = gameFeed.logs.length - 1;
@@ -95,12 +52,8 @@ export default function DiceRoller({
   }, [gameFeed, checkGameFeed]);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-end p-5">
-      {rollsRemaining ?
-        <Button clickHandler={rollOpenDice} content="Roll" style="score" />
-        : null
-      }
-     <div className="w-full mt-10 flex justify-center gap-[10%] text-xl">
+    <div className="w-full h-1/2 flex flex-col items-center p-5">
+      <div className="w-full flex justify-center gap-[10%] text-xl">
         {dice.map((die) =>
           die.open ? (
             <button
@@ -113,7 +66,7 @@ export default function DiceRoller({
           ) : (
             <button
               key={die.name}
-              className="bg-white text-black border-black -translate-y-3 font-bold py-3 px-4 border-4 rounded-xl hover:bg-black hover:text-white shadow-dark"
+              className="bg-gray-400 text-black border-black -translate-y-3 font-bold py-3 px-4 border-4 rounded-xl hover:bg-black hover:text-white shadow-dark"
               onClick={die.changeStatus}
             >
               {die.value}

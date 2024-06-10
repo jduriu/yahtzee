@@ -11,9 +11,9 @@ import { User } from '@/schema/UserSchema';
 import { Scorecard } from "@/schema/ScorecardSchema";
 import { LogHistory } from "@/schema/GameFeedSchema";
 
-type UserSchema = z.infer<typeof User>
-type ScorecardSchema = z.infer<typeof Scorecard>
-type GameFeedSchema = z.infer<typeof LogHistory>
+type UserSchema = z.infer<typeof User>;
+type ScorecardSchema = z.infer<typeof Scorecard>;
+type GameFeedSchema = z.infer<typeof LogHistory>;
 
 interface PlayProps {
   params: { id: string };

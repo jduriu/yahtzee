@@ -28,7 +28,7 @@ const DropDown = ({ setSelected, options }: DropDownProps) => {
   };
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="relative inline-block text-left z-10">
       <div>
         <button
           type="button"

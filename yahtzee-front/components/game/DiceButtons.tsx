@@ -11,17 +11,19 @@ interface DropDownOption {
   value: Categories;
 }
 
-interface ScoreButtonsProps {
+interface DiceButtonsProps {
   setSelectedCategory: React.Dispatch<React.SetStateAction<Categories>>;
   rollsRemaining: number;
   recordScore: () => void;
+  rollOpenDice: () => void;
 }
 
-const ScoreButtons = ({
+const DiceButtons = ({
   setSelectedCategory,
   rollsRemaining,
   recordScore,
-}: ScoreButtonsProps) => {
+  rollOpenDice,
+}: DiceButtonsProps) => {
   const dropOptions: DropDownOption[] = [
     { name: "Ones", value: "ones" },
     { name: "Twos", value: "twos" },
@@ -38,17 +40,24 @@ const ScoreButtons = ({
     { name: "Chance", value: "chance" },
   ];
 
-  if (rollsRemaining < 3) {
-    return (
-      <div className="w-full flex gap-10 items-center justify-center">
-        <Button clickHandler={recordScore} content="Score" style="score" />
-        <DropDown
-          setSelected={setSelectedCategory}
-          options={dropOptions}
-        />
-      </div>
-    );
-  }
+
+  return (
+    <div className="h-1/2 w-full flex gap-10 items-center justify-center">
+      {rollsRemaining ?
+        <Button clickHandler={rollOpenDice} content="Roll" style="score" />
+        : null
+      }
+      {rollsRemaining < 3 && (
+        <>
+          <Button clickHandler={recordScore} content="Score" style="score" />
+          <DropDown
+            setSelected={setSelectedCategory}
+            options={dropOptions}
+          />
+        </>
+      )}
+    </div>
+  );
 };
 
-export default ScoreButtons;
+export default DiceButtons;
