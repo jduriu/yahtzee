@@ -29,7 +29,7 @@ const StartForm = ({ setMode }: StartFormProps) => {
       .catch((error) => {
         router.replace("/login");
       });
-  }, [players, router]);
+  }, []);
 
   const createGame = () => {
     const game = {

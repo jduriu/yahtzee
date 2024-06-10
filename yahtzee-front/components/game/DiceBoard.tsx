@@ -9,6 +9,7 @@ import { Scorecard, CategoryKeys } from "@/schema/ScorecardSchema";
 import { LogHistory, Log } from "@/schema/GameFeedSchema";
 import { z } from 'zod';
 import { usePathname } from "next/navigation";
+import { TemplateContext } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 type ScorecardSchema = z.infer<typeof Scorecard>
 type LogHistorySchema = z.infer<typeof LogHistory>
@@ -85,6 +86,11 @@ const DiceBoard = ({ scorecard, setScorecard, gameFeed, setGameFeed }: DiceBoard
 
   const getTurnsRemaining = () => {
     if (scorecard.scored) {
+      if (scorecard.scored.length >= 13) {
+        let tempScorecard = {...scorecard}
+        tempScorecard["completed"] = true
+        setScorecard(tempScorecard)
+      }
       return 13 - scorecard.scored.length;
     }
   };

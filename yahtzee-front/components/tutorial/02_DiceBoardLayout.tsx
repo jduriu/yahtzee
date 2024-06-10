@@ -9,7 +9,7 @@ const DiceBoardLayout = ({scorecard, setScorecard, gameFeed, setGameFeed, user})
 
   return (
     <div className="w-full h-full relative">
-      <div className="absolute w-full h-full flex gap-10 p-5">
+      <div className="absolute top-0 left-0 w-full h-full flex gap-10 p-5">
         <div className="w-1/2 h-full flex flex-col gap-5">
           <Highlight>
             <DiceBoard scorecard={scorecard} setScorecard={setScorecard} gameFeed={gameFeed} setGameFeed={setGameFeed}/>
@@ -31,6 +31,7 @@ const DiceBoardLayout = ({scorecard, setScorecard, gameFeed, setGameFeed, user})
               <div>You will see the dice values along with the scoring options</div>
               <div>Try holding and releasing a dice by clicking on the dice icons, you should see the hold dice change position and color as you toggle</div>
               <div>Dice which are held will not be re-rolled</div>
+              <div>Try holding a die and rolling again to see how it works</div>
               <div>Click Next to see how to score!</div>
             </div>
           </div>
