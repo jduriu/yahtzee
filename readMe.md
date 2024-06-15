@@ -56,7 +56,6 @@
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -78,12 +77,12 @@ While the end product is a simple dice game, my hope is that underneath lies a w
 
 ### Built With
 
-* [![Next][Next.js]][Next-url]
-* [![FastAPI][FastAPI]][FastAPI-url]
-* [![MongoDB][MongoDB]][MongoDB-url]
-* [![TailwindCSS][TailwindCSS]][Tailwind-url]
-* [![Docker][Docker]][Docker-url]
-<!-- * [![AWS][AWS]][AWS-url] -->
+[![Next][Next.js]][Next-url]
+[![FastAPI][FastAPI]][FastAPI-url]
+[![MongoDB][MongoDB]][MongoDB-url]
+[![TailwindCSS][TailwindCSS]][Tailwind-url]
+[![Docker][Docker]][Docker-url]
+<!-- [![AWS][AWS]][AWS-url] -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -97,13 +96,13 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
-* Docker
-  <div>
-    <a href="https://www.docker.com/get-started/">Docker Installation Guide</a>
-  </div>
+* <a href="https://www.docker.com/get-started/">Docker</a>
+* <a href="https://docs.docker.com/compose/">Docker Compose</a>
 
 
 ### Installation
+
+The simplest way to install and run the application is using Docker.
 
 1. Clone the repo
    ```sh
@@ -130,7 +129,12 @@ This is an example of how to list things you need to use the software and how to
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-This application can be used either signed in or as a guest.
+This application is designed for browser use. The front end NextJS client is responsible for the main game mechanics while the backend FastAPI services are responsible for authentication and data storage.
+
+Currently this project is only for local use. Additional security features are in progress for deployment.
+
+For actual game UI usage, please use the built in tutorial accessible from the dashboard.
+
 
 <!-- Add additional usage steps in this section once completed -->
 
@@ -139,12 +143,10 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-https://www.docker.com/get-started/
 <!-- ROADMAP -->
 ## Roadmap
-
-- Backend
-- Frontend
+Main Features in Development:
+- Deployment on Cloud Service Provider
 
 See the [open issues](https://github.com/jduriu/yahtzee/issues) for a full list of proposed features (and known issues).
 
@@ -161,16 +163,6 @@ Project Link: [https://github.com/jduriu/yahtzee](https://github.com/jduriu/yaht
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* []()
-* []()
-* []()
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 

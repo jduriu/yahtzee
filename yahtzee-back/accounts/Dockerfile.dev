@@ -8,10 +8,6 @@ COPY requirements.txt requirements.txt
 
 RUN python -m pip install -r requirements.txt
 
-## These are not needed until production dockerfile since we are using local app storage for development
-# COPY users_api /code/users_api
-# COPY main.py /code/
-
 WORKDIR /app
 
 CMD uvicorn main:app --reload --host 0.0.0.0

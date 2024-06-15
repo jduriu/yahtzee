@@ -2,22 +2,12 @@ FROM python:3.9
 
 RUN python -m pip install --upgrade pip
 
-# create a working directory called deps to hold the dependencies aka requirements.txt
 WORKDIR /deps
 
-# copy the requirements into /deps
 COPY requirements.txt requirements.txt
 
-# pip install container dependencies
 RUN python -m pip install -r requirements.txt
 
-
-## These are not needed until production dockerfile since we are using local app storage for development
-# COPY games_api /code/games_api
-# COPY scorecards_api /code/scorecards_api
-# COPY main.py /code/
-
-# change working directory to /app
 WORKDIR /app
 
 CMD uvicorn main:app --reload --host 0.0.0.0
